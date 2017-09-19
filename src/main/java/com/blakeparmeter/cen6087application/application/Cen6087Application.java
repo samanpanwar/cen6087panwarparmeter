@@ -23,10 +23,8 @@ public class Cen6087Application extends Application{
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        getClass().getResource("test");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
-        Scene test = new Scene(loader.load());
-        primaryStage.setScene(test);
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/MainWindow.fxml"));
+        primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
     }
 }
