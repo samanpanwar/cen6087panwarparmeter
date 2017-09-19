@@ -6,6 +6,7 @@
 package com.blakeparmeter.cen6087application.application;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -22,9 +23,9 @@ public class Cen6087Application extends Application{
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
-        Label testLabel = new Label("Hello World");
-        Scene test = new Scene(testLabel);
+        getClass().getResource("test");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+        Scene test = new Scene(loader.load());
         primaryStage.setScene(test);
         primaryStage.show();
     }
