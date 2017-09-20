@@ -21,8 +21,8 @@ public class RouteFactoryTest {
     public void basicRouteFactoryTest() {
         
         //initalizes the intersection
-        Grid grid = new Grid(10, 10);
-        RouteFactory factory = new RouteFactory(grid, 1L);
+        Grid grid = new Grid(100, 100);
+        RouteFactory factory = new RouteFactory(grid, 0L);
         Route route = factory.generateRoute();
         
         //Ensures the first and last intersections are edges

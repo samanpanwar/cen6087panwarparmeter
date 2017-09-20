@@ -63,7 +63,7 @@ public class RouteFactory {
                     break;
 
                 case LEFT:
-                    currentDirection = CardinalDirection.values()[currentDirection.index -1 % 4];
+                    currentDirection = CardinalDirection.values()[(currentDirection.index -1 + 4) % 4];
                     intersections.add(grid.getIntersection(NSBlock, EWBlock));
                     break;
 
