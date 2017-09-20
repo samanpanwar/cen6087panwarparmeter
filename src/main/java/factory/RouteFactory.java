@@ -8,7 +8,7 @@ package factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import model.Direction;
+import model.CardinalDirection;
 import model.MoveDirection;
 import static model.MoveDirection.FORWARD;
 import static model.MoveDirection.LEFT;
@@ -44,26 +44,47 @@ public class RouteFactory {
         intersections.add(initialIntersection);
         
         //Moves the route until it gets off the grid
-        Direction currentDirection = grid.getEdgeDirection(initialIntersection);
-        MoveDirection moveDirection = DIR_SEED[random.nextInt(DIR_SEED.length)];
-        switch(moveDirection){
-            case FORWARD:
-                break;
+        CardinalDirection currentDirection = grid.getEdgeDirection(initialIntersection);
+        Intersection currentIntersection = initialIntersection;
+        int NSBlock = currentIntersection.getNSBlock();
+        int EWBlock = currentIntersection.getEWBlock();
+        while(true){
+            
+            //Finds a move direction and sets the cardinal direction, if there is a turn an intersection is added
+            MoveDirection moveDirection = DIR_SEED[random.nextInt(DIR_SEED.length)];
+            switch(moveDirection){
+                case FORWARD:
+                    break;
+
+                case LEFT:
+                    currentDirection = CardinalDirection.values()[currentDirection.index -1 % 4];
+                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
+                    break;
+
+                case RIGHT:
+                    currentDirection = CardinalDirection.values()[currentDirection.index +1 % 4];
+                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
+                    break;
+
+                case U_TURN:
+                    currentDirection = CardinalDirection.values()[currentDirection.index -2 % 4];
+                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
+                    break;
+
+                default:
+                    throw new UnsupportedOperationException("Direction: " + moveDirection + " not supported");
+            }
+            
+            //updates the block the route is on TODO:
+            switch(currentDirection){
                 
-            case LEFT:
-                currentDirection = Direction.values()[%Direction.values().length-1]
+            }
+            
+            //breaks if the current route is off the grid TODO: get the max lengths
+            if(NSBlock < 0 || EWBlock < 0){
                 break;
-                
-            case RIGHT:
-                break;
-                
-            case U_TURN:
-                break;
-                
-            default:
-                throw new UnsupportedOperationException("Direction: " + moveDirection + " not supported");
+            }
         }
-        
         
         return new Route(intersections);
     }

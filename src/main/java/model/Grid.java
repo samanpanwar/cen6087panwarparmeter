@@ -40,19 +40,19 @@ public class Grid {
         return edges;
     }
     
-    public Direction getEdgeDirection(Intersection intersection){
+    public CardinalDirection getEdgeDirection(Intersection intersection){
         if(edges.contains(intersection) == false){
             throw new IllegalArgumentException("The edge: " + intersection + " was not on the edge of the map.");
         }
         
         if(intersection.getNSBlock() == 0) {
-            return Direction.SOUTH;
+            return CardinalDirection.SOUTH;
         } else if(intersection.getNSBlock() == grid.length-1) {
-            return Direction.NORTH;
-        } else if(intersection.getEWlock() == 0) {
-            return Direction.EAST;
+            return CardinalDirection.NORTH;
+        } else if(intersection.getEWBlock() == 0) {
+            return CardinalDirection.EAST;
         } else {
-            return Direction.WEST;
+            return CardinalDirection.WEST;
         }
     }
     

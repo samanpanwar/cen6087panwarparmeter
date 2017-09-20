@@ -22,7 +22,7 @@ public class Intersection {
         return NSBlock;
     }
     
-    public int getEWlock(){
+    public int getEWBlock(){
         return EWBlock;
     }
 }

@@ -9,13 +9,13 @@ package model;
  *
  * @author Blake
  */
-public enum Direction {
+public enum CardinalDirection {
     
     NORTH(0), SOUTH(1), EAST(2), WEST(3);
     
     public final int index;
 
-    private Direction(int index){
+    private CardinalDirection(int index){
         this.index = index;
     }
 }
