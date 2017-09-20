@@ -5,6 +5,7 @@
  */
 package com.blakeparmeter.cen6087application.application;
 
+import factory.RouteFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import model.Grid;
 
 /**
  * FXML Controller class
@@ -32,6 +34,7 @@ public class MainWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         test.setText("Hello World");
+        
     }   
     
     public Parent getRoot(){

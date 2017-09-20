@@ -25,4 +25,9 @@ public class Intersection {
     public int getEWBlock(){
         return EWBlock;
     }
+    
+    @Override
+    public String toString(){
+        return "NS: " + NSBlock + " EW: " + EWBlock;
+    }
 }

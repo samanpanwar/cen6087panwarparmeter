@@ -18,4 +18,8 @@ public class Route {
     public Route(List<Intersection> intersections){
         this.intersections = intersections;
     }
+    
+    public List<Intersection> getIntersections(){
+       return intersections;
+    }
 }
