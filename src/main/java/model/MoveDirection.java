@@ -9,13 +9,6 @@ package model;
  *
  * @author Blake
  */
-public enum Direction {
-    
-    NORTH(0), SOUTH(1), EAST(2), WEST(3);
-    
-    public final int index;
-
-    private Direction(int index){
-        this.index = index;
-    }
+public enum MoveDirection {
+    FORWARD, RIGHT, LEFT, U_TURN;
 }

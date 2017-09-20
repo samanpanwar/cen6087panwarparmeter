@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import model.Direction;
-import static model.Direction.FORWARD;
-import static model.Direction.LEFT;
-import static model.Direction.RIGHT;
-import static model.Direction.U_TURN;
+import model.MoveDirection;
+import static model.MoveDirection.FORWARD;
+import static model.MoveDirection.LEFT;
+import static model.MoveDirection.RIGHT;
+import static model.MoveDirection.U_TURN;
 import model.Grid;
 import model.Intersection;
 import model.Route;
@@ -23,7 +24,7 @@ import model.Route;
  */
 public class RouteFactory {
     
-    private static final Direction[] DIR_SEED = {
+    private static final MoveDirection[] DIR_SEED = {
         FORWARD, FORWARD, FORWARD, FORWARD, RIGHT, RIGHT, LEFT, LEFT, U_TURN
     };
     
@@ -37,8 +38,31 @@ public class RouteFactory {
     
     public Route generateRoute(){
         
+        //Initalizes the intersections
         List<Intersection> intersections = new ArrayList();
-        intersections.add(grid.getEdgeIntersections().get(random.nextInt(grid.getEdgeIntersections().size())));
+        Intersection initialIntersection = grid.getEdgeIntersections().get(random.nextInt(grid.getEdgeIntersections().size()));
+        intersections.add(initialIntersection);
+        
+        //Moves the route until it gets off the grid
+        Direction currentDirection = grid.getEdgeDirection(initialIntersection);
+        MoveDirection moveDirection = DIR_SEED[random.nextInt(DIR_SEED.length)];
+        switch(moveDirection){
+            case FORWARD:
+                break;
+                
+            case LEFT:
+                currentDirection = Direction.values()[%Direction.values().length-1]
+                break;
+                
+            case RIGHT:
+                break;
+                
+            case U_TURN:
+                break;
+                
+            default:
+                throw new UnsupportedOperationException("Direction: " + moveDirection + " not supported");
+        }
         
         
         return new Route(intersections);

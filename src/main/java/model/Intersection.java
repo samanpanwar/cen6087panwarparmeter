@@ -17,4 +17,12 @@ public class Intersection {
         this.NSBlock = NSBlock;
         this.EWBlock = EWBlock;
     }
+    
+    public int getNSBlock(){
+        return NSBlock;
+    }
+    
+    public int getEWlock(){
+        return EWBlock;
+    }
 }

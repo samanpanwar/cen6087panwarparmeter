@@ -40,6 +40,22 @@ public class Grid {
         return edges;
     }
     
+    public Direction getEdgeDirection(Intersection intersection){
+        if(edges.contains(intersection) == false){
+            throw new IllegalArgumentException("The edge: " + intersection + " was not on the edge of the map.");
+        }
+        
+        if(intersection.getNSBlock() == 0) {
+            return Direction.SOUTH;
+        } else if(intersection.getNSBlock() == grid.length-1) {
+            return Direction.NORTH;
+        } else if(intersection.getEWlock() == 0) {
+            return Direction.EAST;
+        } else {
+            return Direction.WEST;
+        }
+    }
+    
     public Intersection getIntersection(int NSBlock, int EWBlock){
         return grid[NSBlock][EWBlock];
     }
