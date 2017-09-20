@@ -40,6 +40,14 @@ public class Grid {
         return edges;
     }
     
+    public int getNSBlockSize(){
+        return grid.length;
+    }
+    
+    public int getEWBlockSize(){
+        return grid[0].length;
+    }
+    
     public CardinalDirection getEdgeDirection(Intersection intersection){
         if(edges.contains(intersection) == false){
             throw new IllegalArgumentException("The edge: " + intersection + " was not on the edge of the map.");

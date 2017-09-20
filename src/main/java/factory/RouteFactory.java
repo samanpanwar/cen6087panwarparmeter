@@ -5,15 +5,15 @@
  */
 package factory;
 
+import static model.MoveDirection.FORWARD;
+import static model.MoveDirection.LEFT;
+import static model.MoveDirection.RIGHT;
+import static model.MoveDirection.U_TURN;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import model.CardinalDirection;
 import model.MoveDirection;
-import static model.MoveDirection.FORWARD;
-import static model.MoveDirection.LEFT;
-import static model.MoveDirection.RIGHT;
-import static model.MoveDirection.U_TURN;
 import model.Grid;
 import model.Intersection;
 import model.Route;
@@ -24,6 +24,7 @@ import model.Route;
  */
 public class RouteFactory {
     
+    //Sets the likelihood of the directions
     private static final MoveDirection[] DIR_SEED = {
         FORWARD, FORWARD, FORWARD, FORWARD, RIGHT, RIGHT, LEFT, LEFT, U_TURN
     };
@@ -31,6 +32,11 @@ public class RouteFactory {
     private final Random random;
     private final Grid grid;
     
+    /**
+     * @param grid the grid to build the route on
+     * @param seed a seed that can be used to generate the RNG. If the grid dimensions are the same and
+     * the seed is the same between runs then the resultant generated routes will be identical aswell. 
+     */
     public RouteFactory(Grid grid, long seed){
         this.grid = grid;
         this.random = new Random(seed);
@@ -75,13 +81,31 @@ public class RouteFactory {
                     throw new UnsupportedOperationException("Direction: " + moveDirection + " not supported");
             }
             
-            //updates the block the route is on TODO:
+            //updates the block the route is on 
+            Intersection beforeMove = grid.getIntersection(NSBlock, EWBlock);
             switch(currentDirection){
-                
+                case NORTH:
+                    NSBlock ++;
+                    break;
+                    
+                case EAST:
+                    EWBlock ++;
+                    break;
+                    
+                case SOUTH:
+                    NSBlock --;
+                    break;
+                    
+                case WEST:
+                    EWBlock --;
+                    break;
             }
             
-            //breaks if the current route is off the grid TODO: get the max lengths
-            if(NSBlock < 0 || EWBlock < 0){
+            //breaks if the current route is off the grid, adds the intersection the route was at before moving
+            if(NSBlock < 0 || NSBlock >= grid.getNSBlockSize() ||
+                    EWBlock < 0 || EWBlock >=grid.getEWBlockSize()){
+                
+                intersections.add(beforeMove);
                 break;
             }
         }
