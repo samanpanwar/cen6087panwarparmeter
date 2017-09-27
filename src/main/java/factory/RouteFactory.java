@@ -5,16 +5,10 @@
  */
 package factory;
 
-import static model.MoveDirection.FORWARD;
-import static model.MoveDirection.LEFT;
-import static model.MoveDirection.RIGHT;
-import static model.MoveDirection.U_TURN;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import model.CardinalDirection;
-import model.MoveDirection;
 import model.Grid;
 import model.Intersection;
 import model.Route;

@@ -23,7 +23,6 @@ public class RouteFactoryTest {
     
     @Test
     public void basicRouteFactoryTest() {
-        
         for(int i = 0; i < 100_000; i++){
             testGenerateRoute(factory.generateRoute(), i);
         }

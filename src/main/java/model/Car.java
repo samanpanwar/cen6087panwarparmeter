@@ -11,6 +11,8 @@ package model;
  */
 public class Car {
     
+    private static final long VELOCITY = 1L;//intersections / time unit
+    
     private final long entryTime;
     private final Route route;
     
