@@ -10,6 +10,7 @@ import static model.MoveDirection.LEFT;
 import static model.MoveDirection.RIGHT;
 import static model.MoveDirection.U_TURN;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import model.CardinalDirection;
@@ -23,11 +24,6 @@ import model.Route;
  * @author Blake
  */
 public class RouteFactory {
-    
-    //Sets the likelihood of the directions
-    private static final MoveDirection[] DIR_SEED = {
-        FORWARD, FORWARD, FORWARD, FORWARD, RIGHT, RIGHT, LEFT, LEFT, U_TURN
-    };
     
     private final Random random;
     private final Grid grid;
@@ -44,72 +40,71 @@ public class RouteFactory {
     
     public Route generateRoute(){
         
-        //Initalizes the intersections
-        List<Intersection> intersections = new ArrayList();
-        Intersection initialIntersection = grid.getEdgeIntersections().get(random.nextInt(grid.getEdgeIntersections().size()));
-        intersections.add(initialIntersection);
-        
-        //Moves the route until it gets off the grid
-        CardinalDirection currentDirection = grid.getEdgeDirection(initialIntersection);
-        Intersection currentIntersection = initialIntersection;
-        int NSBlock = currentIntersection.getNSBlock();
-        int EWBlock = currentIntersection.getEWBlock();
-        while(true){
-            
-            //Finds a move direction and sets the cardinal direction, if there is a turn an intersection is added
-            MoveDirection moveDirection = DIR_SEED[random.nextInt(DIR_SEED.length)];
-            switch(moveDirection){
-                case FORWARD:
-                    break;
-
-                case LEFT:
-                    currentDirection = CardinalDirection.values()[(currentDirection.index -1 + 4) % 4];
-                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
-                    break;
-
-                case RIGHT:
-                    currentDirection = CardinalDirection.values()[currentDirection.index +1 % 4];
-                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
-                    break;
-
-                case U_TURN:
-                    currentDirection = CardinalDirection.values()[currentDirection.index -2 % 4];
-                    intersections.add(grid.getIntersection(NSBlock, EWBlock));
-                    break;
-
-                default:
-                    throw new UnsupportedOperationException("Direction: " + moveDirection + " not supported");
-            }
-            
-            //updates the block the route is on 
-            Intersection beforeMove = grid.getIntersection(NSBlock, EWBlock);
-            switch(currentDirection){
-                case NORTH:
-                    NSBlock ++;
-                    break;
-                    
-                case EAST:
-                    EWBlock ++;
-                    break;
-                    
-                case SOUTH:
-                    NSBlock --;
-                    break;
-                    
-                case WEST:
-                    EWBlock --;
-                    break;
-            }
-            
-            //breaks if the current route is off the grid, adds the intersection the route was at before moving
-            if(NSBlock < 0 || NSBlock >= grid.getNSBlockSize() ||
-                    EWBlock < 0 || EWBlock >=grid.getEWBlockSize()){
-                
-                intersections.add(beforeMove);
-                break;
-            }
+        //gets the entry and exit sides
+        List<Integer> entryPoints = new ArrayList(Arrays.asList(0,1,2,3));
+        int entrySide = entryPoints.get(random.nextInt(4));
+        entryPoints.remove(entrySide);
+        int exitSide = entryPoints.get(random.nextInt(3));
+        if(entrySide == exitSide){
+            throw new IllegalStateException("The algroithim generated the same entry and exit side");
         }
         
-        return new Route(intersections);
+        //gets random entry and exit intersections
+        List<Intersection> entryInteresections = grid.getEdgeIntersections().get(entrySide);
+        Intersection entryIntersection = entryInteresections.get(random.nextInt(entryInteresections.size()));
+        List<Intersection> exitInteresections = grid.getEdgeIntersections().get(exitSide);
+        Intersection exitIntersection = exitInteresections.get(random.nextInt(exitInteresections.size()));
+        
+        int entryNSBlock = entryIntersection.getNSBlock();
+        int entryEWBlock = entryIntersection.getEWBlock();
+        int exitNSBlock = exitIntersection.getNSBlock();
+        int exitEWBlock = exitIntersection.getEWBlock();
+        
+        //The sides are opposite
+        if(Math.abs(entrySide - exitSide) % 2 == 0){
+            
+            //There are no turns
+            if(entryNSBlock == exitNSBlock || entryEWBlock == exitEWBlock){
+                return new Route(Arrays.asList(entryIntersection, exitIntersection));
+                
+            //There are two turns
+            } else {
+                
+                //The route is mainly N->S or S->N
+                if(entryNSBlock == 0 || entryNSBlock == grid.getNSBlockSize()-1){
+                    int xBlock = random.nextInt(grid.getNSBlockSize()-3)+1;
+                    Intersection x1 = grid.getIntersection(xBlock, entryEWBlock);
+                    Intersection x2 = grid.getIntersection(xBlock, exitEWBlock);
+                    return new Route(Arrays.asList(entryIntersection, x1, x2, exitIntersection));
+                    
+                //The route is mainly E->W or W->E
+                } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
+                    int xBlock = random.nextInt(grid.getEWBlockSize()-3)+1;
+                    Intersection x1 = grid.getIntersection(entryNSBlock, xBlock);
+                    Intersection x2 = grid.getIntersection(exitNSBlock, xBlock);
+                    return new Route(Arrays.asList(entryIntersection, x1, x2, exitIntersection));
+                    
+                } else {
+                    throw new IllegalStateException("The main direction could not be determined"); //This should not happen
+                }
+            }
+            
+        //The sides are next to each other
+        } else {
+            
+            //The route starts heading North or South bound
+            if(entryNSBlock == 0 || entryNSBlock == grid.getNSBlockSize()-1){
+                Intersection x = grid.getIntersection(entryNSBlock, exitEWBlock);
+                return new Route(Arrays.asList(entryIntersection, x, exitIntersection));
+            
+            //The route starts heading East or West bound
+            } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
+                Intersection x = grid.getIntersection(exitNSBlock, entryEWBlock);
+                return new Route(Arrays.asList(entryIntersection, x, exitIntersection));
+                
+            }else {
+                throw new IllegalStateException("The main direction could not be determined"); //This should not happen
+            }
+        }
     }
 }

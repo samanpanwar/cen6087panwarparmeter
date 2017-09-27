@@ -15,28 +15,51 @@ import java.util.List;
 public class Grid {
     
     private final Intersection[][] grid;
-    private final List<Intersection> edges;
     
+    //Data structures used to assist with algroithims. 
+    private final List<List<Intersection>> edges;
+    
+    /**
+     * Generates the grid. index 
+     * 0,       0        = NW corner 
+     * 0,       NSBlocks = NE corner
+     * EWBlocks,NSBlocks = SE corner
+     * EWBlocks,0        = SW corner
+     * @param NSBlocks
+     * @param EWBlocks 
+     */
     public Grid(int NSBlocks, int EWBlocks){
-        grid = new Intersection[NSBlocks][EWBlocks];
-        for(int i = 0; i < NSBlocks; i++){
-            for(int j = 0; j < EWBlocks; j++){
+        grid = new Intersection[EWBlocks][NSBlocks];
+        for(int i = 0; i < EWBlocks; i++){
+            for(int j = 0; j < NSBlocks; j++){
                 grid[i][j] = new Intersection(i, j);
             }
         }
         
+        //Builds the edges data structure (note: corners are omitted)
         edges = new ArrayList();
-        for(int i = 0; i < grid.length; i++){
-            edges.add(grid[0][i]);
-            edges.add(grid[grid.length-1][i]);
+        for(int i = 0; i < 4; i++){
+            edges.add(new ArrayList());
         }
-        for(int i = 0; i < grid[0].length; i++){
-            edges.add(grid[i][0]);
-            edges.add(grid[i][grid[0].length-1]);
+        for(int i = 1; i < grid.length-1; i++){
+            edges.get(0).add(grid[i][0]);               //Northern edges
+            edges.get(2).add(grid[i][grid[0].length-1]);//Southern edges
+        }
+        for(int i = 1; i < grid[0].length-1; i++){
+            edges.get(1).add(grid[0][i]);               //Eastern edges
+            edges.get(3).add(grid[grid.length-1][i]);   //Western edges
         }
     }
     
-    public List<Intersection> getEdgeIntersections(){
+    /**
+     * @return A two dimensional list, the first list is the edges in the following form:
+     * 0 = North
+     * 1 = West
+     * 2 = South
+     * 3 = North
+     * The second dimension corresponds to the intersections in those edges. 
+     */
+    public List<List<Intersection>> getEdgeIntersections(){
         return edges;
     }
     
@@ -49,7 +72,7 @@ public class Grid {
     }
     
     public CardinalDirection getEdgeDirection(Intersection intersection){
-        if(edges.contains(intersection) == false){
+        if(isEdge(intersection) == false){
             throw new IllegalArgumentException("The edge: " + intersection + " was not on the edge of the map.");
         }
         
@@ -66,5 +89,14 @@ public class Grid {
     
     public Intersection getIntersection(int NSBlock, int EWBlock){
         return grid[NSBlock][EWBlock];
+    }
+    
+    public boolean isEdge(Intersection intersection){
+        for(List<Intersection> edgeList : edges){
+            if(edgeList.contains(intersection)){
+                return true;
+            }
+        }
+        return false;
     }
 }
