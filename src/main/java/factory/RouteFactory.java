@@ -59,7 +59,7 @@ public class RouteFactory {
             
             //There are no turns
             if(entryNSBlock == exitNSBlock || entryEWBlock == exitEWBlock){
-                return new Route(Arrays.asList(entryIntersection, exitIntersection));
+                return new Route(connectIntersections(entryIntersection, exitIntersection));
                 
             //There are two turns
             } else {
@@ -69,14 +69,14 @@ public class RouteFactory {
                     int xBlock = random.nextInt(grid.getNSBlockSize()-3)+1;
                     Intersection x1 = grid.getIntersection(xBlock, entryEWBlock);
                     Intersection x2 = grid.getIntersection(xBlock, exitEWBlock);
-                    return new Route(Arrays.asList(entryIntersection, x1, x2, exitIntersection));
+                    return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));
                     
                 //The route is mainly E->W or W->E
                 } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
                     int xBlock = random.nextInt(grid.getEWBlockSize()-3)+1;
                     Intersection x1 = grid.getIntersection(entryNSBlock, xBlock);
                     Intersection x2 = grid.getIntersection(exitNSBlock, xBlock);
-                    return new Route(Arrays.asList(entryIntersection, x1, x2, exitIntersection));
+                    return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));
                     
                 } else {
                     throw new IllegalStateException("The main direction could not be determined"); //This should not happen
@@ -89,12 +89,12 @@ public class RouteFactory {
             //The route starts heading North or South bound
             if(entryNSBlock == 0 || entryNSBlock == grid.getNSBlockSize()-1){
                 Intersection x = grid.getIntersection(entryNSBlock, exitEWBlock);
-                return new Route(Arrays.asList(entryIntersection, x, exitIntersection));
+                return new Route(connectIntersections(entryIntersection, x, exitIntersection));
             
             //The route starts heading East or West bound
             } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
                 Intersection x = grid.getIntersection(exitNSBlock, entryEWBlock);
-                return new Route(Arrays.asList(entryIntersection, x, exitIntersection));
+                return new Route(connectIntersections(entryIntersection, x, exitIntersection));
                 
             }else {
                 throw new IllegalStateException("The main direction could not be determined"); //This should not happen
@@ -102,14 +102,53 @@ public class RouteFactory {
         }
     }
     
-    private List<Intersection> getConnectingIntersections(Intersection x1, Intersection x2){
-        int x1NSEntry = x1.getNSBlock();
-        int x1EWEntry = x1.getEWBlock();
-        int x2NSEntry = x2.getNSBlock();
-        int x2EWEntry = x2.getEWBlock();
-        
+    private List<Intersection> connectIntersections(Intersection... intersections){
+        List<Intersection> resultIntersections = new ArrayList();
+        Intersection lastIntersection = null;
+        for(Intersection intersection : intersections){
+            if(lastIntersection != null){
+                resultIntersections.addAll(getConnectingIntersections(lastIntersection, intersection));
+            }
+            lastIntersection = intersection;
+        }
+        return resultIntersections;
+    }
+    
+    private List<Intersection> getConnectingIntersections(Intersection entryIntersection, Intersection exitIntersection){
+
         List<Intersection> intersections = new ArrayList();
+        int entryNSBlock = entryIntersection.getNSBlock();
+        int entryEWBlock = entryIntersection.getEWBlock();
+        int exitNSBlock = exitIntersection.getNSBlock();
+        int exitEWBlock = exitIntersection.getEWBlock();
         
+        //north south
+        if(entryEWBlock == exitEWBlock){
+            
+            //Northbound
+            if(entryNSBlock < exitNSBlock){
+                for(int i = entryNSBlock; i < entryNSBlock - exitNSBlock; i++){
+                    intersections.add(grid.getIntersection(i, entryEWBlock));
+                }
+                
+            //Southbound
+            } else {
+                for(int i = entryNSBlock; i > entryNSBlock - exitNSBlock; i--){
+                    intersections.add(grid.getIntersection(i, entryEWBlock));
+                }
+            }
+            
+        //east west
+        } else if(entryNSBlock == exitNSBlock){
+            
+            //Northbound
+            if(entryNSBlock < exitNSBlock){
+                
+            //Southbound
+            } else {
+                
+            }
+        }
         return intersections;
     }
 }
