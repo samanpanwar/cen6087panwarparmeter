@@ -17,8 +17,8 @@ import org.junit.Test;
  */
 public class RouteFactoryTest {
     
-    private final boolean debug = false;
-    private final Grid grid = new Grid(100, 500);
+    private final boolean debug = true;
+    private final Grid grid = new Grid(10, 20);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
     
     @Test

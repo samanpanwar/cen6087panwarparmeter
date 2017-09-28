@@ -127,13 +127,13 @@ public class RouteFactory {
             
             //Northbound
             if(entryNSBlock < exitNSBlock){
-                for(int i = entryNSBlock; i < entryNSBlock - exitNSBlock; i++){
+                for(int i = entryNSBlock; i < exitNSBlock; i++){
                     intersections.add(grid.getIntersection(i, entryEWBlock));
                 }
                 
             //Southbound
             } else {
-                for(int i = entryNSBlock; i > entryNSBlock - exitNSBlock; i--){
+                for(int i = entryNSBlock; i >= exitNSBlock; i--){
                     intersections.add(grid.getIntersection(i, entryEWBlock));
                 }
             }
@@ -141,12 +141,17 @@ public class RouteFactory {
         //east west
         } else if(entryNSBlock == exitNSBlock){
             
-            //Northbound
-            if(entryNSBlock < exitNSBlock){
+            //Eastbound
+            if(entryEWBlock < exitEWBlock){
+                for(int i = entryEWBlock; i < exitEWBlock; i++){
+                    intersections.add(grid.getIntersection(entryNSBlock, i));
+                }
                 
             //Southbound
             } else {
-                
+                for(int i = entryEWBlock; i >= exitEWBlock; i--){
+                    intersections.add(grid.getIntersection(entryNSBlock, i));
+                }
             }
         }
         return intersections;
