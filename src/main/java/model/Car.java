@@ -5,19 +5,28 @@
  */
 package model;
 
+import java.math.BigInteger;
+
 /**
  *
  * @author Blake
  */
 public class Car {
     
-    private static final long VELOCITY = 1L;//intersections / time unit
-    
-    private final long entryTime;
+    public final long velocity = 5L;//distance units / time unit
+    private final BigInteger entryTime;
     private final Route route;
     
-    public Car(long entryTime, Route route){
+    public Car(BigInteger entryTime, Route route){
         this.entryTime = entryTime;
         this.route = route;
+    }
+    
+    public BigInteger getEntryTime(){
+        return entryTime;
+    }
+    
+    public Route getRoute(){
+        return route;
     }
 }

@@ -24,4 +24,12 @@ public class EventBus {
     public static BigInteger getSimulationTime(){
         return simulationTime;
     }
+    
+    public static void runQueue(){
+        while(EVENT_QUEUE.isEmpty() == false){
+            Event evt = EVENT_QUEUE.pollFirst();
+            simulationTime = evt.eventTime;
+            evt.resolveEvent();
+        }
+    }
 }

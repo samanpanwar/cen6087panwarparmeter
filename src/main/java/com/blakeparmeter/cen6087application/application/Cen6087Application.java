@@ -8,7 +8,6 @@ package com.blakeparmeter.cen6087application.application;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
@@ -26,5 +25,8 @@ public class Cen6087Application extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/MainWindow.fxml"));
         primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
+        
+        //starts the simulation
+        Simulation.startSimulation();
     }
 }

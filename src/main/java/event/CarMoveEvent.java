@@ -6,6 +6,9 @@
 package event;
 
 import java.math.BigInteger;
+import java.util.List;
+import model.Car;
+import model.Intersection;
 
 /**
  *
@@ -13,12 +16,31 @@ import java.math.BigInteger;
  */
 public class CarMoveEvent extends Event {
 
-    public CarMoveEvent(BigInteger eventTime) {
+    private final Car car;
+    private final Intersection currentIntersection, nextIntersection;
+    
+    public CarMoveEvent(BigInteger eventTime, Car car, Intersection currentIntersection, Intersection nextIntersection) {
         super(eventTime);
+        this.car = car;
+        this.currentIntersection = currentIntersection;
+        this.nextIntersection = nextIntersection;
     }
 
     @Override
     public void resolveEvent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        List<Intersection> intersections = car.getRoute().getIntersections();
+        
+        //last intersection
+        if(intersections.get(intersections.size()-1).equals(nextIntersection)){
+            EventBus.submitEvent(new CarExitEvent(eventTime, car));
+        
+        //The car will move to the next intersection
+        } else { 
+            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(currentIntersection.distanceToNext / car.velocity));
+            int intersectionIndex = intersections.indexOf(nextIntersection);
+            System.out.println(car + " moved to " + nextIntersection + " at: " + eventTime);
+            EventBus.submitEvent(new CarMoveEvent(nextEventTime, car, nextIntersection, intersections.get(intersectionIndex + 1)));
+        }
     }
 }

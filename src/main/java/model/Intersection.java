@@ -11,6 +11,7 @@ package model;
  */
 public class Intersection {
     
+    public final int distanceToNext = 100; //Distance units. 
     private final int NSBlock, EWBlock;
     
     public Intersection(int NSBlock, int EWBlock){
