@@ -19,6 +19,7 @@ public class EventBus {
     
     public static void submitEvent(Event event){
         EVENT_QUEUE.add(event);
+        //System.out.println(event + " has been submitted");
     }
     
     public static BigInteger getSimulationTime(){
@@ -31,5 +32,6 @@ public class EventBus {
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }
+        System.out.println("The queue is empty.");
     }
 }
