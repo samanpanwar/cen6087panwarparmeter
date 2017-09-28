@@ -101,4 +101,15 @@ public class RouteFactory {
             }
         }
     }
+    
+    private List<Intersection> getConnectingIntersections(Intersection x1, Intersection x2){
+        int x1NSEntry = x1.getNSBlock();
+        int x1EWEntry = x1.getEWBlock();
+        int x2NSEntry = x2.getNSBlock();
+        int x2EWEntry = x2.getEWBlock();
+        
+        List<Intersection> intersections = new ArrayList();
+        
+        return intersections;
+    }
 }
