@@ -24,7 +24,7 @@ public class CarExitEvent extends Event{
     @Override
     public void resolveEvent() {
         double duration = eventTime.subtract(car.getEntryTime()).longValue();
-        double distance = car.getRoute().getIntersections().size() * 100;
+        double distance = (car.getRoute().getIntersections().size() - 1) * 100;
         System.out.println(car + " has exited at: " + eventTime + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
     }
 }
