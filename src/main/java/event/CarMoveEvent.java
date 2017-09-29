@@ -39,7 +39,7 @@ public class CarMoveEvent extends Event {
         } else { 
             BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(currentIntersection.distanceToNext / car.velocity));
             int intersectionIndex = intersections.indexOf(nextIntersection);
-            System.out.println(car + " moved to " + nextIntersection + " at: " + eventTime);
+            //System.out.println(car + " moved to " + nextIntersection + " at: " + eventTime);
             EventBus.submitEvent(new CarMoveEvent(nextEventTime, car, nextIntersection, intersections.get(intersectionIndex + 1)));
         }
     }

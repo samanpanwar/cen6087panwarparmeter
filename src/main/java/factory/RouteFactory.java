@@ -107,7 +107,14 @@ public class RouteFactory {
         Intersection lastIntersection = null;
         for(Intersection intersection : intersections){
             if(lastIntersection != null){
-                resultIntersections.addAll(getConnectingIntersections(lastIntersection, intersection));
+                
+                //Restricts the 
+                if(resultIntersections.size() > 0){
+                    List<Intersection> connectionIntersections = getConnectingIntersections(lastIntersection, intersection);
+                    resultIntersections.addAll(connectionIntersections.subList(1, connectionIntersections.size()));
+                } else {
+                    resultIntersections.addAll(getConnectingIntersections(lastIntersection, intersection));
+                }
             }
             lastIntersection = intersection;
         }
@@ -127,7 +134,7 @@ public class RouteFactory {
             
             //Northbound
             if(entryNSBlock < exitNSBlock){
-                for(int i = entryNSBlock; i < exitNSBlock; i++){
+                for(int i = entryNSBlock; i <= exitNSBlock; i++){
                     intersections.add(grid.getIntersection(i, entryEWBlock));
                 }
                 
@@ -143,16 +150,18 @@ public class RouteFactory {
             
             //Eastbound
             if(entryEWBlock < exitEWBlock){
-                for(int i = entryEWBlock; i < exitEWBlock; i++){
+                for(int i = entryEWBlock; i <= exitEWBlock; i++){
                     intersections.add(grid.getIntersection(entryNSBlock, i));
                 }
                 
-            //Southbound
+            //Westbound
             } else {
                 for(int i = entryEWBlock; i >= exitEWBlock; i--){
                     intersections.add(grid.getIntersection(entryNSBlock, i));
                 }
             }
+        } else { 
+            throw new IllegalArgumentException("The intersections were not ortagonal.\n\t"+entryIntersection+"\n\t"+exitIntersection);
         }
         return intersections;
     }

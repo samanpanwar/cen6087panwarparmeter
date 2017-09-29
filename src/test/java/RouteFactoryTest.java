@@ -17,8 +17,8 @@ import org.junit.Test;
  */
 public class RouteFactoryTest {
     
-    private final boolean debug = true;
-    private final Grid grid = new Grid(10, 20);
+    private final boolean debug = false;
+    private final Grid grid = new Grid(200, 500);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
     
     @Test
@@ -51,21 +51,34 @@ public class RouteFactoryTest {
         //ensures the route is with in the grid and the same intersection does not repeat
         Intersection lastIntersection = null;
         for(Intersection intersection : route.getIntersections()){
-            if(intersection.getNSBlock() < 0 || intersection.getNSBlock() > grid.getNSBlockSize()){
+            
+            int NSBlock = intersection.getNSBlock();
+            int EWBlock = intersection.getEWBlock();
+            
+            if(NSBlock < 0 || NSBlock > grid.getNSBlockSize()){
                 Assert.fail("intersection out of range");
             }
-            if(intersection.getEWBlock() < 0 || intersection.getEWBlock() > grid.getEWBlockSize()){
+            
+            if(EWBlock < 0 || EWBlock > grid.getEWBlockSize()){
                 Assert.fail("intersection out of range");
             }
-            if(lastIntersection != null){
-                if((intersection.getNSBlock() == lastIntersection.getNSBlock() || 
-                        intersection.getEWBlock() == lastIntersection.getEWBlock()) == false){
-                    
-                    Assert.fail("The intersections are not orthagional");
-                }
-            }
+            
             if(intersection == lastIntersection){
                 Assert.fail("The same intersection repeats");
+            }
+            
+            if(lastIntersection != null){
+                
+                int lastNSBlock = lastIntersection.getNSBlock();
+                int lastEWBlock = lastIntersection.getEWBlock();
+                
+                if((NSBlock == lastNSBlock || EWBlock == lastEWBlock) == false){
+                    Assert.fail("The intersections are not orthagional");
+                }
+                
+                if(Math.abs(NSBlock-lastNSBlock) > 1 || Math.abs(EWBlock-lastEWBlock) > 1){
+                    Assert.fail("The blocks are further than one intersection apart");
+                }
             }
             lastIntersection = intersection;
         }
