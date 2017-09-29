@@ -42,12 +42,20 @@ public class Grid {
             edges.add(new ArrayList());
         }
         for(int i = 1; i < grid.length-1; i++){
-            edges.get(0).add(grid[i][0]);               //Northern edges
-            edges.get(2).add(grid[i][grid[0].length-1]);//Southern edges
+            if(grid[i][0].getNSDirection().equals(CardinalDirection.SOUTH)){
+                edges.get(0).add(grid[i][0]);               //Northern edges (Southbound direction)
+            } 
+            if(grid[i][grid[0].length-1].getNSDirection().equals(CardinalDirection.NORTH)){
+                edges.get(2).add(grid[i][grid[0].length-1]);//Southern edges (Northbound direction)
+            }
         }
         for(int i = 1; i < grid[0].length-1; i++){
-            edges.get(1).add(grid[0][i]);               //Eastern edges
-            edges.get(3).add(grid[grid.length-1][i]);   //Western edges
+            if(grid[0][i].getEWDirection().equals(CardinalDirection.WEST)){
+                edges.get(1).add(grid[0][i]);               //Eastern edges (Westbound direction)
+            } 
+            if(grid[grid.length-1][i].getEWDirection().equals(CardinalDirection.EAST)){
+                edges.get(3).add(grid[grid.length-1][i]);   //Western edges (Eastbound direction)
+            }   
         }
     }
     

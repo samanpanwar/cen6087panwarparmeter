@@ -5,6 +5,7 @@
  */
 
 import factory.RouteFactory;
+import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
 import model.Route;
@@ -78,6 +79,13 @@ public class RouteFactoryTest {
                 
                 if(Math.abs(NSBlock-lastNSBlock) > 1 || Math.abs(EWBlock-lastEWBlock) > 1){
                     Assert.fail("The blocks are further than one intersection apart");
+                }
+                
+                CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
+                if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
+                    Assert.assertTrue(intersection.getNSDirection().equals(direction));
+                } else {
+                    Assert.assertTrue(intersection.getEWDirection().equals(direction));
                 }
             }
             lastIntersection = intersection;
