@@ -49,38 +49,38 @@ public class RouteFactoryTest {
             Assert.fail("The last intersection is not an edge intersection");
         }
         
-        //ensures the route is with in the grid and the same intersection does not repeat
+        //Tests to ensure that the directions are legal
         Intersection lastIntersection = null;
         for(Intersection intersection : route.getIntersections()){
-            
             int NSBlock = intersection.getNSBlock();
             int EWBlock = intersection.getEWBlock();
             
+            //Ensures the intersections are within the grid
             if(NSBlock < 0 || NSBlock > grid.getNSBlockSize()){
                 Assert.fail("intersection out of range");
             }
-            
             if(EWBlock < 0 || EWBlock > grid.getEWBlockSize()){
                 Assert.fail("intersection out of range");
             }
             
-            if(intersection == lastIntersection){
-                Assert.fail("The same intersection repeats");
-            }
-            
+            //Tests which involve neighboring intersections
             if(lastIntersection != null){
-                
                 int lastNSBlock = lastIntersection.getNSBlock();
                 int lastEWBlock = lastIntersection.getEWBlock();
                 
+                if(intersection == lastIntersection){
+                    Assert.fail("The same intersection repeats");
+                }
+                
                 if((NSBlock == lastNSBlock || EWBlock == lastEWBlock) == false){
-                    Assert.fail("The intersections are not orthagional");
+                    Assert.fail("The intersections are not orthogional");
                 }
                 
                 if(Math.abs(NSBlock-lastNSBlock) > 1 || Math.abs(EWBlock-lastEWBlock) > 1){
                     Assert.fail("The blocks are further than one intersection apart");
                 }
                 
+                //Ensures the directions respect the intersection's directions
                 CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
                 if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
                     Assert.assertTrue(intersection.getNSDirection().equals(direction));
