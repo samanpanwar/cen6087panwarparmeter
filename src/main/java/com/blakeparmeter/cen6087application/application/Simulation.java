@@ -2,14 +2,11 @@ package com.blakeparmeter.cen6087application.application;
 
 
 import event.CarEntryEvent;
-import event.CarMoveEvent;
 import event.EventBus;
 import factory.RouteFactory;
 import java.math.BigInteger;
-import java.util.List;
 import model.Car;
 import model.Grid;
-import model.Intersection;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,7 +33,6 @@ public class Simulation {
             Car car = new Car(entryTime, routeFactory.generateRoute());
             EventBus.submitEvent(new CarEntryEvent(entryTime, car));
         }
-        
         EventBus.runQueue();
     }
 }
