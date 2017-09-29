@@ -18,8 +18,8 @@ import org.junit.Test;
  */
 public class RouteFactoryTest {
     
-    private final boolean debug = false;
-    private final Grid grid = new Grid(200, 500);
+    private final boolean debug = true;
+    private final Grid grid = new Grid(10, 20);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
     
     @Test
@@ -83,9 +83,9 @@ public class RouteFactoryTest {
                 //Ensures the directions respect the intersection's directions
                 CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
                 if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
-                    Assert.assertTrue(intersection.getNSDirection().equals(direction));
+                    Assert.assertEquals(intersection.getNSDirection(), direction);
                 } else {
-                    Assert.assertTrue(intersection.getEWDirection().equals(direction));
+                    Assert.assertEquals(intersection.getEWDirection(), direction);
                 }
             }
             lastIntersection = intersection;
