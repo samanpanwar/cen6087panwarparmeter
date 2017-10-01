@@ -18,6 +18,10 @@ public class Grid {
     
     //Data structures used to assist with algroithims. 
     private final List<List<Intersection>> edges;
+    private final List<Integer> NBStreets = new ArrayList();
+    private final List<Integer> EBStreets = new ArrayList();
+    private final List<Integer> SBStreets = new ArrayList();
+    private final List<Integer> WBStreets = new ArrayList();
     
     /**
      * Generates the grid. index 
@@ -41,20 +45,24 @@ public class Grid {
         for(int i = 0; i < 4; i++){
             edges.add(new ArrayList());
         }
-        for(int i = 1; i < grid.length-1; i++){
+        for(int i = 1; i < getEWBlockSize()-1; i++){
             if(grid[i][0].getNSDirection().equals(CardinalDirection.SOUTH)){
+                SBStreets.add(i);
                 edges.get(0).add(grid[i][0]);               //Northern edges (Southbound direction)
             } 
-            if(grid[i][grid[0].length-1].getNSDirection().equals(CardinalDirection.NORTH)){
-                edges.get(2).add(grid[i][grid[0].length-1]);//Southern edges (Northbound direction)
+            if(grid[i][getEWBlockSize()-1].getNSDirection().equals(CardinalDirection.NORTH)){
+                NBStreets.add(i);
+                edges.get(2).add(grid[i][getEWBlockSize()-1]);//Southern edges (Northbound direction)
             }
         }
-        for(int i = 1; i < grid[0].length-1; i++){
+        for(int i = 1; i < getEWBlockSize()-1; i++){
             if(grid[0][i].getEWDirection().equals(CardinalDirection.WEST)){
+                WBStreets.add(i);
                 edges.get(1).add(grid[0][i]);               //Eastern edges (Westbound direction)
             } 
-            if(grid[grid.length-1][i].getEWDirection().equals(CardinalDirection.EAST)){
-                edges.get(3).add(grid[grid.length-1][i]);   //Western edges (Eastbound direction)
+            if(grid[getEWBlockSize()-1][i].getEWDirection().equals(CardinalDirection.EAST)){
+                EBStreets.add(i);
+                edges.get(3).add(grid[getEWBlockSize()-1][i]);   //Western edges (Eastbound direction)
             }   
         }
     }
@@ -71,28 +79,28 @@ public class Grid {
         return edges;
     }
     
-    public int getNSBlockSize(){
+    public List<Integer> getNBStreets(){
+        return NBStreets;
+    }
+    
+    public List<Integer> getEBStreets(){
+        return EBStreets;
+    }
+    
+    public List<Integer> getSBStreets(){
+        return SBStreets;
+    }
+    
+    public List<Integer> getWBStreets(){
+        return WBStreets;
+    }
+    
+    public final int getNSBlockSize(){
         return grid.length;
     }
     
-    public int getEWBlockSize(){
+    public final int getEWBlockSize(){
         return grid[0].length;
-    }
-    
-    public CardinalDirection getEdgeDirection(Intersection intersection){
-        if(isEdge(intersection) == false){
-            throw new IllegalArgumentException("The edge: " + intersection + " was not on the edge of the map.");
-        }
-        
-        if(intersection.getNSBlock() == 0) {
-            return CardinalDirection.SOUTH;
-        } else if(intersection.getNSBlock() == grid.length-1) {
-            return CardinalDirection.NORTH;
-        } else if(intersection.getEWBlock() == 0) {
-            return CardinalDirection.EAST;
-        } else {
-            return CardinalDirection.WEST;
-        }
     }
     
     public Intersection getIntersection(int NSBlock, int EWBlock){

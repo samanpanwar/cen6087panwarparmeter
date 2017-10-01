@@ -66,14 +66,24 @@ public class RouteFactory {
                 
                 //The route is mainly N->S or S->N
                 if(entryNSBlock == 0 || entryNSBlock == grid.getNSBlockSize()-1){
-                    int xBlock = random.nextInt(grid.getNSBlockSize()-3)+1;
+                    int xBlock;
+                    if(entryEWBlock < exitEWBlock){
+                        xBlock = grid.getNBStreets().get(random.nextInt(grid.getNBStreets().size()));
+                    } else {
+                        xBlock = grid.getSBStreets().get(random.nextInt(grid.getSBStreets().size()));
+                    }
                     Intersection x1 = grid.getIntersection(xBlock, entryEWBlock);
                     Intersection x2 = grid.getIntersection(xBlock, exitEWBlock);
                     return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));
                     
                 //The route is mainly E->W or W->E
                 } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
-                    int xBlock = random.nextInt(grid.getEWBlockSize()-3)+1;
+                    int xBlock;
+                    if(entryEWBlock > exitEWBlock){
+                        xBlock = grid.getEBStreets().get(random.nextInt(grid.getEBStreets().size()));
+                    } else {
+                        xBlock = grid.getWBStreets().get(random.nextInt(grid.getWBStreets().size()));
+                    }
                     Intersection x1 = grid.getIntersection(entryNSBlock, xBlock);
                     Intersection x2 = grid.getIntersection(exitNSBlock, xBlock);
                     return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));

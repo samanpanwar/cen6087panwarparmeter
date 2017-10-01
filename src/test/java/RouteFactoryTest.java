@@ -22,6 +22,22 @@ public class RouteFactoryTest {
     private final Grid grid = new Grid(10, 20);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
     
+    @Test 
+    public void gridTest(){
+        for(int i = 0; i < grid.getNSBlockSize(); i++){
+            CardinalDirection direction = grid.getIntersection(i, 0).getNSDirection();
+            for(int j = 0; j < grid.getEWBlockSize(); j++){
+                Assert.assertEquals(grid.getIntersection(i, j).getNSDirection(),direction);
+            }
+        }
+        for(int i = 0; i < grid.getEWBlockSize(); i++){
+            CardinalDirection direction = grid.getIntersection(i, 0).getEWDirection();
+            for(int j = 0; j < grid.getNSBlockSize(); j++){
+                Assert.assertEquals(grid.getIntersection(j, i).getEWDirection(),direction);
+            }
+        }
+    }
+    
     @Test
     public void basicRouteFactoryTest() {
         for(int i = 0; i < 100_000; i++){
@@ -35,7 +51,7 @@ public class RouteFactoryTest {
         if(debug){
             System.out.println("\nTest no: " + (testNum+1) + " Route Size: " + route.getIntersections().size());
             for(int i=0; i < route.getIntersections().size(); i ++){
-                System.out.println("Intersection:" + i + ":" + route.getIntersections().get(i));
+                System.out.println("Intersection:" + i + "\t" + route.getIntersections().get(i));
             }
         }
         
