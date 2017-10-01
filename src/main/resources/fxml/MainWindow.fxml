@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.*?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="root" prefHeight="400.0" prefWidth="640.0" stylesheets="@../styles/mainwindow.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.blakeparmeter.cen6087application.application.MainWindowController">
+<VBox fx:id="root" prefHeight="400.0" prefWidth="640.0" stylesheets="@../styles/mainwindow.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -48,9 +49,6 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label fx:id="test" layoutX="115.0" layoutY="37.0" text="Label" />
-         </children></AnchorPane>
+      <ScrollPane fx:id="canvasPane" prefViewportHeight="375.0" prefViewportWidth="640.0" VBox.vgrow="ALWAYS" />
   </children>
 </VBox>

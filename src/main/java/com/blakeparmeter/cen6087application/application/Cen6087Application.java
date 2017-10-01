@@ -27,6 +27,6 @@ public class Cen6087Application extends Application{
         primaryStage.show();
         
         //starts the simulation
-        Simulation.startSimulation();
+        //Simulation.startSimulation();
     }
 }

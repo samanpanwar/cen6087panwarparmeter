@@ -8,6 +8,7 @@ package event;
 import java.math.BigInteger;
 import java.util.List;
 import model.Car;
+import model.Grid;
 import model.Intersection;
 
 /**
@@ -37,7 +38,7 @@ public class CarMoveEvent extends Event {
         
         //The car will move to the next intersection
         } else { 
-            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(currentIntersection.distanceToNext / car.velocity));
+            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
             int intersectionIndex = intersections.indexOf(nextIntersection);
             //System.out.println(car + " moved to " + nextIntersection + " at: " + eventTime);
             EventBus.submitEvent(new CarMoveEvent(nextEventTime, car, nextIntersection, intersections.get(intersectionIndex + 1)));
