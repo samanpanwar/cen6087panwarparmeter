@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.blakeparmeter.cen6087application.application;
+package GUI;
 
-import factory.RouteFactory;
+import com.blakeparmeter.cen6087application.application.Simulation;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import model.Grid;
 
 /**
  * FXML Controller class
@@ -21,23 +21,20 @@ import model.Grid;
  * @author Blake
  */
 public class MainWindowController implements Initializable {
-
-    @FXML
-    private Label test;
     
     @FXML
     private VBox root;
+    
+    @FXML
+    private ScrollPane canvasPane;
+    
+    private final World world = new World(Simulation.grid);
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        test.setText("Hello World");
-        
+        canvasPane.setContent(world.getCanvas());
     }   
-    
-    public Parent getRoot(){
-        return root;
-    }
 }

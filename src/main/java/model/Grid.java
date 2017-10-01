@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class Grid {
     
+    public static final int INTERSECTION_DISATANCE = 100;
+    
     private final Intersection[][] grid;
     
     //Data structures used to assist with algroithims. 
