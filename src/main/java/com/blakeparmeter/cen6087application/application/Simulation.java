@@ -20,7 +20,7 @@ import model.Grid;
  */
 public class Simulation {
     
-    public static final Grid grid = new Grid(10, 10);
+    public static final Grid grid = new Grid(8, 8);
     private static final RouteFactory routeFactory = new RouteFactory(grid, 0L);
     
     //configuration variables

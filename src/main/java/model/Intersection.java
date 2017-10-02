@@ -11,18 +11,18 @@ package model;
  */
 public class Intersection {
     
-    private final int NSBlock, EWBlock;
+    private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
     
-    public Intersection(int NSBlock, int EWBlock){
-        this.NSBlock = NSBlock;
+    public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
-        if(NSBlock % 2 == 0){
+        this.NSBlock = NSBlock;
+        if(EWBlock % 2 == 0){
             NSDirection = CardinalDirection.NORTH;
         } else { 
             NSDirection = CardinalDirection.SOUTH;
         }
-        if(EWBlock % 2 == 0){
+        if(NSBlock % 2 == 0){
             EWDirection = CardinalDirection.EAST;
         } else { 
             EWDirection = CardinalDirection.WEST;

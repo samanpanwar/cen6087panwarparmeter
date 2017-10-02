@@ -1,10 +1,10 @@
 package GUI;
 
 
-import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
 
@@ -39,7 +39,7 @@ public class World {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         int width = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
         int height = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
-        gc.setFill(Color.BLACK);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width, height);
         
         //Draws all the intersections
@@ -63,7 +63,7 @@ public class World {
         int NSy = cellY;
         int NSw = STREET_WIDTH;
         int NSh = gridSize;
-        gc.setFill(Color.GRAY);
+        gc.setFill(intersection.getNSDirection() == CardinalDirection.NORTH ? Color.LIGHTGRAY : Color.DARKGRAY);
         gc.fillRect(NSx, NSy, NSw, NSh);
         
         //draws the EW street
@@ -71,7 +71,19 @@ public class World {
         int EWy = cellY + (gridSize / 2) - (STREET_WIDTH / 2);
         int EWw = gridSize;
         int EWh = STREET_WIDTH;
-        gc.setFill(Color.GRAY);
+        gc.setFill(intersection.getEWDirection()== CardinalDirection.EAST ? Color.LIGHTGRAY : Color.DARKGRAY);
         gc.fillRect(EWx, EWy, EWw, EWh);
+        
+        //draws the middle of the intersection
+        int Mx = cellX + (gridSize / 2) - (STREET_WIDTH / 2);
+        int My = cellY + (gridSize / 2) - (STREET_WIDTH / 2);
+        int Mw = STREET_WIDTH;
+        int Mh = STREET_WIDTH;
+        gc.setFill(Color.BLACK);
+        gc.fillRect(Mx, My, Mw, Mh);
+        
+        //draws the coordinate
+        gc.setStroke(Color.BLUE);
+        gc.strokeText("("+intersection.getEWBlock() + "," + intersection.getNSBlock() + ")", cellX+10, cellY+30);
     }
 }
