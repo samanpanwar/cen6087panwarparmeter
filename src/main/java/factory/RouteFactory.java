@@ -49,10 +49,10 @@ public class RouteFactory {
         List<Intersection> exitInteresections = grid.getExitIntersections().get(exitSide);
         Intersection exitIntersection = exitInteresections.get(random.nextInt(exitInteresections.size()));
         
-        int yEntry = entryIntersection.getNSBlock();
         int xEntry = entryIntersection.getEWBlock();
-        int yExit = exitIntersection.getNSBlock();
+        int yEntry = entryIntersection.getNSBlock();
         int xExit = exitIntersection.getEWBlock();
+        int yExit = exitIntersection.getNSBlock();
         
         //The sides are opposite
         if(Math.abs(entrySide - exitSide) % 2 == 0){
@@ -67,27 +67,25 @@ public class RouteFactory {
                 //The route is mainly N->S or S->N
                 if(yEntry == 0 || yEntry == grid.getNSBlockSize()-1){
                     int crossBlock;
-                    if(xEntry < xExit){
-                        crossBlock = grid.getNBStreets().get(random.nextInt(grid.getNBStreets().size()));
+                    if(xEntry > xExit){
+                        crossBlock = grid.getWBStreets().get(random.nextInt(grid.getWBStreets().size()-2)+1);
                     } else {
-                        crossBlock = grid.getSBStreets().get(random.nextInt(grid.getSBStreets().size()));
+                        crossBlock = grid.getEBStreets().get(random.nextInt(grid.getEBStreets().size()-2)+1);
                     }
-                    Intersection x1 = grid.getIntersection(crossBlock, yEntry);
-                    Intersection x2 = grid.getIntersection(crossBlock, yExit);
-                    System.out.println("Two Turns:"+entryIntersection+":"+x1+":"+x2+":"+exitIntersection);
+                    Intersection x1 = grid.getIntersection(xEntry, crossBlock);
+                    Intersection x2 = grid.getIntersection(xExit, crossBlock);
                     return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));
                     
                 //The route is mainly E->W or W->E
                 } else if(xEntry == 0 || xEntry == grid.getEWBlockSize()-1){
                     int crossBlock;
-                    if(xEntry > xExit){
-                        crossBlock = grid.getEBStreets().get(random.nextInt(grid.getEBStreets().size()));
+                    if(yEntry > yExit){
+                        crossBlock = grid.getNBStreets().get(random.nextInt(grid.getNBStreets().size()-2)+1);
                     } else {
-                        crossBlock = grid.getWBStreets().get(random.nextInt(grid.getWBStreets().size()));
+                        crossBlock = grid.getSBStreets().get(random.nextInt(grid.getSBStreets().size()-2)+1);
                     }
-                    Intersection x1 = grid.getIntersection(xEntry, crossBlock);
-                    Intersection x2 = grid.getIntersection(xExit, crossBlock);
-                    System.out.println("Two Turns:"+entryIntersection+":"+x1+":"+x2+":"+exitIntersection);
+                    Intersection x1 = grid.getIntersection(crossBlock, yEntry);
+                    Intersection x2 = grid.getIntersection(crossBlock, yExit);
                     return new Route(connectIntersections(entryIntersection, x1, x2, exitIntersection));
                     
                 } else {
@@ -101,13 +99,11 @@ public class RouteFactory {
             //The route starts heading North or South bound
             if(yEntry == 0 || yEntry == grid.getNSBlockSize()-1){
                 Intersection x = grid.getIntersection(xEntry, yExit);
-                System.out.println("One Turn:"+entryIntersection+":"+x+":"+exitIntersection);
                 return new Route(connectIntersections(entryIntersection, x, exitIntersection));
             
             //The route starts heading East or West bound
             } else if(xEntry == 0 || xEntry == grid.getEWBlockSize()-1){
-                Intersection x = grid.getIntersection(xEntry, yExit);
-                System.out.println("One Turn:"+entryIntersection+":"+x+":"+exitIntersection);
+                Intersection x = grid.getIntersection(xExit, yEntry);
                 return new Route(connectIntersections(entryIntersection, x, exitIntersection));
                 
             }else {

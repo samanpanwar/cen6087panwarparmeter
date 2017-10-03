@@ -25,22 +25,22 @@ import org.junit.Test;
  */
 public class RouteFactoryTest {
     
-    private final boolean debug = true;
-    private final Grid grid = new Grid(10, 5);
+    private final boolean debug = false;
+    private final Grid grid = new Grid(12, 8);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
     private Stage stage;
     
     @Test 
     public void gridTest(){
-        for(int i = 0; i < grid.getNSBlockSize(); i++){
+        for(int i = 0; i < grid.getEWBlockSize(); i++){
             CardinalDirection direction = grid.getIntersection(i, 0).getNSDirection();
-            for(int j = 0; j < grid.getEWBlockSize(); j++){
+            for(int j = 0; j < grid.getNSBlockSize(); j++){
                 Assert.assertEquals(grid.getIntersection(i, j).getNSDirection(),direction);
             }
         }
-        for(int i = 0; i < grid.getEWBlockSize(); i++){
-            CardinalDirection direction = grid.getIntersection(i, 0).getEWDirection();
-            for(int j = 0; j < grid.getNSBlockSize(); j++){
+        for(int i = 0; i < grid.getNSBlockSize(); i++){
+            CardinalDirection direction = grid.getIntersection(0, i).getEWDirection();
+            for(int j = 0; j < grid.getEWBlockSize(); j++){
                 Assert.assertEquals(grid.getIntersection(j, i).getEWDirection(),direction);
             }
         }
@@ -74,6 +74,13 @@ public class RouteFactoryTest {
                 world.drawEntriesAndExits();
                 stage.setScene(new Scene(new ScrollPane(world.getCanvas())));
             });
+            
+            //Need to sleep, if it's too fast it will crash the system with too many render calls. 
+            try{
+                Thread.sleep(50);
+            }catch(Exception ex){
+                
+            }
         }
         
         //Ensures the first intersection is an entrance
@@ -127,7 +134,6 @@ public class RouteFactoryTest {
                 
                 //Ensures the directions respect the intersection's directions
                 CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
-                System.out.println(lastIntersection + "->" + intersection + "=" + direction);
                 if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
                     Assert.assertEquals(intersection.getNSDirection(), direction);
                 } else {

@@ -67,15 +67,15 @@ public class Grid {
         for(int j = 1; j < getNSBlockSize()-1; j++){
             if(grid[0][j].getEWDirection().equals(CardinalDirection.WEST)){
                 WBStreets.add(j);
-                entries.get(1).add(grid[0][j]);               //Eastern entrances (Westbound direction)
+                exits.get(1).add(grid[0][j]);               //Eastern exits (Eastbound direction)
             } else {
-                exits.get(1).add(grid[0][j]);               //Eastern exits (Eastbounc direction)
+                entries.get(1).add(grid[0][j]);               //Eastern entrances (Westbound direction)
             }
             if(grid[getEWBlockSize()-1][j].getEWDirection().equals(CardinalDirection.EAST)){
                 EBStreets.add(j);
-                entries.get(3).add(grid[getEWBlockSize()-1][j]);   //Western entrances (Eastbound direction)
-            } else {
                 exits.get(3).add(grid[getEWBlockSize()-1][j]);   //Western exits (Westbound direction)
+            } else {
+                entries.get(3).add(grid[getEWBlockSize()-1][j]);   //Western entrances (Eastbound direction)
             }
         }
     }
