@@ -1,11 +1,18 @@
 package GUI;
 
 import java.util.List;
+import javafx.animation.PathTransition;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.Car;
 import model.CardinalDirection;
 import model.Grid;
@@ -44,8 +51,69 @@ public class World {
         return root;
     }
     
-    private void addCar(Car car){
+    public void addCar(Car car){        
         
+        Intersection location = car.getRoute().getIntersections().get(0);
+        CardinalDirection direction = CardinalDirection.EAST;
+        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int xCell = location.getEWBlock() * gridSize;
+        int yCell = location.getNSBlock() * gridSize;
+        
+        //Direction Modifier
+        int xDir;
+        int yDir;
+        int rotation;
+        switch(direction){
+            case NORTH:
+                xDir = gridSize/2;
+                yDir = gridSize;
+                rotation = 0;
+                break;
+                
+            case EAST:
+                xDir = 0;
+                yDir = gridSize/2;
+                rotation = 90;
+                break;
+                
+            case SOUTH:
+                xDir = gridSize/2; 
+                yDir = 0;
+                rotation = 180;
+                break; 
+                
+            case WEST:
+                xDir = gridSize;
+                yDir = gridSize/2;
+                rotation = 270;
+                break;
+                
+            default:
+                throw new IllegalArgumentException(direction + " is not handled");   
+        }
+                
+        int x = xCell + xDir;
+        int y = yCell + yDir;
+        final Rectangle carObj = new Rectangle(x, y, 3, 5);
+        carObj.setRotate(rotation);
+        carObj.setFill(Color.GREEN);
+        System.out.println(carObj);
+        
+        Platform.runLater(()->{
+            carLayer.getChildren().add(carObj);
+            
+            Path path = new Path();
+            path.getElements().add(new MoveTo(x, y));
+            path.getElements().add(new LineTo(x, y+100));
+            
+            PathTransition pt = new PathTransition();
+            pt.setNode(carObj);
+            pt.setPath(path);
+            pt.setDuration(Duration.seconds(5));
+            pt.play();
+        });
+
+
     }
     
     public void drawRoute(Route route){

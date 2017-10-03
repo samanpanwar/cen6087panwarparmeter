@@ -6,7 +6,6 @@
 package GUI;
 
 import com.blakeparmeter.cen6087application.application.Simulation;
-import event.EventBus;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -29,10 +28,8 @@ public class MainWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Simulation simulation = new Simulation();
-//        canvasPane.setContent(simulation.getWorld().getRoot());
-//        EventBus.setWorld(simulation.getWorld());
-//        
-//        simulation.start();
+        canvasPane.setContent(simulation.getWorldNode());
+        simulation.start();
     }   
     
     

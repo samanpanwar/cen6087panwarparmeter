@@ -1,10 +1,12 @@
 package com.blakeparmeter.cen6087application.application;
 
 
+import GUI.World;
 import event.CarEntryEvent;
 import event.EventBus;
 import factory.RouteFactory;
 import java.math.BigInteger;
+import javafx.scene.Node;
 import model.Car;
 import model.Grid;
 
@@ -20,19 +22,31 @@ import model.Grid;
  */
 public class Simulation {
     
-    public static final Grid grid = new Grid(8, 8);
-    private static final RouteFactory routeFactory = new RouteFactory(grid, 0L);
     
     //configuration variables
     private static final long simulationTime = 100_000; //time units
     private static final int numCars = 10_000;
     
-    public static final void startSimulation(){
-        for(int i = 0; i<numCars; i++){
-            BigInteger entryTime = BigInteger.valueOf(i * (simulationTime/numCars));
-            Car car = new Car(entryTime, routeFactory.generateRoute());
-            EventBus.submitEvent(new CarEntryEvent(entryTime, car));
-        }
-        EventBus.runQueue();
+    public final Grid grid = new Grid(8, 8);
+    public final World world = new World(grid);
+    private final RouteFactory routeFactory = new RouteFactory(grid, 0L);
+    
+    public Simulation(){
+        EventBus.setWorld(world);
+    }
+    
+    public Node getWorldNode(){
+        return world.getRoot();
+    }
+    
+    public void start(){
+        new Thread(()->{
+            for(int i = 0; i<numCars; i++){
+                BigInteger entryTime = BigInteger.valueOf(i * (simulationTime/numCars));
+                Car car = new Car(entryTime, routeFactory.generateRoute());
+                EventBus.submitEvent(new CarEntryEvent(entryTime, car));
+            }
+            EventBus.runQueue();
+        }).start();
     }
 }
