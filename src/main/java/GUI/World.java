@@ -1,9 +1,11 @@
 package GUI;
 
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,7 +29,7 @@ public class World {
     private static final int STREET_WIDTH = 10; //px
     
     private final StackPane root = new StackPane();
-    private final StackPane carLayer = new StackPane();
+    private final Pane carLayer = new Pane();
     private final Canvas gridPane;
     
     public World(Grid grid){
@@ -44,11 +46,12 @@ public class World {
     
     public void addCar(Car car, Intersection location, CardinalDirection direction){
         int gridSize = Grid.INTERSECTION_DISATANCE;
-        int x = location.getEWBlock() * gridSize;
-        int y = location.getNSBlock() * gridSize;
+        int x = location.getNSBlock() * gridSize;
+        int y = location.getEWBlock() * gridSize;
         Rectangle carObj = new Rectangle(x, y, 3, 5);
         carObj.setFill(Color.GREEN);
         System.out.println(carObj);
+        StackPane.setAlignment(carObj, Pos.TOP_LEFT);
         carLayer.getChildren().add(carObj);
         
     }
