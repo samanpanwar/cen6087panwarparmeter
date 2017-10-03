@@ -72,7 +72,7 @@ public class RouteFactoryTest {
                 World world = new World(grid);
                 world.drawRoute(route);
                 world.drawEntriesAndExits();
-                stage.setScene(new Scene(new ScrollPane(world.getCanvas())));
+                stage.setScene(new Scene(new ScrollPane(world.getRoot())));
             });
             
             //Need to sleep, if it's too fast it will crash the system with too many render calls. 

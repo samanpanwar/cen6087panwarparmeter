@@ -1,10 +1,12 @@
 package GUI;
 
-
 import java.util.List;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import model.Car;
 import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
@@ -24,17 +26,26 @@ public class World {
     
     private static final int STREET_WIDTH = 10; //px
     
+    private final StackPane root = new StackPane();
+    private final StackPane carLayer = new StackPane();
     private final Canvas canvas;
-    private final Grid grid;
+    private final Grid grid;    
     
     public World(Grid grid){
         this.grid = grid;
         canvas = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
         drawGrid(grid);
+        
+        //adds all the layers to the root
+        root.getChildren().setAll(canvas, carLayer);
     }
     
-    public Canvas getCanvas(){
-        return canvas;
+    public Node getRoot(){
+        return root;
+    }
+    
+    private void addCar(Car car){
+        
     }
     
     public void drawRoute(Route route){
