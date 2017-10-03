@@ -4,7 +4,15 @@
  * and open the template in the editor.
  */
 
+import GUI.World;
 import factory.RouteFactory;
+import java.util.List;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Stage;
+import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
 import model.Route;
@@ -18,11 +26,35 @@ import org.junit.Test;
 public class RouteFactoryTest {
     
     private final boolean debug = false;
-    private final Grid grid = new Grid(200, 500);
+    private final Grid grid = new Grid(12, 8);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
+    private Stage stage;
+    
+    @Test 
+    public void gridTest(){
+        for(int i = 0; i < grid.getEWBlockSize(); i++){
+            CardinalDirection direction = grid.getIntersection(i, 0).getNSDirection();
+            for(int j = 0; j < grid.getNSBlockSize(); j++){
+                Assert.assertEquals(grid.getIntersection(i, j).getNSDirection(),direction);
+            }
+        }
+        for(int i = 0; i < grid.getNSBlockSize(); i++){
+            CardinalDirection direction = grid.getIntersection(0, i).getEWDirection();
+            for(int j = 0; j < grid.getEWBlockSize(); j++){
+                Assert.assertEquals(grid.getIntersection(j, i).getEWDirection(),direction);
+            }
+        }
+    }
     
     @Test
     public void basicRouteFactoryTest() {
+        if(debug){
+            new JFXPanel(); // initializes JavaFX environment
+            Platform.runLater(()->{
+                stage = new Stage();
+                stage.show();
+            });
+        }
         for(int i = 0; i < 100_000; i++){
             testGenerateRoute(factory.generateRoute(), i);
         }
@@ -34,50 +66,78 @@ public class RouteFactoryTest {
         if(debug){
             System.out.println("\nTest no: " + (testNum+1) + " Route Size: " + route.getIntersections().size());
             for(int i=0; i < route.getIntersections().size(); i ++){
-                System.out.println("Intersection:" + i + ":" + route.getIntersections().get(i));
+                System.out.println("Intersection:" + i + "\t" + route.getIntersections().get(i));
+            }
+            Platform.runLater(()->{
+                World world = new World(grid);
+                world.drawRoute(route);
+                world.drawEntriesAndExits();
+                stage.setScene(new Scene(new ScrollPane(world.getRoot())));
+            });
+            
+            //Need to sleep, if it's too fast it will crash the system with too many render calls. 
+            try{
+                Thread.sleep(50);
+            }catch(Exception ex){
+                
             }
         }
         
-        //Ensures the first and last intersections are edges
-        if(grid.isEdge(route.getIntersections().get(0)) == false){
-            Assert.fail("The first intersection is not an edge intersection");
+        //Ensures the first intersection is an entrance
+        boolean foundEntry = false;
+        for(List<Intersection> entrances : grid.getEntryIntersections()){
+            if(entrances.contains(route.getIntersections().get(0))){
+                foundEntry = true;
+            }
         }
+        Assert.assertTrue("The first intersection is not an entrance", foundEntry);
         
-        //Ensures the first and last intersections are edges
-        if(grid.isEdge(route.getIntersections().get(route.getIntersections().size()-1)) == false){
-            Assert.fail("The last intersection is not an edge intersection");
+        //Ensures the last intersection is an exit
+        boolean foundExit = false;
+        for(List<Intersection> exits : grid.getExitIntersections()){
+            if(exits.contains(route.getIntersections().get(route.getIntersections().size()-1))){
+                foundExit = true;
+            }
         }
+        Assert.assertTrue("The last intersection is not an exit", foundExit);
         
-        //ensures the route is with in the grid and the same intersection does not repeat
+        //Tests to ensure that the directions are legal
         Intersection lastIntersection = null;
         for(Intersection intersection : route.getIntersections()){
-            
             int NSBlock = intersection.getNSBlock();
             int EWBlock = intersection.getEWBlock();
             
+            //Ensures the intersections are within the grid
             if(NSBlock < 0 || NSBlock > grid.getNSBlockSize()){
                 Assert.fail("intersection out of range");
             }
-            
             if(EWBlock < 0 || EWBlock > grid.getEWBlockSize()){
                 Assert.fail("intersection out of range");
             }
             
-            if(intersection == lastIntersection){
-                Assert.fail("The same intersection repeats");
-            }
-            
+            //Tests which involve neighboring intersections
             if(lastIntersection != null){
-                
                 int lastNSBlock = lastIntersection.getNSBlock();
                 int lastEWBlock = lastIntersection.getEWBlock();
                 
+                if(intersection == lastIntersection){
+                    Assert.fail("The same intersection repeats");
+                }
+                
                 if((NSBlock == lastNSBlock || EWBlock == lastEWBlock) == false){
-                    Assert.fail("The intersections are not orthagional");
+                    Assert.fail("The intersections are not orthogional");
                 }
                 
                 if(Math.abs(NSBlock-lastNSBlock) > 1 || Math.abs(EWBlock-lastEWBlock) > 1){
                     Assert.fail("The blocks are further than one intersection apart");
+                }
+                
+                //Ensures the directions respect the intersection's directions
+                CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
+                if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
+                    Assert.assertEquals(intersection.getNSDirection(), direction);
+                } else {
+                    Assert.assertEquals(intersection.getEWDirection(), direction);
                 }
             }
             lastIntersection = intersection;

@@ -11,11 +11,30 @@ package model;
  */
 public class Intersection {
     
-    private final int NSBlock, EWBlock;
+    private final int EWBlock, NSBlock;
+    private final CardinalDirection NSDirection, EWDirection;
     
-    public Intersection(int NSBlock, int EWBlock){
-        this.NSBlock = NSBlock;
+    public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
+        this.NSBlock = NSBlock;
+        if(EWBlock % 2 == 0){
+            NSDirection = CardinalDirection.NORTH;
+        } else { 
+            NSDirection = CardinalDirection.SOUTH;
+        }
+        if(NSBlock % 2 == 0){
+            EWDirection = CardinalDirection.WEST;
+        } else { 
+            EWDirection = CardinalDirection.EAST;
+        }
+    }
+    
+    public CardinalDirection getNSDirection(){
+        return NSDirection;
+    }
+    
+    public CardinalDirection getEWDirection(){
+        return EWDirection;
     }
     
     public int getNSBlock(){
@@ -26,38 +45,19 @@ public class Intersection {
         return EWBlock;
     }
     
-    @Override
-    public String toString(){
-        return "EW: " + EWBlock + " NS: " + NSBlock;
-    }
-    
-    public CardinalDirection getInitialDirection(Grid grid){
-        if(EWBlock == 0){
-            return CardinalDirection.NORTH;
-        } else if(EWBlock == grid.getNSBlockSize()-1){
-            return CardinalDirection.SOUTH;
-        } else if(NSBlock == 0){
-            return CardinalDirection.EAST;
-        } else if(NSBlock == grid.getEWBlockSize()-1){
-            return CardinalDirection.WEST;
-        } else {
-            throw new IllegalArgumentException(this + " is not an edge");
-        }
-    }
-    
     public CardinalDirection getDirectionTo(Intersection intersection){
         
         if(this.equals(intersection)){
             throw new IllegalArgumentException("The passed in intersecion is equal to this.");
         }
-        System.out.println("compare:" + this + ":" + intersection);
+        
         int otherNSBlock = intersection.NSBlock;
         int otherEWBlock = intersection.EWBlock;
         if(EWBlock == otherEWBlock){
-            if(NSBlock < otherNSBlock){
-                return CardinalDirection.SOUTH;
-            } else {
+            if(NSBlock > otherNSBlock){
                 return CardinalDirection.NORTH;
+            } else {
+                return CardinalDirection.SOUTH;
             }
         }else if(NSBlock == otherNSBlock){
             if(EWBlock > otherEWBlock){
@@ -68,5 +68,10 @@ public class Intersection {
         } else {
             throw new IllegalArgumentException("The passed in intersection is not orthogonal to this intersection");
         }
+    }
+    
+    @Override
+    public String toString(){
+        return "EW: " + EWBlock + " NS: " + NSBlock;
     }
 }
