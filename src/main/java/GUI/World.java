@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import model.Car;
 import model.CardinalDirection;
 import model.Grid;
@@ -29,7 +30,6 @@ public class World {
     private final StackPane carLayer = new StackPane();
     private final Canvas gridPane;
     
-    
     public World(Grid grid){
         gridPane = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
         drawGrid(grid);
@@ -42,7 +42,14 @@ public class World {
         return root;
     }
     
-    private void addCar(Car car){
+    public void addCar(Car car, Intersection location, CardinalDirection direction){
+        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int x = location.getEWBlock() * gridSize;
+        int y = location.getNSBlock() * gridSize;
+        Rectangle carObj = new Rectangle(x, y, 3, 5);
+        carObj.setFill(Color.GREEN);
+        System.out.println(carObj);
+        carLayer.getChildren().add(carObj);
         
     }
     
@@ -66,10 +73,10 @@ public class World {
     private void drawIntersection(Intersection intersection){
         
         //sets up variables
-        GraphicsContext gc = gridPane.getGraphicsContext2D();
         int gridSize = Grid.INTERSECTION_DISATANCE;
+        GraphicsContext gc = gridPane.getGraphicsContext2D();
         int cellX = intersection.getEWBlock() * gridSize;
-        int cellY = intersection.getNSBlock()* gridSize;
+        int cellY = intersection.getNSBlock() * gridSize;
         
         //draws the NS street
         int NSx = cellX + (gridSize / 2) - (STREET_WIDTH / 2);

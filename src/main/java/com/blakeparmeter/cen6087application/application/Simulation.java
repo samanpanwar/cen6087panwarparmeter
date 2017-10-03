@@ -1,6 +1,7 @@
 package com.blakeparmeter.cen6087application.application;
 
 
+import GUI.World;
 import event.CarEntryEvent;
 import event.EventBus;
 import factory.RouteFactory;
@@ -20,19 +21,30 @@ import model.Grid;
  */
 public class Simulation {
     
-    public static final Grid grid = new Grid(10, 10);
-    private static final RouteFactory routeFactory = new RouteFactory(grid, 0L);
     
     //configuration variables
     private static final long simulationTime = 100_000; //time units
-    private static final int numCars = 10_000;
+    private static final int numCars = 3;
     
-    public static final void startSimulation(){
-        for(int i = 0; i<numCars; i++){
-            BigInteger entryTime = BigInteger.valueOf(i * (simulationTime/numCars));
-            Car car = new Car(entryTime, routeFactory.generateRoute());
-            EventBus.submitEvent(new CarEntryEvent(entryTime, car));
-        }
-        EventBus.runQueue();
+    public final Grid grid = new Grid(5, 5);
+    private final RouteFactory routeFactory = new RouteFactory(grid, 0L);
+    private World world = new World(grid);
+    
+    public Simulation(){
+    }
+    
+    public void start(){
+        new Thread(()->{
+            for(int i = 0; i<numCars; i++){
+                BigInteger entryTime = BigInteger.valueOf(i * (simulationTime/numCars));
+                Car car = new Car(entryTime, routeFactory.generateRoute());
+                EventBus.submitEvent(new CarEntryEvent(entryTime, car));
+            }
+            EventBus.runQueue();
+        },"simulation thread").start();
+    }
+    
+    public World getWorld(){
+        return world;
     }
 }

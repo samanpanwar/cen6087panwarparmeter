@@ -8,6 +8,7 @@ package event;
 import java.math.BigInteger;
 import java.util.List;
 import model.Car;
+import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
 
@@ -30,6 +31,6 @@ public class CarEntryEvent extends Event{
         List<Intersection> intersections = car.getRoute().getIntersections();
         BigInteger moveTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
         EventBus.submitEvent(new CarMoveEvent(moveTime, car, intersections.get(0), intersections.get(1)));
+        EventBus.world.addCar(car, intersections.get(0), CardinalDirection.NORTH);
     }
-    
 }

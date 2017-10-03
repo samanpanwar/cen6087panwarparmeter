@@ -5,6 +5,7 @@
  */
 package event;
 
+import GUI.World;
 import java.math.BigInteger;
 import java.util.TreeSet;
 
@@ -16,6 +17,7 @@ public class EventBus {
     
     private static BigInteger simulationTime = BigInteger.ZERO;
     private static final TreeSet<Event> EVENT_QUEUE = new TreeSet(new EventComparator());
+    protected static World world;
     
     public static void submitEvent(Event event){
         EVENT_QUEUE.add(event);
@@ -33,5 +35,9 @@ public class EventBus {
             evt.resolveEvent();
         }
         System.out.println("The queue is empty.");
+    }
+    
+    public static void setWorld(World world){
+        EventBus.world = world;
     }
 }

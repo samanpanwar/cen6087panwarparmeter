@@ -6,14 +6,12 @@
 package GUI;
 
 import com.blakeparmeter.cen6087application.application.Simulation;
+import event.EventBus;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -23,18 +21,19 @@ import javafx.scene.layout.VBox;
 public class MainWindowController implements Initializable {
     
     @FXML
-    private VBox root;
-    
-    @FXML
     private ScrollPane canvasPane;
-    
-    private final World world = new World(Simulation.grid);
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        canvasPane.setContent(world.getRoot());
+        Simulation simulation = new Simulation();
+        canvasPane.setContent(simulation.getWorld().getRoot());
+        EventBus.setWorld(simulation.getWorld());
+        
+        simulation.start();
     }   
+    
+    
 }
