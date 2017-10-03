@@ -7,6 +7,7 @@ package event;
 
 import java.math.BigInteger;
 import model.Car;
+import model.Intersection;
 
 /**
  *
@@ -25,6 +26,7 @@ public class CarExitEvent extends Event{
     public void resolveEvent() {
         double duration = eventTime.subtract(car.getEntryTime()).longValue();
         double distance = (car.getRoute().getIntersections().size() - 1) * 100;
-        System.out.println(car + " has exited at: " + eventTime + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
+        Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);
+        System.out.println(car + " has exited at " +intersection + " t=" + eventTime + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
     }
 }

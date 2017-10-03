@@ -65,11 +65,11 @@ public class Grid {
         return edges;
     }
     
-    public int getNSBlockSize(){
+    public int getEWBlockSize(){
         return grid.length;
     }
     
-    public int getEWBlockSize(){
+    public int getNSBlockSize(){
         return grid[0].length;
     }
     
@@ -89,8 +89,8 @@ public class Grid {
         }
     }
     
-    public Intersection getIntersection(int NSBlock, int EWBlock){
-        return grid[NSBlock][EWBlock];
+    public Intersection getIntersection(int EWBlock, int NSBlock){
+        return grid[EWBlock][NSBlock];
     }
     
     public boolean isEdge(Intersection intersection){

@@ -1,14 +1,21 @@
 package GUI;
 
 
-import javafx.geometry.Pos;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.Car;
 import model.CardinalDirection;
 import model.Grid;
@@ -32,7 +39,10 @@ public class World {
     private final Pane carLayer = new Pane();
     private final Canvas gridPane;
     
+    public final Grid grid;
+    
     public World(Grid grid){
+        this.grid = grid;
         gridPane = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
         drawGrid(grid);
         
@@ -46,8 +56,8 @@ public class World {
     
     public void addCar(Car car, Intersection location, CardinalDirection direction){
         int gridSize = Grid.INTERSECTION_DISATANCE;
-        int xCell = location.getNSBlock() * gridSize;
-        int yCell = location.getEWBlock() * gridSize;
+        int xCell = location.getEWBlock() * gridSize;
+        int yCell = location.getNSBlock() * gridSize;
         
         //TODO: put in a lane
         //Direction Modifier
@@ -85,12 +95,25 @@ public class World {
         
         int x = xCell + xDir;
         int y = yCell + yDir;
-        Rectangle carObj = new Rectangle(x, y, 3, 5);
+        final Rectangle carObj = new Rectangle(x, y, 3, 5);
         carObj.setRotate(rotation);
-        carLayer.getChildren().add(carObj);
         carObj.setFill(Color.GREEN);
-        
         System.out.println(carObj);
+        
+        Platform.runLater(()->{
+            carLayer.getChildren().add(carObj);
+            
+            Path path = new Path();
+            path.getElements().add(new MoveTo(x, y));
+            path.getElements().add(new LineTo(x, y+100));
+            
+            PathTransition pt = new PathTransition();
+            pt.setNode(carObj);
+            pt.setPath(path);
+            pt.setDuration(Duration.seconds(5));
+            pt.play();
+        });
+            
     }
     
     private void drawGrid(Grid grid){
@@ -146,6 +169,6 @@ public class World {
         
         //draws the coordinate
         gc.setStroke(Color.BLUE);
-        gc.strokeText("("+intersection.getEWBlock() + "," + intersection.getNSBlock() + ")", cellX+10, cellY+30);
+        gc.strokeText("(EW:"+intersection.getEWBlock() + ",NS:" + intersection.getNSBlock() + ")", cellX+10, cellY+30);
     }
 }

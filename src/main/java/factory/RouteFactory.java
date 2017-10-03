@@ -88,17 +88,17 @@ public class RouteFactory {
         } else {
             
             //The route starts heading North or South bound
-            if(entryNSBlock == 0 || entryNSBlock == grid.getNSBlockSize()-1){
+            if(entryNSBlock == 0 || entryNSBlock == grid.getEWBlockSize()-1){
                 Intersection x = grid.getIntersection(entryNSBlock, exitEWBlock);
                 return new Route(connectIntersections(entryIntersection, x, exitIntersection));
             
             //The route starts heading East or West bound
-            } else if(entryEWBlock == 0 || entryEWBlock == grid.getEWBlockSize()-1){
+            } else if(entryEWBlock == 0 || entryEWBlock == grid.getNSBlockSize()-1){
                 Intersection x = grid.getIntersection(exitNSBlock, entryEWBlock);
                 return new Route(connectIntersections(entryIntersection, x, exitIntersection));
                 
             }else {
-                throw new IllegalStateException("The main direction could not be determined"); //This should not happen
+                throw new IllegalStateException("The main direction could not be determined " + entryIntersection + ":" + exitIntersection); //This should not happen
             }
         }
     }

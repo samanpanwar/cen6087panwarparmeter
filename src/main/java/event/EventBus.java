@@ -17,7 +17,7 @@ public class EventBus {
     
     private static BigInteger simulationTime = BigInteger.ZERO;
     private static final TreeSet<Event> EVENT_QUEUE = new TreeSet(new EventComparator());
-    protected static World world;
+    public static World world;
     
     public static void submitEvent(Event event){
         EVENT_QUEUE.add(event);

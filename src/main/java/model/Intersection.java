@@ -28,6 +28,45 @@ public class Intersection {
     
     @Override
     public String toString(){
-        return "NS: " + NSBlock + " EW: " + EWBlock;
+        return "EW: " + EWBlock + " NS: " + NSBlock;
+    }
+    
+    public CardinalDirection getInitialDirection(Grid grid){
+        if(EWBlock == 0){
+            return CardinalDirection.NORTH;
+        } else if(EWBlock == grid.getNSBlockSize()-1){
+            return CardinalDirection.SOUTH;
+        } else if(NSBlock == 0){
+            return CardinalDirection.EAST;
+        } else if(NSBlock == grid.getEWBlockSize()-1){
+            return CardinalDirection.WEST;
+        } else {
+            throw new IllegalArgumentException(this + " is not an edge");
+        }
+    }
+    
+    public CardinalDirection getDirectionTo(Intersection intersection){
+        
+        if(this.equals(intersection)){
+            throw new IllegalArgumentException("The passed in intersecion is equal to this.");
+        }
+        System.out.println("compare:" + this + ":" + intersection);
+        int otherNSBlock = intersection.NSBlock;
+        int otherEWBlock = intersection.EWBlock;
+        if(EWBlock == otherEWBlock){
+            if(NSBlock < otherNSBlock){
+                return CardinalDirection.SOUTH;
+            } else {
+                return CardinalDirection.NORTH;
+            }
+        }else if(NSBlock == otherNSBlock){
+            if(EWBlock > otherEWBlock){
+                return CardinalDirection.WEST;
+            } else {
+                return CardinalDirection.EAST;
+            }
+        } else {
+            throw new IllegalArgumentException("The passed in intersection is not orthogonal to this intersection");
+        }
     }
 }
