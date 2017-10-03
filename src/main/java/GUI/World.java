@@ -1,18 +1,14 @@
 package GUI;
 
 import java.util.List;
-import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import model.Car;
 import model.CardinalDirection;
 import model.Grid;
@@ -34,7 +30,7 @@ public class World {
     private static final int STREET_WIDTH = 10; //px
     
     private final StackPane root = new StackPane();
-    private final StackPane carLayer = new StackPane();
+    private final Pane carLayer = new Pane();
     private final Canvas canvas;
     private final Grid grid;    
     
@@ -54,7 +50,7 @@ public class World {
     public void addCar(Car car){        
         
         Intersection location = car.getRoute().getIntersections().get(0);
-        CardinalDirection direction = CardinalDirection.EAST;
+        CardinalDirection direction = grid.getEntryDirection(location);
         int gridSize = Grid.INTERSECTION_DISATANCE;
         int xCell = location.getEWBlock() * gridSize;
         int yCell = location.getNSBlock() * gridSize;
@@ -102,15 +98,16 @@ public class World {
         Platform.runLater(()->{
             carLayer.getChildren().add(carObj);
             
-            Path path = new Path();
-            path.getElements().add(new MoveTo(x, y));
-            path.getElements().add(new LineTo(x, y+100));
-            
-            PathTransition pt = new PathTransition();
-            pt.setNode(carObj);
-            pt.setPath(path);
-            pt.setDuration(Duration.seconds(5));
-            pt.play();
+            //TODO: Something like this for car move events.
+//            Path path = new Path();
+//            path.getElements().add(new MoveTo(x, y));
+//            path.getElements().add(new LineTo(x, y+100));
+//            
+//            PathTransition pt = new PathTransition();
+//            pt.setNode(carObj);
+//            pt.setPath(path);
+//            pt.setDuration(Duration.seconds(5));
+//            pt.play();
         });
 
 

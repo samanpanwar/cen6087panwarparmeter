@@ -25,9 +25,9 @@ public class Simulation {
     
     //configuration variables
     private static final long simulationTime = 100_000; //time units
-    private static final int numCars = 10_000;
+    private static final int numCars = 5;
     
-    public final Grid grid = new Grid(8, 8);
+    public final Grid grid = new Grid(10, 5);
     public final World world = new World(grid);
     private final RouteFactory routeFactory = new RouteFactory(grid, 0L);
     
