@@ -37,6 +37,7 @@ public class RouteFactory {
         //gets the entry and exit sides
         List<Integer> entryPoints = new ArrayList(Arrays.asList(0,1,2,3));
         int entrySide = entryPoints.get(random.nextInt(4));
+        //int entrySide = entryPoints.get(0);//TEMP: all cars are comming from N -> S
         entryPoints.remove(entrySide);
         int exitSide = entryPoints.get(random.nextInt(3));
         if(entrySide == exitSide){

@@ -46,14 +46,51 @@ public class World {
     
     public void addCar(Car car, Intersection location, CardinalDirection direction){
         int gridSize = Grid.INTERSECTION_DISATANCE;
-        int x = location.getNSBlock() * gridSize;
-        int y = location.getEWBlock() * gridSize;
-        Rectangle carObj = new Rectangle(x, y, 3, 5);
-        carObj.setFill(Color.GREEN);
-        System.out.println(carObj);
-        StackPane.setAlignment(carObj, Pos.TOP_LEFT);
-        carLayer.getChildren().add(carObj);
+        int xCell = location.getNSBlock() * gridSize;
+        int yCell = location.getEWBlock() * gridSize;
         
+        //TODO: put in a lane
+        //Direction Modifier
+        int xDir;
+        int yDir;
+        int rotation;
+        switch(direction){
+            case NORTH:
+                xDir = gridSize/2;
+                yDir = gridSize;
+                rotation = 0;
+                break;
+                
+            case EAST:
+                xDir = 0;
+                yDir = gridSize/2;
+                rotation = 90;
+                break;
+                
+            case SOUTH:
+                xDir = gridSize/2; 
+                yDir = 0;
+                rotation = 180;
+                break; 
+                
+            case WEST:
+                xDir = gridSize;
+                yDir = gridSize/2;
+                rotation = 270;
+                break;
+                
+            default:
+                throw new IllegalArgumentException(direction + " is not handled");
+        }
+        
+        int x = xCell + xDir;
+        int y = yCell + yDir;
+        Rectangle carObj = new Rectangle(x, y, 3, 5);
+        carObj.setRotate(rotation);
+        carLayer.getChildren().add(carObj);
+        carObj.setFill(Color.GREEN);
+        
+        System.out.println(carObj);
     }
     
     private void drawGrid(Grid grid){
