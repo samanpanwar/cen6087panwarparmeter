@@ -5,6 +5,7 @@
  */
 
 import factory.RouteFactory;
+import java.util.List;
 import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
@@ -55,15 +56,23 @@ public class RouteFactoryTest {
             }
         }
         
-        //Ensures the first and last intersections are edges
-        if(grid.isEdge(route.getIntersections().get(0)) == false){
-            Assert.fail("The first intersection is not an edge intersection");
+        //Ensures the first intersection is an entrance
+        boolean foundEntry = false;
+        for(List<Intersection> entrances : grid.getEntryIntersections()){
+            if(entrances.contains(route.getIntersections().get(0))){
+                foundEntry = true;
+            }
         }
+        Assert.assertTrue("The first intersection is not an entrance", foundEntry);
         
-        //Ensures the first and last intersections are edges
-        if(grid.isEdge(route.getIntersections().get(route.getIntersections().size()-1)) == false){
-            Assert.fail("The last intersection is not an edge intersection");
+        //Ensures the last intersection is an exit
+        boolean foundExit = false;
+        for(List<Intersection> exits : grid.getExitIntersections()){
+            if(exits.contains(route.getIntersections().get(route.getIntersections().size()-1))){
+                foundExit = true;
+            }
         }
+        Assert.assertTrue("The last intersection is not an exit", foundExit);
         
         //Tests to ensure that the directions are legal
         Intersection lastIntersection = null;
@@ -98,6 +107,7 @@ public class RouteFactoryTest {
                 
                 //Ensures the directions respect the intersection's directions
                 CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
+                System.out.println(lastIntersection + "->" + intersection + "=" + direction);
                 if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
                     Assert.assertEquals(intersection.getNSDirection(), direction);
                 } else {

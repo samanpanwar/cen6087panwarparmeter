@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
+import model.Route;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,6 +32,24 @@ public class World {
     
     public Canvas getCanvas(){
         return canvas;
+    }
+    
+    public void drawRoute(Route route){
+        
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        int gridSize = Grid.INTERSECTION_DISATANCE;
+        Intersection last = null;
+        for(Intersection inter : route.getIntersections()){
+            if(last != null){
+                int x1 = last.getEWBlock() * gridSize;
+                int y1 = last.getNSBlock() * gridSize;
+                int x2 = inter.getEWBlock() * gridSize;
+                int y2 = inter.getNSBlock() * gridSize;
+                gc.setStroke(Color.PINK);
+                gc.strokeLine(x1, y1, x2, y2);
+            }
+            last = inter;
+        }
     }
     
     private void drawGrid(Grid grid){

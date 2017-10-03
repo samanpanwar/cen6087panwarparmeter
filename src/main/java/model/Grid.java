@@ -19,7 +19,8 @@ public class Grid {
     private final Intersection[][] grid;
     
     //Data structures used to assist with algroithims. 
-    private final List<List<Intersection>> edges;
+    private final List<List<Intersection>> entries;
+    private final List<List<Intersection>> exits;
     private final List<Integer> NBStreets = new ArrayList();
     private final List<Integer> EBStreets = new ArrayList();
     private final List<Integer> SBStreets = new ArrayList();
@@ -31,54 +32,76 @@ public class Grid {
      * 0,       NSBlocks = NE corner
      * EWBlocks,NSBlocks = SE corner
      * EWBlocks,0        = SW corner
-     * @param NSBlocks
-     * @param EWBlocks 
+     * @param numNSBlocks
+     * @param numEWBlocks 
      */
-    public Grid(int NSBlocks, int EWBlocks){
-        grid = new Intersection[EWBlocks][NSBlocks];
-        for(int i = 0; i < EWBlocks; i++){
-            for(int j = 0; j < NSBlocks; j++){
+    public Grid(int numEWBlocks, int numNSBlocks){
+        grid = new Intersection[numEWBlocks][numNSBlocks];
+        for(int i = 0; i < numEWBlocks; i++){
+            for(int j = 0; j < numNSBlocks; j++){
                 grid[i][j] = new Intersection(i, j);
             }
         }
         
         //Builds the edges data structure (note: corners are omitted)
-        edges = new ArrayList();
+        entries = new ArrayList();
+        exits = new ArrayList();
         for(int i = 0; i < 4; i++){
-            edges.add(new ArrayList());
+            entries.add(new ArrayList());
+            exits.add(new ArrayList());
         }
         for(int i = 1; i < getEWBlockSize()-1; i++){
             if(grid[i][0].getNSDirection().equals(CardinalDirection.SOUTH)){
                 SBStreets.add(i);
-                edges.get(0).add(grid[i][0]);               //Northern edges (Southbound direction)
-            } 
-            if(grid[i][getEWBlockSize()-1].getNSDirection().equals(CardinalDirection.NORTH)){
+                entries.get(0).add(grid[i][0]);               //Northern entrances (Southbound direction)
+            }  else {
+                exits.get(0).add(grid[i][0]);                 //Northern exits (NorthBound direction)
+            }
+            if(grid[i][getNSBlockSize()-1].getNSDirection().equals(CardinalDirection.NORTH)){
                 NBStreets.add(i);
-                edges.get(2).add(grid[i][getEWBlockSize()-1]);//Southern edges (Northbound direction)
+                entries.get(2).add(grid[i][getNSBlockSize()-1]);//Southern entrances (Northbound direction)
+            } else {
+                exits.get(2).add(grid[i][getNSBlockSize()-1]);//Southern exits (Southbound direction)
             }
         }
-        for(int i = 1; i < getEWBlockSize()-1; i++){
-            if(grid[0][i].getEWDirection().equals(CardinalDirection.WEST)){
-                WBStreets.add(i);
-                edges.get(1).add(grid[0][i]);               //Eastern edges (Westbound direction)
-            } 
-            if(grid[getEWBlockSize()-1][i].getEWDirection().equals(CardinalDirection.EAST)){
-                EBStreets.add(i);
-                edges.get(3).add(grid[getEWBlockSize()-1][i]);   //Western edges (Eastbound direction)
-            }   
+        for(int j = 1; j < getNSBlockSize()-1; j++){
+            if(grid[0][j].getEWDirection().equals(CardinalDirection.WEST)){
+                WBStreets.add(j);
+                entries.get(1).add(grid[0][j]);               //Eastern entrances (Westbound direction)
+            } else {
+                exits.get(1).add(grid[0][j]);               //Eastern exits (Eastbounc direction)
+            }
+            if(grid[getEWBlockSize()-1][j].getEWDirection().equals(CardinalDirection.EAST)){
+                EBStreets.add(j);
+                entries.get(3).add(grid[getEWBlockSize()-1][j]);   //Western entrances (Eastbound direction)
+            } else {
+                exits.get(3).add(grid[getEWBlockSize()-1][j]);   //Western exits (Westbound direction)
+            }
         }
     }
     
     /**
-     * @return A two dimensional list, the first list is the edges in the following form:
-     * 0 = North
-     * 1 = West
-     * 2 = South
-     * 3 = North
+     * @return A two dimensional list, the first list is the entrance in the following form corresponding to the sides:
+     * 0 = North (x,0)
+     * 1 = West  (0,y) 
+     * 2 = South (x,m)
+     * 3 = East  (m,y)
      * The second dimension corresponds to the intersections in those edges. 
      */
-    public List<List<Intersection>> getEdgeIntersections(){
-        return edges;
+    public List<List<Intersection>> getEntryIntersections(){
+        return entries;
+    }
+    
+    /**
+     * @return A two dimensional list, the first list is the exits in the following form corresponding to the sides:
+     * 0 = North (x,0)
+     * 1 = West  (0,y) 
+     * 2 = South (x,m)
+     * 3 = East  (m,y)
+     * The second dimension corresponds to the intersections in those edges. 
+     */
+    public List<List<Intersection>> getExitIntersections(){
+        return exits;
     }
     
     public List<Integer> getNBStreets(){
@@ -97,24 +120,15 @@ public class Grid {
         return WBStreets;
     }
     
-    public final int getNSBlockSize(){
+    public final int getEWBlockSize(){
         return grid.length;
     }
     
-    public final int getEWBlockSize(){
+    public final int getNSBlockSize(){
         return grid[0].length;
     }
     
-    public Intersection getIntersection(int NSBlock, int EWBlock){
-        return grid[NSBlock][EWBlock];
-    }
-    
-    public boolean isEdge(Intersection intersection){
-        for(List<Intersection> edgeList : edges){
-            if(edgeList.contains(intersection)){
-                return true;
-            }
-        }
-        return false;
+    public Intersection getIntersection(int EWBlock, int NSBlock){
+        return grid[EWBlock][NSBlock];
     }
 }

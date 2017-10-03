@@ -23,9 +23,9 @@ public class Intersection {
             NSDirection = CardinalDirection.SOUTH;
         }
         if(NSBlock % 2 == 0){
-            EWDirection = CardinalDirection.EAST;
-        } else { 
             EWDirection = CardinalDirection.WEST;
+        } else { 
+            EWDirection = CardinalDirection.EAST;
         }
     }
     
@@ -54,16 +54,16 @@ public class Intersection {
         int otherNSBlock = intersection.NSBlock;
         int otherEWBlock = intersection.EWBlock;
         if(EWBlock == otherEWBlock){
-            if(NSBlock < otherNSBlock){
+            if(NSBlock > otherNSBlock){
                 return CardinalDirection.NORTH;
             } else {
                 return CardinalDirection.SOUTH;
             }
         }else if(NSBlock == otherNSBlock){
             if(EWBlock > otherEWBlock){
-                return CardinalDirection.EAST;
-            } else {
                 return CardinalDirection.WEST;
+            } else {
+                return CardinalDirection.EAST;
             }
         } else {
             throw new IllegalArgumentException("The passed in intersection is not orthogonal to this intersection");
@@ -72,6 +72,6 @@ public class Intersection {
     
     @Override
     public String toString(){
-        return "NS: " + NSBlock + " EW: " + EWBlock;
+        return "EW: " + EWBlock + " NS: " + NSBlock;
     }
 }
