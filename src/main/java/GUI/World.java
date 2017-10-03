@@ -1,6 +1,7 @@
 package GUI;
 
 
+import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -24,8 +25,10 @@ public class World {
     private static final int STREET_WIDTH = 10; //px
     
     private final Canvas canvas;
+    private final Grid grid;
     
     public World(Grid grid){
+        this.grid = grid;
         canvas = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
         drawGrid(grid);
     }
@@ -35,21 +38,45 @@ public class World {
     }
     
     public void drawRoute(Route route){
-        
         GraphicsContext gc = canvas.getGraphicsContext2D();
         int gridSize = Grid.INTERSECTION_DISATANCE;
         Intersection last = null;
         for(Intersection inter : route.getIntersections()){
+            int x1 = (inter.getEWBlock() * gridSize) + (gridSize /2);
+            int y1 = (inter.getNSBlock() * gridSize) + (gridSize /2);
             if(last != null){
-                int x1 = last.getEWBlock() * gridSize;
-                int y1 = last.getNSBlock() * gridSize;
-                int x2 = inter.getEWBlock() * gridSize;
-                int y2 = inter.getNSBlock() * gridSize;
-                gc.setStroke(Color.PINK);
+                int x2 = (last.getEWBlock() * gridSize) + (gridSize /2);
+                int y2 = (last.getNSBlock() * gridSize) + (gridSize /2);
+                gc.setStroke(Color.RED);
                 gc.strokeLine(x1, y1, x2, y2);
+            } else {
+                gc.setStroke(Color.RED);
+                gc.strokeText("START", x1, y1+15);
             }
             last = inter;
         }
+    }
+    
+    public void drawEntriesAndExits(){
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        int gridSize = Grid.INTERSECTION_DISATANCE;
+        for(List<Intersection> entrances : grid.getEntryIntersections()){
+            for(Intersection entry : entrances){
+                int x1 = (entry.getEWBlock() * gridSize) + (gridSize /2);
+                int y1 = (entry.getNSBlock() * gridSize) + (gridSize /2);
+                gc.setStroke(Color.RED);
+                gc.strokeText("ENTRY", x1, y1);
+            }
+        }
+        for(List<Intersection> exits : grid.getExitIntersections()){
+            for(Intersection exit : exits){
+                int x1 = (exit.getEWBlock() * gridSize) + (gridSize /2);
+                int y1 = (exit.getNSBlock() * gridSize) + (gridSize /2);
+                gc.setStroke(Color.RED);
+                gc.strokeText("EXIT", x1, y1);
+            }
+        }
+        
     }
     
     private void drawGrid(Grid grid){

@@ -4,8 +4,14 @@
  * and open the template in the editor.
  */
 
+import GUI.World;
 import factory.RouteFactory;
 import java.util.List;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Stage;
 import model.CardinalDirection;
 import model.Grid;
 import model.Intersection;
@@ -20,8 +26,9 @@ import org.junit.Test;
 public class RouteFactoryTest {
     
     private final boolean debug = true;
-    private final Grid grid = new Grid(10, 20);
+    private final Grid grid = new Grid(10, 5);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
+    private Stage stage;
     
     @Test 
     public void gridTest(){
@@ -41,6 +48,13 @@ public class RouteFactoryTest {
     
     @Test
     public void basicRouteFactoryTest() {
+        if(debug){
+            new JFXPanel(); // initializes JavaFX environment
+            Platform.runLater(()->{
+                stage = new Stage();
+                stage.show();
+            });
+        }
         for(int i = 0; i < 100_000; i++){
             testGenerateRoute(factory.generateRoute(), i);
         }
@@ -54,6 +68,12 @@ public class RouteFactoryTest {
             for(int i=0; i < route.getIntersections().size(); i ++){
                 System.out.println("Intersection:" + i + "\t" + route.getIntersections().get(i));
             }
+            Platform.runLater(()->{
+                World world = new World(grid);
+                world.drawRoute(route);
+                world.drawEntriesAndExits();
+                stage.setScene(new Scene(new ScrollPane(world.getCanvas())));
+            });
         }
         
         //Ensures the first intersection is an entrance
