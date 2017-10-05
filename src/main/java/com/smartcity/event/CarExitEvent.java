@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package event;
+package com.smartcity.event;
 
 import java.math.BigInteger;
-import model.Car;
-import model.Intersection;
+import com.smartcity.model.Car;
+import com.smartcity.model.Intersection;
 
 /**
  *

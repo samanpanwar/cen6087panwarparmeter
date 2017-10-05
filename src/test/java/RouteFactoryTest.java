@@ -4,18 +4,18 @@
  * and open the template in the editor.
  */
 
-import GUI.World;
-import factory.RouteFactory;
+import com.smartcity.gui.World;
+import com.smartcity.factory.RouteFactory;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-import model.CardinalDirection;
-import model.Grid;
-import model.Intersection;
-import model.Route;
+import com.smartcity.model.CardinalDirection;
+import com.smartcity.model.Grid;
+import com.smartcity.model.Intersection;
+import com.smartcity.model.Route;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -9,7 +9,7 @@
 <?import javafx.scene.text.*?>
 
 <VBox fx:id="root" prefHeight="400.0" prefWidth="640.0" stylesheets="@../styles/mainwindow.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-fx:controller="GUI.MainWindowController">
+fx:controller="com.smartcity.gui.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>

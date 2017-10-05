@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package factory;
+package com.smartcity.factory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import model.Grid;
-import model.Intersection;
-import model.Route;
+import com.smartcity.model.Grid;
+import com.smartcity.model.Intersection;
+import com.smartcity.model.Route;
 
 /**
  *

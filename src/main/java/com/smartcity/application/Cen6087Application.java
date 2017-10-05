@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.blakeparmeter.cen6087application.application;
+package com.smartcity.application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

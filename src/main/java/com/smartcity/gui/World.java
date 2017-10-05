@@ -1,4 +1,4 @@
-package GUI;
+package com.smartcity.gui;
 
 import java.util.List;
 import javafx.application.Platform;
@@ -9,11 +9,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import model.Car;
-import model.CardinalDirection;
-import model.Grid;
-import model.Intersection;
-import model.Route;
+import com.smartcity.model.Car;
+import com.smartcity.model.CardinalDirection;
+import com.smartcity.model.Grid;
+import com.smartcity.model.Intersection;
+import com.smartcity.model.Route;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

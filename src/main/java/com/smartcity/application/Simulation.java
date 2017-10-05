@@ -1,14 +1,14 @@
-package com.blakeparmeter.cen6087application.application;
+package com.smartcity.application;
 
 
-import GUI.World;
-import event.CarEntryEvent;
-import event.EventBus;
-import factory.RouteFactory;
+import com.smartcity.gui.World;
+import com.smartcity.event.CarEntryEvent;
+import com.smartcity.event.EventBus;
+import com.smartcity.factory.RouteFactory;
 import java.math.BigInteger;
 import javafx.scene.Node;
-import model.Car;
-import model.Grid;
+import com.smartcity.model.Car;
+import com.smartcity.model.Grid;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
