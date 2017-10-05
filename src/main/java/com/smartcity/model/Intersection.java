@@ -6,6 +6,7 @@
 package com.smartcity.model;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -14,11 +15,15 @@ import java.util.Queue;
  */
 public class Intersection {
     
-    public enum LightState{NORTH_SOUTH, EAST_WEST};
+    public enum LightDirection{NS_BOUND, EW_BOUND};
+    public enum LightState{RED, YELLOW, GREEN};
     
     private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
-    private final Queue<Car> lightQueueNB, lightQueueEB, lightQueueSB, lightQueueWB;
+    private final Queue<Car> lightQueueNSBound, lightQueueEWBound;
+    
+    private LightState NSLightState, EWLightState;
+    private LightDirection lightDirection;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -33,13 +38,95 @@ public class Intersection {
         } else { 
             EWDirection = CardinalDirection.EAST;
         }
-        lightQueueNB = new LinkedList();
-        lightQueueEB = new LinkedList();
-        lightQueueSB = new LinkedList();
-        lightQueueWB = new LinkedList();
+        
+        //Light variables
+        lightQueueNSBound = new LinkedList();
+        lightQueueEWBound = new LinkedList();
+        
+        //Logic for initial light state, right now all start as NSBound, then all will tick to EWBound
+        lightDirection = LightDirection.NS_BOUND;
+        NSLightState = LightState.GREEN;
+        EWLightState = LightState.RED;
     }
     
-    public void submitCar
+    /**
+     * @param car
+     * @param to
+     * @return true = the car can move though the intersection 
+     */
+    public boolean submitCar(Car car, Intersection to){
+        CardinalDirection heading = getDirectionTo(to);
+        switch(heading){
+            
+            case NORTH: case SOUTH:
+                if(NSLightState == LightState.GREEN){
+                    return true;
+                } else {
+                    lightQueueNSBound.add(car);
+                    return false;
+                }
+                
+            case EAST: case WEST:
+                if(EWLightState == LightState.GREEN){
+                    return true;
+                } else {
+                    lightQueueEWBound.add(car);
+                    return false;
+                }
+                
+            default:
+                throw new IllegalArgumentException(heading + "-bound headings are not handled.");
+        }
+    }
+    
+    /**
+     * @param direction
+     * @param isInitial the opposing direction will turn yellow, if not initial
+     * the direction will turn green
+     * @return the cars waiting, only given when the state is not initial
+     */
+    public Car[] setLightState(LightDirection direction, boolean isInitial){
+        
+        if(isInitial && direction.equals(lightDirection)){
+            throw new IllegalArgumentException("The state was already set to " + direction);
+        }
+        
+        switch(direction){
+            case NS_BOUND:
+                if(isInitial){
+                    NSLightState = LightState.RED;      //should already be red
+                    EWLightState = LightState.YELLOW;   
+                    lightDirection = direction;
+                    return null;
+                } else {
+                    NSLightState = LightState.GREEN;
+                    EWLightState = LightState.RED;
+                    try{
+                        return lightQueueNSBound.toArray(new Car[0]);
+                    } finally {
+                        lightQueueNSBound.clear();
+                    }
+                }
+            case EW_BOUND:
+                if(isInitial){
+                    NSLightState = LightState.GREEN;
+                    EWLightState = LightState.RED;      //should already be red
+                    lightDirection = direction;
+                } else {
+                    NSLightState = LightState.RED;
+                    EWLightState = LightState.GREEN;
+                    try{
+                        return lightQueueEWBound.toArray(new Car[0]);
+                    } finally {
+                        lightQueueEWBound.clear();
+                    }
+                }
+            
+            default: 
+                throw new IllegalArgumentException(direction + " is not a handled light state");
+                    
+        }
+    }
     
     public CardinalDirection getNSDirection(){
         return NSDirection;

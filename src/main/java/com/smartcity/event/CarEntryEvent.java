@@ -8,7 +8,6 @@ package com.smartcity.event;
 import java.math.BigInteger;
 import java.util.List;
 import com.smartcity.model.Car;
-import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.Intersection;
 
@@ -30,7 +29,7 @@ public class CarEntryEvent extends Event{
         List<Intersection> intersections = car.getRoute().getIntersections();
         BigInteger moveTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
         System.out.println(car + " has entered at: " + eventTime + " location: " + intersections.get(0));
-        EventBus.submitEvent(new CarMoveEvent(moveTime, car, intersections.get(0), intersections.get(1)));
+        EventBus.submitEvent(new CarMoveEvent(moveTime, car, intersections.get(0)));
         EventBus.world.addCar(car);
     }
 }
