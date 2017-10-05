@@ -93,7 +93,6 @@ public class World {
         final Rectangle carObj = new Rectangle(x, y, 3, 5);
         carObj.setRotate(rotation);
         carObj.setFill(Color.GREEN);
-        System.out.println(carObj);
         
         Platform.runLater(()->{
             carLayer.getChildren().add(carObj);
