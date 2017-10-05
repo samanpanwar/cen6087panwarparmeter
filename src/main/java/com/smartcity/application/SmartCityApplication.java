@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  *
  * @author Blake
  */
-public class Cen6087Application extends Application{
+public class SmartCityApplication extends Application{
 
     public static void main(String[] args) {
         launch(args);
