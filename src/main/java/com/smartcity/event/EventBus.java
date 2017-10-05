@@ -6,10 +6,10 @@
 package com.smartcity.event;
 
 import com.smartcity.gui.World;
-import com.smartcity.model.Intersection;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import javafx.application.Platform;
 
 /**
  *
@@ -19,14 +19,15 @@ public class EventBus {
     
     private static BigInteger simulationTime = BigInteger.ZERO;
     private static final Queue<Event> EVENT_QUEUE = new PriorityQueue(new EventComparator());
-    public static World world;
+    
+    static World world;
     
     public static void submitEvent(Event event){
         EVENT_QUEUE.add(event);
         //System.out.println(event + " has been submitted");
     }
     
-    public static BigInteger getSimulationTime(){
+    static BigInteger getSimulationTime(){
         return simulationTime;
     }
     
@@ -37,6 +38,7 @@ public class EventBus {
             evt.resolveEvent();
         }
         System.out.println("The queue is empty.");
+        Platform.exit();
     }
     
     public static void setWorld(World world){

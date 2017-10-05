@@ -20,4 +20,9 @@ public abstract class Event {
     }
     
     public abstract void resolveEvent();
+    
+    @Override
+    public String toString(){
+        return getClass().getSimpleName() + " time: " + eventTime + " ";
+    }
 }

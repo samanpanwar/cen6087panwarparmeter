@@ -40,7 +40,7 @@ public class LightChangeEvent extends Event {
         } else {
             Car[] carsDequeued = intersection.setLightState(lightDirection, false);
             if(carsDequeued.length != 0){
-                System.out.println(carsDequeued.length + " cars have been dequeued: " + Arrays.toString(carsDequeued));
+            //    System.out.println(this.toString() + " " + carsDequeued.length + " cars have been dequeued: " + Arrays.toString(carsDequeued));
             }
             
             BigInteger carMoveTime = eventTime;

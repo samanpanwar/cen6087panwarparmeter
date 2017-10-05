@@ -42,10 +42,10 @@ public class CarMoveEvent extends Event {
             Intersection nextIntersection = intersections.get(currentIndex + 1);
             if(currentIntersection.submitCar(car, nextIntersection)){
                 BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
-                System.out.println(car + " moved to " + nextIntersection + " at: " + eventTime);
+            //    System.out.println(this.toString() + car + " moved to " + nextIntersection);
                 EventBus.submitEvent(new CarMoveEvent(nextEventTime, car, nextIntersection));
             } else {
-                System.out.println(car + " has been stopped at intersection " + currentIntersection);
+            //    System.out.println(this.toString() + car + " has been stopped at intersection " + currentIntersection);
                 //Do nothing, this car is queued in the intersection.
             }
         }
