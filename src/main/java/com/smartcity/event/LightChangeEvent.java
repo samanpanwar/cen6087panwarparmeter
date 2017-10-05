@@ -9,6 +9,7 @@ import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightDirection;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 /**
  *
@@ -38,9 +39,14 @@ public class LightChangeEvent extends Event {
             EventBus.submitEvent(new LightChangeEvent(nextEventTime, intersection, lightDirection, false));
         } else {
             Car[] carsDequeued = intersection.setLightState(lightDirection, false);
+            if(carsDequeued.length != 0){
+                System.out.println(carsDequeued.length + " cars have been dequeued: " + Arrays.toString(carsDequeued));
+            }
+            
+            BigInteger carMoveTime = eventTime;
             for(Car car : carsDequeued){
-                EventBus.submitEvent(new CarMoveEvent(eventTime, car, intersection));
-                eventTime.add(BigInteger.valueOf(CAR_DEQUEUE_TIME));
+                EventBus.submitEvent(new CarMoveEvent(carMoveTime, car, intersection));
+                carMoveTime = carMoveTime.add(BigInteger.valueOf(CAR_DEQUEUE_TIME));
             }
         }
     }

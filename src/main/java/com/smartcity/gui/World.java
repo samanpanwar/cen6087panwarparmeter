@@ -108,8 +108,6 @@ public class World {
 //            pt.setDuration(Duration.seconds(5));
 //            pt.play();
         });
-
-
     }
     
     public void drawRoute(Route route){

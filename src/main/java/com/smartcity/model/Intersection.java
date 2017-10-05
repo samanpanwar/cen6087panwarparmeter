@@ -107,11 +107,13 @@ public class Intersection {
                         lightQueueNSBound.clear();
                     }
                 }
+                
             case EW_BOUND:
                 if(isInitial){
                     NSLightState = LightState.GREEN;
                     EWLightState = LightState.RED;      //should already be red
                     lightDirection = direction;
+                    return null;
                 } else {
                     NSLightState = LightState.RED;
                     EWLightState = LightState.GREEN;

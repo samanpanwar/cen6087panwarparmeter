@@ -6,6 +6,7 @@
 package com.smartcity.event;
 
 import com.smartcity.gui.World;
+import com.smartcity.model.Intersection;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
 import java.util.Queue;
