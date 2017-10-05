@@ -7,7 +7,8 @@ package com.smartcity.event;
 
 import com.smartcity.gui.World;
 import java.math.BigInteger;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.TreeSet;
 public class EventBus {
     
     private static BigInteger simulationTime = BigInteger.ZERO;
-    private static final TreeSet<Event> EVENT_QUEUE = new TreeSet(new EventComparator());
+    private static final Queue<Event> EVENT_QUEUE = new PriorityQueue(new EventComparator());
     public static World world;
     
     public static void submitEvent(Event event){
@@ -30,7 +31,7 @@ public class EventBus {
     
     public static void runQueue(){
         while(EVENT_QUEUE.isEmpty() == false){
-            Event evt = EVENT_QUEUE.pollFirst();
+            Event evt = EVENT_QUEUE.poll();
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }

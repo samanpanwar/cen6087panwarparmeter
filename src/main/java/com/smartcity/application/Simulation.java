@@ -24,7 +24,7 @@ public class Simulation {
     
     
     //configuration variables
-    private static final long simulationTime = 100_000; //time units
+    private static final long simulationTime = 100; //time units
     private static final int numCars = 5;
     
     public final Grid grid = new Grid(10, 5);

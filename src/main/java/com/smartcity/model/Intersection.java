@@ -5,14 +5,20 @@
  */
 package com.smartcity.model;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  *
  * @author Blake
  */
 public class Intersection {
     
+    public enum LightState{NORTH_SOUTH, EAST_WEST};
+    
     private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
+    private final Queue<Car> lightQueueNB, lightQueueEB, lightQueueSB, lightQueueWB;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -27,7 +33,13 @@ public class Intersection {
         } else { 
             EWDirection = CardinalDirection.EAST;
         }
+        lightQueueNB = new LinkedList();
+        lightQueueEB = new LinkedList();
+        lightQueueSB = new LinkedList();
+        lightQueueWB = new LinkedList();
     }
+    
+    public void submitCar
     
     public CardinalDirection getNSDirection(){
         return NSDirection;
