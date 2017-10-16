@@ -109,7 +109,7 @@ public class Intersection {
                 
             case EW_BOUND:
                 if(isInitial){
-                    NSLightState = LightState.GREEN;
+                    NSLightState = LightState.YELLOW;
                     EWLightState = LightState.RED;      //should already be red
                     lightDirection = direction;
                     return null;

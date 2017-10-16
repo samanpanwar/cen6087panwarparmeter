@@ -31,7 +31,7 @@ public class Simulation {
     public static final int NUM_CARS = 5;
     public static final long NUM_TICKS = 1_000;
     public static final boolean REAL_TIME = true;
-    public static final double SIM_SPEED = 0.005;
+    public static final double SIM_SPEED = 0.01;
     
     public final Grid grid = new Grid(12, 8);
     public final World world = new World(grid);
@@ -47,7 +47,18 @@ public class Simulation {
     }
     
     public void start(){
+        
+        //Starts up the "dumb" light switch algorithm for the traffic lights
+        for(int i = 0; i < grid.getEWBlockSize(); i++){
+            for(int j = 0; j < grid.getNSBlockSize(); j++){
+                Intersection intersection = grid.getIntersection(i, j);
+                EventBus.submitEvent(new LightChangeEvent(BigInteger.ZERO, intersection, LightDirection.EW_BOUND, true));
+            }
+        }
+        
+        //TODO: initialize the car generation event and remove the tick event. 
         EventBus.submitEvent(new SimulationTickEvent(BigInteger.ZERO));
+        
         new Thread(()->{
             try{
                 EventBus.runQueue();

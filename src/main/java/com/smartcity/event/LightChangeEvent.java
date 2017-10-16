@@ -18,6 +18,7 @@ import java.util.Arrays;
 public class LightChangeEvent extends Event {
     
     private final static long YELLOW_TIME = 50;
+    private final static long GREEN_TIME = 150;
     private final static long CAR_DEQUEUE_TIME = 10;
     
     private final Intersection intersection;
@@ -38,11 +39,22 @@ public class LightChangeEvent extends Event {
             BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(YELLOW_TIME));
             EventBus.submitEvent(new LightChangeEvent(nextEventTime, intersection, lightDirection, false));
         } else {
-            Car[] carsDequeued = intersection.setLightState(lightDirection, false);
+            Car[] carsDequeued = intersection.setLightState(lightDirection, isInitial);
             if(carsDequeued.length != 0){
                 System.out.println(this.toString() + " " + carsDequeued.length + " cars have been dequeued: " + Arrays.toString(carsDequeued));
             }
             
+            //Queues up a new light change direction
+            LightDirection newDirection;
+            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(GREEN_TIME));
+            if(lightDirection.equals(LightDirection.EW_BOUND)){
+                newDirection = LightDirection.NS_BOUND;
+            } else { 
+                newDirection = LightDirection.EW_BOUND;
+            }
+            EventBus.submitEvent(new LightChangeEvent(nextEventTime, intersection, newDirection, true));
+            
+            //Queues up all the cars in waiting at the light
             BigInteger carMoveTime = eventTime;
             for(Car car : carsDequeued){
                 EventBus.submitEvent(new CarMoveEvent(carMoveTime, car, intersection));

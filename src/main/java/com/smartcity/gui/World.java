@@ -109,7 +109,7 @@ public class World {
         CAR_MAP.put(car, carObj);
         
         Platform.runLater(()->{
-            shapeLayer.getChildren().add(carObj);
+        //    shapeLayer.getChildren().add(carObj);
         });
     }
     
@@ -159,9 +159,8 @@ public class World {
             default:
                 throw new IllegalArgumentException(intersection.getNSDirection() + " is not handled");
         }
-        Rectangle NSLight = new Rectangle(NSXPos, NSYPos, 16, 10);
+        Rectangle NSLight = new Rectangle(NSXPos-8, NSYPos-5, 16, 10);
         NSLight.setFill(getColor(intersection.getNSLightState()));
-        NSLight.setLayoutX(0);
         NSLight.setRotate(NSRotation);
         
         int EWXPos, EWYPos;
@@ -183,10 +182,8 @@ public class World {
                 throw new IllegalArgumentException(intersection.getNSDirection() + " is not handled");
         }
         
-        Rectangle EWLight = new Rectangle(EWXPos, EWYPos, 16, 10);
+        Rectangle EWLight = new Rectangle(EWXPos-8, EWYPos-5, 16, 10);
         EWLight.setFill(getColor(intersection.getEWLightState()));
-//        EWLight.setLayoutX(EWLight.getWidth()/2);
-//        EWLight.setLayoutY(EWLight.getHeight()/2);
         EWLight.setRotate(EWRotation);
         
         Platform.runLater(()->{
@@ -300,7 +297,7 @@ public class World {
     }
     
     private static Color getColor(LightState state){
-        double lightOpacity = .7;
+        double lightOpacity = .5;
         switch(state){
             case GREEN:
                 return Color.color(0, 1, 0, lightOpacity);
