@@ -27,9 +27,9 @@ import com.smartcity.model.Intersection.LightDirection;
 public class Simulation {
     
     //configuration variables
-    public static final long CAR_ENTRY_INTERVAL = 10_000_000; //time units
-    public static final int NUM_CARS = 500_000;
-    public static final long NUM_TICKS = 1_000_000;
+    public static final long CAR_ENTRY_INTERVAL = 50; //time units
+    public static final int NUM_CARS = 5;
+    public static final long NUM_TICKS = 1_000;
     
     public final Grid grid = new Grid(12, 8);
     public final World world = new World(grid);

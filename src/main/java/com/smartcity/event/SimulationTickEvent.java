@@ -66,7 +66,7 @@ public class SimulationTickEvent extends Event {
         }
         
         if(carsGeneratedThisTick > 0){
-        //    System.out.println(this.toString() + " " + carsGeneratedThisTick + " cars generated.");
+            System.out.println(this.toString() + " " + carsGeneratedThisTick + " cars generated.");
         }
         
         if(tickNum < NUM_TICKS){

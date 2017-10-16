@@ -27,6 +27,6 @@ public class CarExitEvent extends Event{
         double duration = eventTime.subtract(car.getEntryTime()).longValue();
         double distance = (car.getRoute().getIntersections().size() - 1) * 100;
         Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);
-        //System.out.println(this.toString() + car + " has exited at " +intersection + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
+        System.out.println(this.toString() + car + " has exited at " +intersection + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
     }
 }

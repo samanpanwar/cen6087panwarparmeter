@@ -28,7 +28,7 @@ public class CarEntryEvent extends Event{
     public void resolveEvent() {
         List<Intersection> intersections = car.getRoute().getIntersections();
         BigInteger moveTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
-        //System.out.println(this.toString() + car + " location: " + intersections.get(0));
+        System.out.println(this.toString() + car + " location: " + intersections.get(0));
         EventBus.submitEvent(new CarMoveEvent(moveTime, car, intersections.get(0)));
         //EventBus.world.addCar(car);
     }
