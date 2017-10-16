@@ -30,6 +30,8 @@ public class Simulation {
     public static final long CAR_ENTRY_INTERVAL = 50; //time units
     public static final int NUM_CARS = 5;
     public static final long NUM_TICKS = 1_000;
+    public static final boolean REAL_TIME = true;
+    public static final double SIM_SPEED = 0.005;
     
     public final Grid grid = new Grid(12, 8);
     public final World world = new World(grid);
@@ -47,7 +49,11 @@ public class Simulation {
     public void start(){
         EventBus.submitEvent(new SimulationTickEvent(BigInteger.ZERO));
         new Thread(()->{
-            EventBus.runQueue();
+            try{
+                EventBus.runQueue();
+            }catch(InterruptedException ex){
+                ex.printStackTrace(System.err);
+            }
         },"Simulation Thread").start();
     }
 }

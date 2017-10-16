@@ -12,8 +12,19 @@ import javafx.scene.shape.Rectangle;
 import com.smartcity.model.Car;
 import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.Grid;
+import com.smartcity.model.GridCoordinate;
 import com.smartcity.model.Intersection;
+import com.smartcity.model.Intersection.LightState;
 import com.smartcity.model.Route;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.animation.PathTransition;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,9 +39,11 @@ import com.smartcity.model.Route;
 public class World {
     
     private static final int STREET_WIDTH = 10; //px
+    private static final Map<Car, Rectangle> CAR_MAP = new HashMap();
+    private static final Map<Intersection, List<Node>> INTERSECTION_LIGHT_MAP = new HashMap();
     
     private final StackPane root = new StackPane();
-    private final Pane carLayer = new Pane();
+    private final Pane shapeLayer = new Pane();
     private final Canvas canvas;
     private final Grid grid;    
     
@@ -40,14 +53,14 @@ public class World {
         drawGrid(grid);
         
         //adds all the layers to the root
-        root.getChildren().setAll(canvas, carLayer);
+        root.getChildren().setAll(canvas, shapeLayer);
     }
     
     public Node getRoot(){
         return root;
     }
     
-    public void addCar(Car car){        
+    public void addCar(Car car){    
         
         Intersection location = car.getRoute().getIntersections().get(0);
         CardinalDirection direction = grid.getEntryDirection(location);
@@ -93,20 +106,97 @@ public class World {
         final Rectangle carObj = new Rectangle(x, y, 3, 5);
         carObj.setRotate(rotation);
         carObj.setFill(Color.GREEN);
+        CAR_MAP.put(car, carObj);
         
         Platform.runLater(()->{
-            carLayer.getChildren().add(carObj);
+            shapeLayer.getChildren().add(carObj);
+        });
+    }
+    
+    public void moveCar(Car car, GridCoordinate to, long time){
+        
+        Rectangle carObj = CAR_MAP.get(car);
+        if(carObj == null){
+            throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
+        }
+        
+        Platform.runLater(()->{
+            Path path = new Path();
+            path.getElements().add(new MoveTo(to.ewPoint, to.nsPoint));
+            path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
             
-            //TODO: Something like this for car move events.
-//            Path path = new Path();
-//            path.getElements().add(new MoveTo(x, y));
-//            path.getElements().add(new LineTo(x, y+100));
-//            
-//            PathTransition pt = new PathTransition();
-//            pt.setNode(carObj);
-//            pt.setPath(path);
-//            pt.setDuration(Duration.seconds(5));
-//            pt.play();
+            PathTransition pt = new PathTransition();
+            pt.setNode(carObj);
+            pt.setPath(path);
+            pt.setDuration(Duration.millis(time));
+            pt.play();
+        });
+    }
+    
+    public void renderIntersectionLights(Intersection intersection){
+        
+        int lightDistance = 15;
+        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int xCenter = (intersection.getEWBlock() * gridSize) + (gridSize/2);
+        int yCenter = (intersection.getNSBlock() * gridSize) + (gridSize/2);
+        
+        //Generate NS Light
+        int NSXPos, NSYPos;
+        double NSRotation;
+        switch(intersection.getNSDirection()){
+            case NORTH:
+                NSXPos = xCenter;
+                NSYPos = yCenter + lightDistance;
+                NSRotation = 180;
+                break;
+                
+            case SOUTH:
+                NSXPos = xCenter;
+                NSYPos = yCenter - lightDistance;
+                NSRotation = 0;
+                break;
+                
+            default:
+                throw new IllegalArgumentException(intersection.getNSDirection() + " is not handled");
+        }
+        Rectangle NSLight = new Rectangle(NSXPos, NSYPos, 16, 10);
+        NSLight.setFill(getColor(intersection.getNSLightState()));
+        NSLight.setLayoutX(0);
+        NSLight.setRotate(NSRotation);
+        
+        int EWXPos, EWYPos;
+        double EWRotation;
+        switch(intersection.getEWDirection()){
+            case EAST:
+                EWXPos = xCenter + lightDistance;
+                EWYPos = yCenter;
+                EWRotation = 270;
+                break;
+                
+            case WEST:
+                EWXPos = xCenter - lightDistance;
+                EWYPos = yCenter;
+                EWRotation = 90;
+                break;
+                
+            default:
+                throw new IllegalArgumentException(intersection.getNSDirection() + " is not handled");
+        }
+        
+        Rectangle EWLight = new Rectangle(EWXPos, EWYPos, 16, 10);
+        EWLight.setFill(getColor(intersection.getEWLightState()));
+//        EWLight.setLayoutX(EWLight.getWidth()/2);
+//        EWLight.setLayoutY(EWLight.getHeight()/2);
+        EWLight.setRotate(EWRotation);
+        
+        Platform.runLater(()->{
+            List<Node> oldLights = INTERSECTION_LIGHT_MAP.get(intersection);
+            if(oldLights != null){
+                shapeLayer.getChildren().removeAll(oldLights);
+            }
+            List<Node> newLights = Arrays.asList(NSLight, EWLight);
+            shapeLayer.getChildren().addAll(newLights);
+            INTERSECTION_LIGHT_MAP.put(intersection, newLights);
         });
     }
     
@@ -204,5 +294,25 @@ public class World {
         //draws the coordinate
         gc.setStroke(Color.BLUE);
         gc.strokeText("("+intersection.getEWBlock() + "," + intersection.getNSBlock() + ")", cellX+10, cellY+30);
+        
+        //Draws the lights of the intersection
+        renderIntersectionLights(intersection);
+    }
+    
+    private static Color getColor(LightState state){
+        double lightOpacity = .7;
+        switch(state){
+            case GREEN:
+                return Color.color(0, 1, 0, lightOpacity);
+                
+            case RED:
+                return Color.color(1, 0, 0, lightOpacity);
+                
+            case YELLOW:
+                return Color.color(1, 1, 0, lightOpacity);
+                
+            default:
+                throw new IllegalArgumentException("cannot determine the color for state: " + state);
+        }
     }
 }

@@ -30,6 +30,6 @@ public class CarEntryEvent extends Event{
         BigInteger moveTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
         System.out.println(this.toString() + car + " location: " + intersections.get(0));
         EventBus.submitEvent(new CarMoveEvent(moveTime, car, intersections.get(0)));
-        //EventBus.world.addCar(car);
+        EventBus.world.addCar(car);
     }
 }

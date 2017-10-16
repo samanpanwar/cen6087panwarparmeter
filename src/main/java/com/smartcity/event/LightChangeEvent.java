@@ -49,5 +49,6 @@ public class LightChangeEvent extends Event {
                 carMoveTime = carMoveTime.add(BigInteger.valueOf(CAR_DEQUEUE_TIME));
             }
         }
+        EventBus.world.renderIntersectionLights(intersection);
     }
 }

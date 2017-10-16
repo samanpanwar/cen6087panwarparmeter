@@ -6,7 +6,6 @@
 package com.smartcity.model;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -169,6 +168,14 @@ public class Intersection {
         } else {
             throw new IllegalArgumentException("The passed in intersection is not orthogonal to this intersection");
         }
+    }
+    
+    public LightState getEWLightState(){
+        return EWLightState; 
+    }
+    
+    public LightState getNSLightState(){
+        return NSLightState;
     }
     
     @Override

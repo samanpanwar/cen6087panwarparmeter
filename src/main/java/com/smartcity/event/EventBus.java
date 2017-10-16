@@ -5,6 +5,7 @@
  */
 package com.smartcity.event;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.gui.World;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
@@ -31,9 +32,12 @@ public class EventBus {
         return simulationTime;
     }
     
-    public static void runQueue(){
+    public static void runQueue() throws InterruptedException{
         while(EVENT_QUEUE.isEmpty() == false){
             Event evt = EVENT_QUEUE.poll();
+            if(Simulation.REAL_TIME){
+                Thread.sleep((long) (evt.eventTime.subtract(simulationTime).longValue() * (1/Simulation.SIM_SPEED)));
+            }
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }
