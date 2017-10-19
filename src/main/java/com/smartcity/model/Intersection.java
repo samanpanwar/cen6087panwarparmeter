@@ -5,6 +5,7 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -80,47 +81,82 @@ public class Intersection {
     
     /**
      * @param direction
-     * @param isInitial the opposing direction will turn yellow, if not initial
-     * the direction will turn green
      * @return the cars waiting, only given when the state is not initial
      */
-    public Car[] setLightState(LightDirection direction, boolean isInitial){
+    public Car[] getAndEmptyCars(LightDirection direction){
+        switch(direction){
+            case EW_BOUND:
+                try{
+                    return lightQueueEWBound.toArray(new Car[0]);
+                } finally {
+                    lightQueueEWBound.clear();
+                }
+
+            case NS_BOUND:
+                try{
+                    return lightQueueNSBound.toArray(new Car[0]);
+                } finally {
+                    lightQueueNSBound.clear();
+                }
+            default:
+                throw new IllegalArgumentException(direction + " is not handled");
+        }
+    }
+    
+    /**
+     * @param direction
+     * @param changeType
+     */
+    public void setLightState(LightDirection direction, ChangeType changeType){
         
-        if(isInitial && direction.equals(lightDirection)){
-            throw new IllegalArgumentException("The state was already set to " + direction);
+        if(changeType.equals(ChangeType.INITIAL)){
+            if(direction.equals(lightDirection)){
+                throw new IllegalArgumentException("The state was already set to " + direction);
+            }
+            lightDirection = direction;
         }
         
         switch(direction){
             case NS_BOUND:
-                if(isInitial){
-                    NSLightState = LightState.RED;      //should already be red
-                    EWLightState = LightState.YELLOW;   
-                    lightDirection = direction;
-                    return null;
-                } else {
-                    NSLightState = LightState.GREEN;
-                    EWLightState = LightState.RED;
-                    try{
-                        return lightQueueNSBound.toArray(new Car[0]);
-                    } finally {
-                        lightQueueNSBound.clear();
-                    }
+                switch(changeType){
+                    case INITIAL:
+                        NSLightState = LightState.RED;      //should already be red
+                        EWLightState = LightState.YELLOW;   
+                        return;
+                        
+                    case ALL_RED:
+                        NSLightState = LightState.RED;      //should already be red
+                        EWLightState = LightState.RED;  
+                        return;
+                        
+                    case GREEN:
+                        NSLightState = LightState.GREEN;
+                        EWLightState = LightState.RED;
+                        return;
+                        
+                    default:
+                        throw new IllegalArgumentException(changeType + " is not handled");
                 }
                 
             case EW_BOUND:
-                if(isInitial){
-                    NSLightState = LightState.YELLOW;
-                    EWLightState = LightState.RED;      //should already be red
-                    lightDirection = direction;
-                    return null;
-                } else {
-                    NSLightState = LightState.RED;
-                    EWLightState = LightState.GREEN;
-                    try{
-                        return lightQueueEWBound.toArray(new Car[0]);
-                    } finally {
-                        lightQueueEWBound.clear();
-                    }
+                switch(changeType){
+                    case INITIAL:
+                        NSLightState = LightState.YELLOW;
+                        EWLightState = LightState.RED;      //should already be red
+                        return;
+                        
+                    case ALL_RED:
+                        NSLightState = LightState.RED;      //should already be red
+                        EWLightState = LightState.RED;  
+                        return;
+                        
+                    case GREEN:
+                        NSLightState = LightState.RED;
+                        EWLightState = LightState.GREEN;
+                        return;
+                    
+                    default:
+                        throw new IllegalArgumentException(changeType + " is not handled");
                 }
             
             default: 

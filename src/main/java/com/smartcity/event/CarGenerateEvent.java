@@ -40,6 +40,8 @@ public class CarGenerateEvent extends Event{
         carsGenerated ++;
         if(carsGenerated < Simulation.NUM_CARS){
             EventBus.submitEvent(new CarGenerateEvent(eventTime + Simulation.CAR_ENTRY_INTERVAL));
+        } else {
+            System.out.println("Car generation completed.");
         }
     }
 }

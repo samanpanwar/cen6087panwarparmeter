@@ -44,7 +44,7 @@ public class Simulation {
         for(int i = 0; i < GRID.getEWBlockSize(); i++){
             for(int j = 0; j < GRID.getNSBlockSize(); j++){
                 Intersection intersection = GRID.getIntersection(i, j);
-                EventBus.submitEvent(new LightChangeEvent(0.0, intersection, LightDirection.EW_BOUND, true));
+                EventBus.submitEvent(new LightChangeEvent(0.0, intersection, LightDirection.NS_BOUND, LightChangeEvent.ChangeType.GREEN));
             }
         }
         
