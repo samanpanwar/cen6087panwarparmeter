@@ -5,7 +5,6 @@
  */
 package com.smartcity.utility;
 
-import com.smartcity.application.Simulation;
 import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.GridVector;
@@ -53,17 +52,15 @@ public class VectorUtility {
         return new GridVector(x, y, null);
     }
     
-    public static GridVector initializePositionDirection(Route route){
-        Intersection location = route.getIntersections().get(0);
-        CardinalDirection cardinalDirection = Simulation.GRID.getEntryDirection(location);
+    public static GridVector getIntersectionEdge(Intersection intersection, CardinalDirection direction){
         int gridSize = Grid.INTERSECTION_DISATANCE;
-        int xCell = location.getEWBlock() * gridSize;
-        int yCell = location.getNSBlock() * gridSize;
+        int xCell = intersection.getEWBlock() * gridSize;
+        int yCell = intersection.getNSBlock() * gridSize;
         
         //Direction Modifier
         int xDir;
         int yDir;
-        switch(cardinalDirection){
+        switch(direction){
             case NORTH:
                 xDir = gridSize/2;
                 yDir = gridSize;
@@ -85,28 +82,52 @@ public class VectorUtility {
                 break;
                 
             default:
-                throw new IllegalArgumentException(cardinalDirection + " is not handled");   
+                throw new IllegalArgumentException(direction + " is not handled");   
         }
                 
-        return new GridVector(xCell + xDir, yCell + yDir, cardinalDirection);
+        return new GridVector(xCell + xDir, yCell + yDir, direction);
     }
     
-    public static double getDirection(CardinalDirection direction){
-        switch(direction){
+    public static GridVector initializePositionDirection(Route route){
+        Intersection firstIntersection = route.getIntersections().get(0);
+        CardinalDirection direction = getDirectionTo(firstIntersection, route.getNextIntersection(firstIntersection));
+        return getIntersectionEdge(firstIntersection, direction);
+    }
+    
+    /**
+     * 
+     * @param vector the vector to mutate will add the magnitude to the direction, the direction will be added to.
+     * @param magnitude the magnitude to add to the vector
+     * @return 
+     */
+    public static GridVector addMagnitude(GridVector vector, double magnitude){
+        double xModifier;
+        double yModifier;
+        switch(vector.direction){
+            
             case NORTH:
-                return 0;
+                xModifier = 0;
+                yModifier = magnitude * -1;
+                break;
                 
             case EAST:
-                return 90;
-                
+                xModifier = magnitude;
+                yModifier = 0;
+                break;
+            
             case SOUTH:
-                return 180;
+                xModifier = 0;
+                yModifier = magnitude;
+                break;
                 
             case WEST:
-                return 270;
-                
+                xModifier = magnitude * -1;
+                yModifier = 0;
+                break;
+            
             default:
-                throw new IllegalArgumentException(direction + " is not handled");
-        }
+                throw new IllegalArgumentException(vector.direction + " is not handled");
+        }    
+        return new GridVector(xModifier + vector.ewPoint, yModifier + vector.nsPoint, vector.direction);
     }
 }

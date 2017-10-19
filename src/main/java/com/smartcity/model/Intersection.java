@@ -59,35 +59,8 @@ public class Intersection {
     }
     
     public GridVector getYellowLightVector(Car car){
-        double xModifier;
-        double yModifier;
         double magnitude = car.stoppingDistance + (Grid.INTERSECTION_DISATANCE/2);
-        switch(car.getVector().direction){
-            
-            case NORTH:
-                xModifier = 0;
-                yModifier = magnitude * -1;
-                break;
-                
-            case EAST:
-                xModifier = magnitude * -1;
-                yModifier = 0;
-                break;
-            
-            case SOUTH:
-                xModifier = 0;
-                yModifier = magnitude;
-                break;
-                
-            case WEST:
-                xModifier = magnitude;
-                yModifier = 0;
-                break;
-            
-            default:
-                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
-        }
-        return new GridVector(xModifier + center.ewPoint, yModifier + center.nsPoint, car.getVector().direction);
+        return VectorUtility.addMagnitude(car.getVector(), magnitude);
     }
     
     public int getNumCarsWaiting(CardinalDirection direction){
@@ -104,9 +77,6 @@ public class Intersection {
     }
     
     public GridVector StopCar(Car car){
-        
-        double xModifier;
-        double yModifier;
         double magnitude = Grid.INTERSECTION_DISATANCE/2;
         
         //adds the car behind the last car 
@@ -130,36 +100,15 @@ public class Intersection {
             magnitude += car.getVector().distanceTo(lastCar.getVector()) + carStopDistance;
         }
         
-        switch(car.getVector().direction){
-            
-            case NORTH:
-                xModifier = 0;
-                yModifier = magnitude * -1;
-                break;
-                
-            case EAST:
-                xModifier = magnitude * -1;
-                yModifier = 0;
-                break;
-            
-            case SOUTH:
-                xModifier = 0;
-                yModifier = magnitude;
-                break;
-                
-            case WEST:
-                xModifier = magnitude;
-                yModifier = 0;
-                break;
-            
-            default:
-                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
-        }    
-        return new GridVector(xModifier + center.ewPoint, yModifier + center.nsPoint, car.getVector().direction);
+        return VectorUtility.addMagnitude(car.getVector(), magnitude*-1);
     }
     
     public GridVector getCenter(){
         return center;
+    }
+    
+    public GridVector getExit(CardinalDirection direction){
+        return null;
     }
     
     /**

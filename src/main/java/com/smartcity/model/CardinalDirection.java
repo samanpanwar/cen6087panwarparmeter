@@ -18,4 +18,42 @@ public enum CardinalDirection {
     private CardinalDirection(int index){
         this.index = index;
     }
+    
+    public CardinalDirection getOppisite(){
+        switch(this){
+            case NORTH:
+                return SOUTH;
+                
+            case EAST: 
+                return WEST;
+                
+            case SOUTH:
+                return NORTH;
+                
+            case WEST:
+                return EAST;
+                
+            default:
+                throw new IllegalArgumentException(this + " is not handled.");
+        }
+    }
+    
+    public double getDegrees(){
+        switch(this){
+            case NORTH:
+                return 0;
+                
+            case EAST: 
+                return 90;
+                
+            case SOUTH:
+                return 180;
+                
+            case WEST:
+                return 270;
+                
+            default:
+                throw new IllegalArgumentException(this + " is not handled.");
+        }
+    }
 }

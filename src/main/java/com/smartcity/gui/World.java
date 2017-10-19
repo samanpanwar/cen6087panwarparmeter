@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.smartcity.model.Car;
@@ -18,10 +17,10 @@ import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightState;
 import com.smartcity.model.Route;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -65,7 +64,7 @@ public class World {
         
         GridVector v = car.getVector();
         final Rectangle carObj = new Rectangle(v.ewPoint, v.nsPoint, 3, 5);
-        carObj.setRotate(VectorUtility.getDirection(v.direction));
+        carObj.setRotate(v.direction.getDegrees());
         carObj.setFill(Color.GREEN);
         CAR_MAP.put(car, carObj);
         
@@ -84,7 +83,7 @@ public class World {
         
         Platform.runLater(()->{
             if(to.direction != null){
-                carObj.setRotate(VectorUtility.getDirection(to.direction));
+                carObj.setRotate(to.direction.getDegrees());
             }
             
             Path path = new Path();
@@ -92,11 +91,23 @@ public class World {
             path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
             
             PathTransition pt = new PathTransition();
+            pt.setInterpolator(Interpolator.LINEAR);
             pt.setNode(carObj);
             pt.setPath(path);
             pt.setDuration(Duration.millis(time * (1/Simulation.SIM_SPEED)));
             pt.play();
-            System.out.println(car + " moved from: " + car.getVector() + " to: " + to + " in " + time * (1/Simulation.SIM_SPEED) + " ms(realtime)");
+//            System.out.println(car + " moved from: " + car.getVector() + " to: " + to + " in " + time * (1/Simulation.SIM_SPEED) + " ms(realtime)");
+        });
+    }
+    
+    public void removeCar(Car car){
+        Rectangle carObj = CAR_MAP.remove(car);
+        if(carObj == null){
+            throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
+        }
+        
+        Platform.runLater(()->{
+            root.getChildren().remove(carObj);
         });
     }
     

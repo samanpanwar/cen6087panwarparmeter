@@ -60,9 +60,14 @@ public class DetermineStopEvent extends Event{
                 Simulation.WORLD.moveCar(car, moveToVector, deltaTime);
                 car.setVector(moveToVector);
                 EventBus.submitEvent(new ApproachIntersectionEvent(eventTime + deltaTime, car, nextIntersection));
+            
+            //There are no more intersections, the car is exiting thoug this interseciton in it's current direction
             } else {
-                //TODO: render the move
-//                EventBus.submitEvent(new CarExitEvent(get the time, car));
+                GridVector exitVector = VectorUtility.getIntersectionEdge(stopAt, car.getVector().direction.getOppisite());
+                double deltaTime = car.getTimeTo(exitVector);
+                Simulation.WORLD.moveCar(car, exitVector, deltaTime);
+                car.setVector(exitVector);
+                EventBus.submitEvent(new CarExitEvent(eventTime + deltaTime, car));
             }
 
         } else {
