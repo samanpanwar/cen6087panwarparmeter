@@ -5,6 +5,7 @@
  */
 package com.smartcity.event;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightDirection;
@@ -25,7 +26,7 @@ public class LightChangeEvent extends Event {
     private final LightDirection lightDirection;
     private final boolean isInitial;
 
-    public LightChangeEvent(BigInteger eventTime, Intersection intersection, LightDirection lightDirection, boolean isInitial) {
+    public LightChangeEvent(double eventTime, Intersection intersection, LightDirection lightDirection, boolean isInitial) {
         super(eventTime);
         this.intersection = intersection;
         this.lightDirection = lightDirection;
@@ -36,7 +37,7 @@ public class LightChangeEvent extends Event {
     public void resolveEvent() {
         if(isInitial){
             intersection.setLightState(lightDirection, isInitial);
-            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(YELLOW_TIME));
+            double nextEventTime = eventTime + YELLOW_TIME;
             EventBus.submitEvent(new LightChangeEvent(nextEventTime, intersection, lightDirection, false));
         } else {
             Car[] carsDequeued = intersection.setLightState(lightDirection, isInitial);
@@ -46,7 +47,7 @@ public class LightChangeEvent extends Event {
             
             //Queues up a new light change direction
             LightDirection newDirection;
-            BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(GREEN_TIME));
+            double nextEventTime = eventTime + GREEN_TIME;
             if(lightDirection.equals(LightDirection.EW_BOUND)){
                 newDirection = LightDirection.NS_BOUND;
             } else { 
@@ -55,12 +56,12 @@ public class LightChangeEvent extends Event {
             EventBus.submitEvent(new LightChangeEvent(nextEventTime, intersection, newDirection, true));
             
             //Queues up all the cars in waiting at the light
-            BigInteger carMoveTime = eventTime;
+            double carMoveTime = eventTime;
             for(Car car : carsDequeued){
                 EventBus.submitEvent(new CarMoveEvent(carMoveTime, car, intersection));
-                carMoveTime = carMoveTime.add(BigInteger.valueOf(CAR_DEQUEUE_TIME));
+                carMoveTime += CAR_DEQUEUE_TIME;
             }
         }
-        EventBus.world.renderIntersectionLights(intersection);
+        Simulation.WORLD.renderIntersectionLights(intersection);
     }
 }

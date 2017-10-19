@@ -21,7 +21,7 @@ public class CarMoveEvent extends Event {
     private final Car car;
     private final Intersection currentIntersection;
     
-    public CarMoveEvent(BigInteger eventTime, Car car, Intersection currentIntersection) {
+    public CarMoveEvent(double eventTime, Car car, Intersection currentIntersection) {
         super(eventTime);
         this.car = car;
         this.currentIntersection = currentIntersection;
@@ -41,7 +41,7 @@ public class CarMoveEvent extends Event {
         } else { 
             Intersection nextIntersection = intersections.get(currentIndex + 1);
             if(currentIntersection.submitCar(car, nextIntersection)){
-                BigInteger nextEventTime = eventTime.add(BigInteger.valueOf(Grid.INTERSECTION_DISATANCE / car.velocity));
+                double nextEventTime = eventTime + (Grid.INTERSECTION_DISATANCE / car.velocity);
                 System.out.println(this.toString() + car + " moved to " + nextIntersection);
                 EventBus.submitEvent(new CarMoveEvent(nextEventTime, car, nextIntersection));
             } else {

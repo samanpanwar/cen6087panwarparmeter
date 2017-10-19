@@ -14,7 +14,7 @@ import java.math.BigInteger;
  */
 public class IntersectionExitEvent extends Event{
 
-    public IntersectionExitEvent(BigInteger eventTime, Intersection from, Intersection to) {
+    public IntersectionExitEvent(double eventTime, Intersection from, Intersection to) {
         super(eventTime);
     }
 

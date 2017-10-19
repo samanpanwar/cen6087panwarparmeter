@@ -6,8 +6,6 @@
 package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
-import com.smartcity.gui.World;
-import java.math.BigInteger;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javafx.application.Platform;
@@ -18,34 +16,35 @@ import javafx.application.Platform;
  */
 public class EventBus {
     
-    private static BigInteger simulationTime = BigInteger.ZERO;
+    private static double simulationTime = 0.0;
     private static final Queue<Event> EVENT_QUEUE = new PriorityQueue(new EventComparator());
-    
-    static World world;
     
     public static void submitEvent(Event event){
         EVENT_QUEUE.add(event);
-        //System.out.println(event + " has been submitted");
     }
     
-    static BigInteger getSimulationTime(){
+    static double getSimulationTime(){
         return simulationTime;
     }
     
+    @SuppressWarnings("SleepWhileInLoop")
     public static void runQueue() throws InterruptedException{
         while(EVENT_QUEUE.isEmpty() == false){
             Event evt = EVENT_QUEUE.poll();
             if(Simulation.REAL_TIME){
-                Thread.sleep((long) (evt.eventTime.subtract(simulationTime).longValue() * (1/Simulation.SIM_SPEED)));
+                long sleepTime = (long) ((evt.eventTime - simulationTime) * (1/Simulation.SIM_SPEED));
+                if(sleepTime > 0){
+                    Thread.sleep(sleepTime);
+                } else {
+                    if(sleepTime < 0){
+                        System.out.println("Sleep time is: " + sleepTime);
+                    }
+                }
             }
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }
         System.out.println("The queue is empty.");
         Platform.exit();
-    }
-    
-    public static void setWorld(World world){
-        EventBus.world = world;
     }
 }

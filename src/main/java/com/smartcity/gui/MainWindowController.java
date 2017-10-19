@@ -27,9 +27,8 @@ public class MainWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Simulation simulation = new Simulation();
-        canvasPane.setContent(simulation.getWorldNode());
-        simulation.start();
+        canvasPane.setContent(Simulation.WORLD.getRoot());
+        Simulation.start();
     }   
     
     

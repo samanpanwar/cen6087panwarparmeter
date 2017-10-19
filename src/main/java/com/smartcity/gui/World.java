@@ -42,18 +42,17 @@ public class World {
     private static final Map<Car, Rectangle> CAR_MAP = new HashMap();
     private static final Map<Intersection, List<Node>> INTERSECTION_LIGHT_MAP = new HashMap();
     
-    private final StackPane root = new StackPane();
-    private final Pane shapeLayer = new Pane();
-    private final Canvas canvas;
+    private final Pane root = new Pane();
+    private final Canvas roads;
     private final Grid grid;    
     
     public World(Grid grid){
         this.grid = grid;
-        canvas = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
+        roads = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
         drawGrid(grid);
         
         //adds all the layers to the root
-        root.getChildren().setAll(canvas, shapeLayer);
+        root.getChildren().add(roads);
     }
     
     public Node getRoot(){
@@ -109,7 +108,7 @@ public class World {
         CAR_MAP.put(car, carObj);
         
         Platform.runLater(()->{
-        //    shapeLayer.getChildren().add(carObj);
+            root.getChildren().add(carObj);
         });
     }
     
@@ -189,16 +188,16 @@ public class World {
         Platform.runLater(()->{
             List<Node> oldLights = INTERSECTION_LIGHT_MAP.get(intersection);
             if(oldLights != null){
-                shapeLayer.getChildren().removeAll(oldLights);
+                root.getChildren().removeAll(oldLights);
             }
             List<Node> newLights = Arrays.asList(NSLight, EWLight);
-            shapeLayer.getChildren().addAll(newLights);
+            root.getChildren().addAll(newLights);
             INTERSECTION_LIGHT_MAP.put(intersection, newLights);
         });
     }
     
     public void drawRoute(Route route){
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = roads.getGraphicsContext2D();
         int gridSize = Grid.INTERSECTION_DISATANCE;
         Intersection last = null;
         for(Intersection inter : route.getIntersections()){
@@ -218,7 +217,7 @@ public class World {
     }
     
     public void drawEntriesAndExits(){
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = roads.getGraphicsContext2D();
         int gridSize = Grid.INTERSECTION_DISATANCE;
         for(List<Intersection> entrances : grid.getEntryIntersections()){
             for(Intersection entry : entrances){
@@ -242,7 +241,7 @@ public class World {
     private void drawGrid(Grid grid){
         
         //Draws the black background
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = roads.getGraphicsContext2D();
         int width = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
         int height = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
         gc.setFill(Color.WHITE);
@@ -259,7 +258,7 @@ public class World {
     private void drawIntersection(Intersection intersection){
         
         //sets up variables
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = roads.getGraphicsContext2D();
         int gridSize = Grid.INTERSECTION_DISATANCE;
         int cellX = intersection.getEWBlock() * gridSize;
         int cellY = intersection.getNSBlock()* gridSize;

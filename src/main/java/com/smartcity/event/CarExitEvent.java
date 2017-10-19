@@ -17,14 +17,14 @@ public class CarExitEvent extends Event{
 
     private final Car car;
     
-    public CarExitEvent(BigInteger eventTime, Car car) {
+    public CarExitEvent(double eventTime, Car car) {
         super(eventTime);
         this.car = car;
     }
 
     @Override
     public void resolveEvent() {
-        double duration = eventTime.subtract(car.getEntryTime()).longValue();
+        double duration = eventTime - car.getEntryTime();
         double distance = (car.getRoute().getIntersections().size() - 1) * 100;
         Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);
         System.out.println(this.toString() + car + " has exited at " +intersection + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));

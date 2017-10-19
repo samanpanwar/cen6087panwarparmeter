@@ -2,10 +2,9 @@ package com.smartcity.application;
 
 
 import com.smartcity.gui.World;
-import com.smartcity.event.CarEntryEvent;
+import com.smartcity.event.CarGenerateEvent;
 import com.smartcity.event.EventBus;
 import com.smartcity.event.LightChangeEvent;
-import com.smartcity.event.SimulationTickEvent;
 import com.smartcity.factory.RouteFactory;
 import java.math.BigInteger;
 import javafx.scene.Node;
@@ -27,37 +26,30 @@ import com.smartcity.model.Intersection.LightDirection;
 public class Simulation {
     
     //configuration variables
-    public static final long CAR_ENTRY_INTERVAL = 50; //time units
+    public static final long CAR_ENTRY_INTERVAL = 12; //time units
     public static final int NUM_CARS = 5;
     public static final long NUM_TICKS = 1_000;
     public static final boolean REAL_TIME = true;
     public static final double SIM_SPEED = 0.01;
+    public static final int NUM_EW_STREETS = 12;
+    public static final int NUM_NS_STREETS = 8;
     
-    public final Grid grid = new Grid(12, 8);
-    public final World world = new World(grid);
-    private final RouteFactory routeFactory = new RouteFactory(grid, 0L);
+    //Objects
+    public static final Grid GRID = new Grid(NUM_EW_STREETS, NUM_NS_STREETS);
+    public static final World WORLD = new World(GRID);
     
-    public Simulation(){
-        EventBus.setWorld(world);
-        SimulationTickEvent.init(routeFactory, grid);
-    }
-    
-    public Node getWorldNode(){
-        return world.getRoot();
-    }
-    
-    public void start(){
+    public static void start(){
         
         //Starts up the "dumb" light switch algorithm for the traffic lights
-        for(int i = 0; i < grid.getEWBlockSize(); i++){
-            for(int j = 0; j < grid.getNSBlockSize(); j++){
-                Intersection intersection = grid.getIntersection(i, j);
-                EventBus.submitEvent(new LightChangeEvent(BigInteger.ZERO, intersection, LightDirection.EW_BOUND, true));
+        for(int i = 0; i < GRID.getEWBlockSize(); i++){
+            for(int j = 0; j < GRID.getNSBlockSize(); j++){
+                Intersection intersection = GRID.getIntersection(i, j);
+                EventBus.submitEvent(new LightChangeEvent(0.0, intersection, LightDirection.EW_BOUND, true));
             }
         }
         
-        //TODO: initialize the car generation event and remove the tick event. 
-        EventBus.submitEvent(new SimulationTickEvent(BigInteger.ZERO));
+        //Initializes the car generate event
+        EventBus.submitEvent(new CarGenerateEvent(0.0));
         
         new Thread(()->{
             try{

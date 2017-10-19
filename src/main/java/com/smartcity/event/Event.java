@@ -5,17 +5,15 @@
  */
 package com.smartcity.event;
 
-import java.math.BigInteger;
-
 /**
  *
  * @author Blake
  */
 public abstract class Event {
     
-    public final BigInteger eventTime;
+    public final double eventTime;
     
-    public Event(BigInteger eventTime){
+    public Event(double eventTime){
         this.eventTime = eventTime;
     }
     

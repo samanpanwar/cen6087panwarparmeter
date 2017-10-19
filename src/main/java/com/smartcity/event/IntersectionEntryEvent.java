@@ -7,7 +7,6 @@ package com.smartcity.event;
 
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
-import java.math.BigInteger;
 
 /**
  *
@@ -18,7 +17,7 @@ public class IntersectionEntryEvent extends Event {
     private final Intersection interseciton;
     private final Car car;
     
-    public IntersectionEntryEvent(BigInteger eventTime, Intersection intersection, Car car) {
+    public IntersectionEntryEvent(double eventTime, Intersection intersection, Car car) {
         super(eventTime);
         this.interseciton = intersection;
         this.car = car;
