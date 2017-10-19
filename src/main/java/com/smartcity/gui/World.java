@@ -39,7 +39,6 @@ import javafx.util.Duration;
  */
 public class World {
     
-    private static final int STREET_WIDTH = 10; //px
     private static final Map<Car, Rectangle> CAR_MAP = new HashMap();
     private static final Map<Intersection, List<Node>> INTERSECTION_LIGHT_MAP = new HashMap();
     
@@ -49,7 +48,7 @@ public class World {
     
     public World(Grid grid){
         this.grid = grid;
-        roads = new Canvas(grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Grid.INTERSECTION_DISATANCE);
+        roads = new Canvas(grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Simulation.INTERSECTION_DISATANCE);
         drawGrid(grid);
         
         //adds all the layers to the root
@@ -114,7 +113,7 @@ public class World {
     public void renderIntersectionLights(Intersection intersection){
         
         int lightDistance = 15;
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
         int xCenter = (intersection.getEWBlock() * gridSize) + (gridSize/2);
         int yCenter = (intersection.getNSBlock() * gridSize) + (gridSize/2);
         
@@ -177,7 +176,7 @@ public class World {
     
     public void drawRoute(Route route){
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
         Intersection last = null;
         for(Intersection inter : route.getIntersections()){
             int x1 = (inter.getEWBlock() * gridSize) + (gridSize /2);
@@ -197,7 +196,7 @@ public class World {
     
     public void drawEntriesAndExits(){
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
         for(List<Intersection> entrances : grid.getEntryIntersections()){
             for(Intersection entry : entrances){
                 int x1 = (entry.getEWBlock() * gridSize) + (gridSize /2);
@@ -221,8 +220,8 @@ public class World {
         
         //Draws the black background
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int width = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
-        int height = grid.getEWBlockSize() * Grid.INTERSECTION_DISATANCE;
+        int width = grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE;
+        int height = grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE;
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width, height);
         
@@ -238,31 +237,32 @@ public class World {
         
         //sets up variables
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int streetWidth = Simulation.STREET_WIDTH;
         int cellX = intersection.getEWBlock() * gridSize;
         int cellY = intersection.getNSBlock()* gridSize;
         
         //draws the NS street
-        int NSx = cellX + (gridSize / 2) - (STREET_WIDTH / 2);
+        int NSx = cellX + (gridSize / 2) - (streetWidth / 2);
         int NSy = cellY;
-        int NSw = STREET_WIDTH;
+        int NSw = streetWidth;
         int NSh = gridSize;
         gc.setFill(intersection.getNSDirection() == CardinalDirection.NORTH ? Color.LIGHTGRAY : Color.DARKGRAY);
         gc.fillRect(NSx, NSy, NSw, NSh);
         
         //draws the EW street
         int EWx = cellX;
-        int EWy = cellY + (gridSize / 2) - (STREET_WIDTH / 2);
+        int EWy = cellY + (gridSize / 2) - (streetWidth / 2);
         int EWw = gridSize;
-        int EWh = STREET_WIDTH;
+        int EWh = streetWidth;
         gc.setFill(intersection.getEWDirection()== CardinalDirection.EAST ? Color.LIGHTGRAY : Color.DARKGRAY);
         gc.fillRect(EWx, EWy, EWw, EWh);
         
         //draws the middle of the intersection
-        int Mx = cellX + (gridSize / 2) - (STREET_WIDTH / 2);
-        int My = cellY + (gridSize / 2) - (STREET_WIDTH / 2);
-        int Mw = STREET_WIDTH;
-        int Mh = STREET_WIDTH;
+        int Mx = cellX + (gridSize / 2) - (streetWidth / 2);
+        int My = cellY + (gridSize / 2) - (streetWidth / 2);
+        int Mw = streetWidth;
+        int Mh = streetWidth;
         gc.setFill(Color.BLACK);
         gc.fillRect(Mx, My, Mw, Mh);
         

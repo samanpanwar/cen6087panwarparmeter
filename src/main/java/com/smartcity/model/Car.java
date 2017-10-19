@@ -14,8 +14,8 @@ import com.smartcity.utility.VectorUtility;
 public class Car {
     
     public final double velocity = 5;//distance units / time unit
-    public final double stoppingDistance = 10;
-    public final double accelerationDistance = 10;
+    public final double stoppingDistance = 25;
+    public final double accelerationDistance = 25;
     
     private final double entryTime;
     private final Route route;

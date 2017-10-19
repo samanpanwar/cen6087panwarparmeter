@@ -9,7 +9,6 @@ import com.smartcity.application.Simulation;
 import com.smartcity.factory.RouteFactory;
 import java.util.List;
 import com.smartcity.model.Car;
-import com.smartcity.model.Grid;
 import com.smartcity.model.Intersection;
 
 /**

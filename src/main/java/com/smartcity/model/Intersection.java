@@ -5,6 +5,7 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.SortedSet;
@@ -59,8 +60,8 @@ public class Intersection {
     }
     
     public GridVector getYellowLightVector(Car car){
-        double magnitude = car.stoppingDistance + (Grid.INTERSECTION_DISATANCE/2);
-        return VectorUtility.addMagnitude(car.getVector(), magnitude);
+        double magnitude = car.stoppingDistance + (Simulation.STREET_WIDTH/2);
+        return VectorUtility.addMagnitude(center, car.getVector().direction.getOppisite(), magnitude);
     }
     
     public int getNumCarsWaiting(CardinalDirection direction){
@@ -77,7 +78,7 @@ public class Intersection {
     }
     
     public GridVector StopCar(Car car){
-        double magnitude = Grid.INTERSECTION_DISATANCE/2;
+        double magnitude = Simulation.INTERSECTION_DISATANCE/2;
         
         //adds the car behind the last car 
         //TODO: there should be a check for the distance being too long
@@ -100,7 +101,7 @@ public class Intersection {
             magnitude += car.getVector().distanceTo(lastCar.getVector()) + carStopDistance;
         }
         
-        return VectorUtility.addMagnitude(car.getVector(), magnitude*-1);
+        return VectorUtility.addMagnitude(center, car.getVector().direction.getOppisite(), magnitude*-1);
     }
     
     public GridVector getCenter(){

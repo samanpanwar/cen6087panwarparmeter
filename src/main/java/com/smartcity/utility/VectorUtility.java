@@ -5,6 +5,7 @@
  */
 package com.smartcity.utility;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.GridVector;
@@ -46,14 +47,14 @@ public class VectorUtility {
     }
     
     public static GridVector getCenter(Intersection intersection){
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
         int x = (intersection.getEWBlock() * gridSize) + (gridSize/2);
         int y = (intersection.getNSBlock()* gridSize) + (gridSize/2);
         return new GridVector(x, y, null);
     }
     
     public static GridVector getIntersectionEdge(Intersection intersection, CardinalDirection direction){
-        int gridSize = Grid.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISATANCE;
         int xCell = intersection.getEWBlock() * gridSize;
         int yCell = intersection.getNSBlock() * gridSize;
         
@@ -97,13 +98,14 @@ public class VectorUtility {
     /**
      * 
      * @param vector the vector to mutate will add the magnitude to the direction, the direction will be added to.
+     * @param direction The direction to add the magnitude
      * @param magnitude the magnitude to add to the vector
      * @return 
      */
-    public static GridVector addMagnitude(GridVector vector, double magnitude){
+    public static GridVector addMagnitude(GridVector vector, CardinalDirection direction, double magnitude){
         double xModifier;
         double yModifier;
-        switch(vector.direction){
+        switch(direction){
             
             case NORTH:
                 xModifier = 0;
@@ -126,8 +128,8 @@ public class VectorUtility {
                 break;
             
             default:
-                throw new IllegalArgumentException(vector.direction + " is not handled");
+                throw new IllegalArgumentException(direction + " is not handled");
         }    
-        return new GridVector(xModifier + vector.ewPoint, yModifier + vector.nsPoint, vector.direction);
+        return new GridVector(xModifier + vector.ewPoint, yModifier + vector.nsPoint, direction);
     }
 }
