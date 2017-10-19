@@ -32,8 +32,9 @@ public class ApproachIntersectionEvent extends Event{
         if(to.getNumCarsWaiting(car.getVector().direction) == 0){
             GridVector newVector = to.getYellowLightVector(car);
             double deltaTime = car.getTimeTo(newVector);
-            EventBus.submitEvent(new DetermineStopEvent(deltaTime + eventTime, car, to));
             Simulation.WORLD.moveCar(car, newVector, deltaTime);
+            car.setVector(newVector);
+            EventBus.submitEvent(new DetermineStopEvent(deltaTime + eventTime, car, to));
         } else {
             
             //TODO if the car is past the yellow light then move the car or stop the car based on the light state. 

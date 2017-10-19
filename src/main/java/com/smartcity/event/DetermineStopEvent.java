@@ -7,9 +7,11 @@ package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
+import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightState;
+import com.smartcity.utility.VectorUtility;
 
 /**
  *
@@ -18,12 +20,12 @@ import com.smartcity.model.Intersection.LightState;
 public class DetermineStopEvent extends Event{
     
     private final Car car;
-    private final Intersection to;
+    private final Intersection stopAt;
 
-    public DetermineStopEvent(double eventTime, Car car, Intersection to) {
+    public DetermineStopEvent(double eventTime, Car car, Intersection stopAt) {
         super(eventTime);
         this.car = car;
-        this.to = to;
+        this.stopAt = stopAt;
     }
 
     @Override
@@ -32,30 +34,39 @@ public class DetermineStopEvent extends Event{
         LightState lightState;
         switch(car.getVector().direction){
             case NORTH: case SOUTH:
-                lightState = to.getNSLightState();
+                lightState = stopAt.getNSLightState();
                 break;
                 
             case EAST: case WEST:
-                lightState = to.getEWLightState();
+                lightState = stopAt.getEWLightState();
                 break;
                 
             default:
                 throw new IllegalArgumentException(car.getVector().direction + " is not handled");
         }
                 
-        //Move the car though the intersection then submit a new approach intersection event
+        //Move the car to center of the current intersection then submit a new approach intersection event for the next intersection
         if(lightState.equals(Intersection.LightState.GREEN)){
-            Intersection nextIntersection = car.getRoute().getNextIntersection(to);
+            Intersection nextIntersection = car.getRoute().getNextIntersection(stopAt);
             if(nextIntersection != null){
-                //TODO: render the move
-//                EventBus.submitEvent(new ApproachIntersectionEvent(get the time, car, nextIntersection));
+                
+                //Determine the center and set the rotation
+                double x = stopAt.getCenter().ewPoint;
+                double y = stopAt.getCenter().nsPoint;
+                CardinalDirection direction = VectorUtility.getDirectionTo(stopAt, nextIntersection);
+                GridVector moveToVector = new GridVector(x, y, direction);
+                
+                double deltaTime = car.getTimeTo(moveToVector);
+                Simulation.WORLD.moveCar(car, moveToVector, deltaTime);
+                car.setVector(moveToVector);
+                EventBus.submitEvent(new ApproachIntersectionEvent(eventTime + deltaTime, car, nextIntersection));
             } else {
                 //TODO: render the move
 //                EventBus.submitEvent(new CarExitEvent(get the time, car));
             }
 
         } else {
-            GridVector stopLocation = to.StopCar(car);
+            GridVector stopLocation = stopAt.StopCar(car);
             double deltaTime = car.getTimeTo(stopLocation);
             EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car, stopLocation));
             Simulation.WORLD.moveCar(car, stopLocation, deltaTime);

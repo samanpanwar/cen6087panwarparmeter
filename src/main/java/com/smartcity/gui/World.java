@@ -83,6 +83,10 @@ public class World {
         }
         
         Platform.runLater(()->{
+            if(to.direction != null){
+                carObj.setRotate(VectorUtility.getDirection(to.direction));
+            }
+            
             Path path = new Path();
             path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
             path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
@@ -130,13 +134,13 @@ public class World {
         double EWRotation;
         switch(intersection.getEWDirection()){
             case EAST:
-                EWXPos = xCenter + lightDistance;
+                EWXPos = xCenter - lightDistance;
                 EWYPos = yCenter;
                 EWRotation = 270;
                 break;
                 
             case WEST:
-                EWXPos = xCenter - lightDistance;
+                EWXPos = xCenter + lightDistance;
                 EWYPos = yCenter;
                 EWRotation = 90;
                 break;

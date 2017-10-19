@@ -34,6 +34,7 @@ public class CarGenerateEvent extends Event{
         System.out.println(this.toString() + car + " location: " + intersections.get(0));
         EventBus.submitEvent(new ApproachIntersectionEvent(moveTime, car, intersections.get(0)));
         Simulation.WORLD.addCar(car);
+        Simulation.WORLD.drawRoute(car.getRoute());
         
         //generates the next car if there is a time to
         carsGenerated ++;

@@ -7,8 +7,6 @@ package com.smartcity.model;
 
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -23,13 +21,13 @@ public class Intersection {
     
     private final static double carStopDistance = 8;//Distace between stopped cars
     
+    private final GridVector center;
     private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
     private final SortedSet<Car> lightQueueNSBound, NSBoundCars, lightQueueEWBound, EWBoundCars;
     
     private LightState NSLightState, EWLightState;
     private LightDirection lightDirection;
-    private GridVector center;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -158,6 +156,10 @@ public class Intersection {
                 throw new IllegalArgumentException(car.getVector().direction + " is not handled");
         }    
         return new GridVector(xModifier + center.ewPoint, yModifier + center.nsPoint, car.getVector().direction);
+    }
+    
+    public GridVector getCenter(){
+        return center;
     }
     
     /**
