@@ -26,11 +26,10 @@ import com.smartcity.model.Intersection.LightDirection;
 public class Simulation {
     
     //configuration variables
-    public static final long CAR_ENTRY_INTERVAL = 12; //time units
-    public static final int NUM_CARS = 100;
-    public static final long NUM_TICKS = 1_000;
+    public static final long CAR_ENTRY_INTERVAL = 1; //time units
+    public static final int NUM_CARS = 10_000;
     public static final boolean REAL_TIME = true;
-    public static final double SIM_SPEED = 0.01;
+    public static final double SIM_SPEED = 0.1;
     public static final int NUM_EW_STREETS = 12;
     public static final int NUM_NS_STREETS = 8;
     
