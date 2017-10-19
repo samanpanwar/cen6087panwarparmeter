@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import com.smartcity.utility.VectorUtility;
 import com.smartcity.gui.World;
 import com.smartcity.factory.RouteFactory;
 import java.util.List;
@@ -133,7 +134,7 @@ public class RouteFactoryTest {
                 }
                 
                 //Ensures the directions respect the intersection's directions
-                CardinalDirection direction = lastIntersection.getDirectionTo(intersection);
+                CardinalDirection direction = VectorUtility.getDirectionTo(lastIntersection, intersection);
                 if(direction.equals(CardinalDirection.NORTH) || direction.equals(CardinalDirection.SOUTH)){
                     Assert.assertEquals(intersection.getNSDirection(), direction);
                 } else {

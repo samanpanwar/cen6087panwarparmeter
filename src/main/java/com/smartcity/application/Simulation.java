@@ -27,7 +27,7 @@ public class Simulation {
     
     //configuration variables
     public static final long CAR_ENTRY_INTERVAL = 12; //time units
-    public static final int NUM_CARS = 5;
+    public static final int NUM_CARS = 1;
     public static final long NUM_TICKS = 1_000;
     public static final boolean REAL_TIME = true;
     public static final double SIM_SPEED = 0.01;

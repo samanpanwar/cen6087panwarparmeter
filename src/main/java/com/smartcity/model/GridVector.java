@@ -9,18 +9,25 @@ package com.smartcity.model;
  *
  * @author Blake
  */
-public class GridCoordinate {
+public class GridVector {
     
     public final double ewPoint, nsPoint;
+    public final CardinalDirection direction;
     
-    public GridCoordinate(double ewPoint, double nsPoint){
+    public GridVector(double ewPoint, double nsPoint, CardinalDirection direction){
         this.ewPoint = ewPoint;
         this.nsPoint = nsPoint;
+        this.direction = direction;
     }
     
-    public final double distanceTo(GridCoordinate that){
+    public final double distanceTo(GridVector that){
         double deltaX = ewPoint - that.ewPoint;
         double deltaY = nsPoint - that.nsPoint;
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    }
+    
+    @Override
+    public String toString(){
+        return "x:" + this.ewPoint + " y:" + this.nsPoint + " dir:"+ this.direction;
     }
 }

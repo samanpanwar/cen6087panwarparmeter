@@ -5,9 +5,12 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  *
@@ -18,12 +21,15 @@ public class Intersection {
     public enum LightDirection{NS_BOUND, EW_BOUND};
     public enum LightState{RED, YELLOW, GREEN};
     
+    private final static double carStopDistance = 8;//Distace between stopped cars
+    
     private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
-    private final Queue<Car> lightQueueNSBound, lightQueueEWBound;
+    private final SortedSet<Car> lightQueueNSBound, NSBoundCars, lightQueueEWBound, EWBoundCars;
     
     private LightState NSLightState, EWLightState;
     private LightDirection lightDirection;
+    private GridVector center;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -39,9 +45,14 @@ public class Intersection {
             EWDirection = CardinalDirection.EAST;
         }
         
+        //helper variables
+        center = VectorUtility.getCenter(this);
+        
         //Light variables
-        lightQueueNSBound = new LinkedList();
-        lightQueueEWBound = new LinkedList();
+        lightQueueNSBound = new TreeSet();
+        NSBoundCars = new TreeSet();
+        lightQueueEWBound = new TreeSet();
+        EWBoundCars = new TreeSet();
         
         //Logic for initial light state, right now all start as NSBound, then all will tick to EWBound
         lightDirection = LightDirection.NS_BOUND;
@@ -49,30 +60,129 @@ public class Intersection {
         EWLightState = LightState.RED;
     }
     
+    public GridVector getYellowLightVector(Car car){
+        double xModifier;
+        double yModifier;
+        double magnitude = car.stoppingDistance + (Grid.INTERSECTION_DISATANCE/2);
+        switch(car.getVector().direction){
+            
+            case NORTH:
+                xModifier = 0;
+                yModifier = magnitude * -1;
+                break;
+                
+            case EAST:
+                xModifier = magnitude * -1;
+                yModifier = 0;
+                break;
+            
+            case SOUTH:
+                xModifier = 0;
+                yModifier = magnitude;
+                break;
+                
+            case WEST:
+                xModifier = magnitude;
+                yModifier = 0;
+                break;
+            
+            default:
+                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
+        }
+        return new GridVector(xModifier + center.ewPoint, yModifier + center.nsPoint, car.getVector().direction);
+    }
+    
+    public int getNumCarsWaiting(CardinalDirection direction){
+        switch(direction){
+            case NORTH: case SOUTH:
+                return this.lightQueueNSBound.size();
+                
+            case EAST: case WEST:
+                return this.lightQueueEWBound.size();
+                
+            default :
+                throw new IllegalArgumentException(direction + " is not handled");
+        }
+    }
+    
+    public GridVector StopCar(Car car){
+        
+        double xModifier;
+        double yModifier;
+        double magnitude = Grid.INTERSECTION_DISATANCE/2;
+        
+        //adds the car behind the last car 
+        //TODO: there should be a check for the distance being too long
+        Car lastCar = null;
+        switch(car.getVector().direction){
+            case NORTH: case SOUTH:
+                if(!this.lightQueueNSBound.isEmpty()){
+                    lastCar = this.lightQueueNSBound.last();
+                }
+                break;
+            case EAST: case WEST:
+                if(!this.lightQueueEWBound.isEmpty()){
+                    lastCar = this.lightQueueEWBound.last();
+                }
+                break;
+            default:
+                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
+        }
+        if(lastCar != null){
+            magnitude += car.getVector().distanceTo(lastCar.getVector()) + carStopDistance;
+        }
+        
+        switch(car.getVector().direction){
+            
+            case NORTH:
+                xModifier = 0;
+                yModifier = magnitude * -1;
+                break;
+                
+            case EAST:
+                xModifier = magnitude * -1;
+                yModifier = 0;
+                break;
+            
+            case SOUTH:
+                xModifier = 0;
+                yModifier = magnitude;
+                break;
+                
+            case WEST:
+                xModifier = magnitude;
+                yModifier = 0;
+                break;
+            
+            default:
+                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
+        }    
+        return new GridVector(xModifier + center.ewPoint, yModifier + center.nsPoint, car.getVector().direction);
+    }
+    
     /**
      * @param car
      * @param to
-     * @return true = the car can move though the intersection 
      */
-    public boolean submitCar(Car car, Intersection to){
-        CardinalDirection heading = getDirectionTo(to);
+    public void submitCar(Car car, Intersection to){
+        
+        if(EWBoundCars.contains(car)){
+            throw new IllegalArgumentException(car + " is already in the EW queue");
+        }
+        if(NSBoundCars.contains(car)){
+            throw new IllegalArgumentException(car + " is already in the NS queue");
+        }
+        
+        CardinalDirection heading = VectorUtility.getDirectionTo(this, to);
         switch(heading){
-            
-            case NORTH: case SOUTH:
-                if(NSLightState == LightState.GREEN){
-                    return true;
-                } else {
-                    lightQueueNSBound.add(car);
-                    return false;
-                }
                 
             case EAST: case WEST:
-                if(EWLightState == LightState.GREEN){
-                    return true;
-                } else {
-                    lightQueueEWBound.add(car);
-                    return false;
-                }
+                EWBoundCars.add(car);
+                break;
+            
+            case NORTH: case SOUTH:
+                NSBoundCars.add(car);
+                break;
                 
             default:
                 throw new IllegalArgumentException(heading + "-bound headings are not handled.");
@@ -181,37 +291,14 @@ public class Intersection {
         return EWBlock;
     }
     
-    public CardinalDirection getDirectionTo(Intersection intersection){
-        
-        if(this.equals(intersection)){
-            throw new IllegalArgumentException("The passed in intersecion is equal to this.");
-        }
-        
-        int otherNSBlock = intersection.NSBlock;
-        int otherEWBlock = intersection.EWBlock;
-        if(EWBlock == otherEWBlock){
-            if(NSBlock > otherNSBlock){
-                return CardinalDirection.NORTH;
-            } else {
-                return CardinalDirection.SOUTH;
-            }
-        }else if(NSBlock == otherNSBlock){
-            if(EWBlock > otherEWBlock){
-                return CardinalDirection.WEST;
-            } else {
-                return CardinalDirection.EAST;
-            }
-        } else {
-            throw new IllegalArgumentException("The passed in intersection is not orthogonal to this intersection");
-        }
-    }
-    
     public LightState getEWLightState(){
-        return EWLightState; 
+//        return EWLightState; 
+        return LightState.GREEN;
     }
     
     public LightState getNSLightState(){
-        return NSLightState;
+//        return NSLightState;
+        return LightState.GREEN;
     }
     
     @Override

@@ -19,8 +19,8 @@ public class LightChangeEvent extends Event {
     
     public enum ChangeType{INITIAL, ALL_RED, GREEN};
     
-    private final static long YELLOW_TIME = 30;
-    private final static long GREEN_TIME = 30;
+    private final static long YELLOW_TIME = 50;
+    private final static long GREEN_TIME = 150;
     private final static long CAR_DEQUEUE_TIME = 10;
     
     private final Intersection intersection;
@@ -64,7 +64,7 @@ public class LightChangeEvent extends Event {
                 //Queues up all the cars in waiting at the light
                 double carMoveTime = eventTime;
                 for(Car car : carsDequeued){
-                    EventBus.submitEvent(new CarMoveEvent(carMoveTime, car, intersection));
+                    EventBus.submitEvent(new ApproachIntersectionEvent(carMoveTime, car, intersection));
                     carMoveTime += CAR_DEQUEUE_TIME;
                 }
                 break;

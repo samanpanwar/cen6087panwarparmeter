@@ -29,7 +29,5 @@ public class MainWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         canvasPane.setContent(Simulation.WORLD.getRoot());
         Simulation.start();
-    }   
-    
-    
+    }
 }

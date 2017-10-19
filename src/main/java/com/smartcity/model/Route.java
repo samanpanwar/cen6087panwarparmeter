@@ -22,4 +22,20 @@ public class Route {
     public List<Intersection> getIntersections(){
        return intersections;
     }
+    
+    /**
+     * @param intersection gets the intersection after this one. 
+     * @return null if the route is at the end, throws exception 
+     * if the route does not contain the intersection
+     */
+    public Intersection getNextIntersection(Intersection intersection){
+        int currentIndex = this.intersections.indexOf(intersection);
+        if(currentIndex == -1){
+            throw new IllegalArgumentException("The intersection: " + intersection + " is not in the route");
+        } else if(currentIndex == this.intersections.size()-1){
+            return null;
+        } else {
+            return this.intersections.get(currentIndex+1);
+        }
+    }
 }

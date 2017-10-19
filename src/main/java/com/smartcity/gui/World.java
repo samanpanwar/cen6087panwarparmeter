@@ -1,5 +1,7 @@
 package com.smartcity.gui;
 
+import com.smartcity.application.Simulation;
+import com.smartcity.utility.VectorUtility;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -12,7 +14,7 @@ import javafx.scene.shape.Rectangle;
 import com.smartcity.model.Car;
 import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.Grid;
-import com.smartcity.model.GridCoordinate;
+import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightState;
 import com.smartcity.model.Route;
@@ -61,49 +63,9 @@ public class World {
     
     public void addCar(Car car){    
         
-        Intersection location = car.getRoute().getIntersections().get(0);
-        CardinalDirection direction = grid.getEntryDirection(location);
-        int gridSize = Grid.INTERSECTION_DISATANCE;
-        int xCell = location.getEWBlock() * gridSize;
-        int yCell = location.getNSBlock() * gridSize;
-        
-        //Direction Modifier
-        int xDir;
-        int yDir;
-        int rotation;
-        switch(direction){
-            case NORTH:
-                xDir = gridSize/2;
-                yDir = gridSize;
-                rotation = 0;
-                break;
-                
-            case EAST:
-                xDir = 0;
-                yDir = gridSize/2;
-                rotation = 90;
-                break;
-                
-            case SOUTH:
-                xDir = gridSize/2; 
-                yDir = 0;
-                rotation = 180;
-                break; 
-                
-            case WEST:
-                xDir = gridSize;
-                yDir = gridSize/2;
-                rotation = 270;
-                break;
-                
-            default:
-                throw new IllegalArgumentException(direction + " is not handled");   
-        }
-                
-        int x = xCell + xDir;
-        int y = yCell + yDir;
-        final Rectangle carObj = new Rectangle(x, y, 3, 5);
-        carObj.setRotate(rotation);
+        GridVector v = car.getVector();
+        final Rectangle carObj = new Rectangle(v.ewPoint, v.nsPoint, 3, 5);
+        carObj.setRotate(VectorUtility.getDirection(v.direction));
         carObj.setFill(Color.GREEN);
         CAR_MAP.put(car, carObj);
         
@@ -112,8 +74,9 @@ public class World {
         });
     }
     
-    public void moveCar(Car car, GridCoordinate to, long time){
+    public void moveCar(Car car, GridVector to, double time){
         
+        GridVector from = car.getVector();
         Rectangle carObj = CAR_MAP.get(car);
         if(carObj == null){
             throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
@@ -121,14 +84,15 @@ public class World {
         
         Platform.runLater(()->{
             Path path = new Path();
-            path.getElements().add(new MoveTo(to.ewPoint, to.nsPoint));
+            path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
             path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
             
             PathTransition pt = new PathTransition();
             pt.setNode(carObj);
             pt.setPath(path);
-            pt.setDuration(Duration.millis(time));
+            pt.setDuration(Duration.millis(time * (1/Simulation.SIM_SPEED)));
             pt.play();
+            System.out.println(car + " moved from: " + car.getVector() + " to: " + to + " in " + time * (1/Simulation.SIM_SPEED) + " ms(realtime)");
         });
     }
     
