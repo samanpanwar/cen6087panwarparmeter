@@ -131,22 +131,4 @@ public class Grid {
     public Intersection getIntersection(int EWBlock, int NSBlock){
         return grid[EWBlock][NSBlock];
     }
-    
-//    public CardinalDirection getEntryDirection(Intersection intersection){
-//        
-//        int x = intersection.getEWBlock();
-//        int y = intersection.getNSBlock();
-//        
-//        if(y == 0){
-//            return CardinalDirection.SOUTH;
-//        } else if(x == 0){
-//            return CardinalDirection.EAST;
-//        } else if(y == getNSBlockSize() -1 && y != getEWBlockSize() -1){
-//            return CardinalDirection.NORTH;
-//        } else if(x == getEWBlockSize() -1 && x != getNSBlockSize() -1){
-//            return CardinalDirection.WEST;
-//        } else {
-//            throw new IllegalArgumentException("cannot determine the direciton for entry block:" + intersection);
-//        }
-//    }
 }

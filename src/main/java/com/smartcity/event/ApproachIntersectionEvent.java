@@ -28,6 +28,11 @@ public class ApproachIntersectionEvent extends Event{
     @Override
     public void resolveEvent() {
         
+        //If this is the entry event add the car to the GUI
+        if(car.getEntryTime() == eventTime){
+            Simulation.WORLD.addCar(car);
+        }
+        
         //Approach the yellow light vector and submit a car to the queue 
         if(to.getNumCarsWaiting(car.getVector().direction) == 0){
             GridVector newVector = to.getYellowLightVector(car);

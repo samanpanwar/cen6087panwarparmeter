@@ -18,6 +18,7 @@ import com.smartcity.model.Intersection;
  */
 public class CarGenerateEvent extends Event{
     
+    private static final double QUEUE_TIME = 15;
     private static final RouteFactory ROUTE_FACTORY = new RouteFactory(Simulation.GRID, 0L);
     private static long carsGenerated = 0;
 
@@ -28,12 +29,11 @@ public class CarGenerateEvent extends Event{
     @Override
     public void resolveEvent() {
         
-        Car car = new Car(eventTime, carsGenerated, ROUTE_FACTORY.generateRoute());
+        double insertTime = eventTime + QUEUE_TIME;
+        Car car = new Car(insertTime, carsGenerated, ROUTE_FACTORY.generateRoute());
         List<Intersection> intersections = car.getRoute().getIntersections();
-        double moveTime = eventTime + (Grid.INTERSECTION_DISATANCE / car.velocity);
         System.out.println(this.toString() + car + " location: " + intersections.get(0));
-        EventBus.submitEvent(new ApproachIntersectionEvent(moveTime, car, intersections.get(0)));
-        Simulation.WORLD.addCar(car);
+        EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
 //        Simulation.WORLD.drawRoute(car.getRoute());
         
         //generates the next car if there is a time to

@@ -50,7 +50,6 @@ public class Simulation {
         
         //Initializes the car generate event
         EventBus.submitEvent(new CarGenerateEvent(0.0));
-        
         new Thread(()->{
             try{
                 EventBus.runQueue();
