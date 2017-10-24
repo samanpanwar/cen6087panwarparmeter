@@ -9,6 +9,7 @@ import com.smartcity.application.Simulation;
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  *
@@ -136,24 +137,45 @@ public class Intersection {
         }
     }
     
+    public boolean isPastYellowLightVector(Car car){
+        GridVector yellowVector = getYellowLightVector(car);
+        GridVector carVector = car.getVector();
+        switch(carVector.direction){
+            case EAST:
+                return carVector.ewPoint < yellowVector.ewPoint;
+                
+            case WEST:
+                return carVector.ewPoint > yellowVector.ewPoint;
+                
+            case NORTH:
+                return carVector.nsPoint < yellowVector.nsPoint;
+                
+            case SOUTH:
+                return carVector.nsPoint > yellowVector.nsPoint;
+            
+            default:
+                throw new IllegalArgumentException(car.getVector().direction + " is not handled");
+        }
+    }
+    
     /**
      * @param direction
      * @return the cars waiting, only given when the state is not initial
      */
-    public Car[] getAndEmptyCars(LightDirection direction){
+    public Queue<Car> getAndEmptyCars(LightDirection direction){
         switch(direction){
             case EW_BOUND:
                 try{
-                    return lightQueueEWBound.toArray(new Car[0]);
+                    return (Queue<Car>) lightQueueEWBound.clone();
                 } finally {
-                //    lightQueueEWBound.clear();
+                    lightQueueEWBound.clear();
                 }
 
             case NS_BOUND:
                 try{
-                    return lightQueueNSBound.toArray(new Car[0]);
+                    return (Queue<Car>) lightQueueNSBound.clone();
                 } finally {
-                 //   lightQueueNSBound.clear();
+                    lightQueueNSBound.clear();
                 }
             default:
                 throw new IllegalArgumentException(direction + " is not handled");
@@ -239,13 +261,13 @@ public class Intersection {
     }
     
     public LightState getEWLightState(){
-//        return EWLightState; 
-        return LightState.RED;
+        return EWLightState; 
+//        return LightState.RED;
     }
     
     public LightState getNSLightState(){
-//        return NSLightState;
-        return LightState.RED;
+        return NSLightState;
+//        return LightState.RED;
     }
     
     @Override

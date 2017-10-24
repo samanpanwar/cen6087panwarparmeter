@@ -15,6 +15,8 @@ public class Car {
     
     public enum State{STOPPED, ACCELERATING, CRUISING, STOPPING};
     
+    public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
+    
     public final double velocity = 5;//distance units / time unit
     public final double stoppingDistance = 25;
     public final double accelerationDistance = 25;

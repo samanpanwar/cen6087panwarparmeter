@@ -9,7 +9,6 @@ import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightDirection;
-import java.util.Arrays;
 
 /**
  *
@@ -20,8 +19,7 @@ public class LightChangeEvent extends Event {
     public enum ChangeType{INITIAL, ALL_RED, GREEN};
     
     private final static long YELLOW_TIME = 50;
-    private final static long GREEN_TIME = 150;
-    private final static long CAR_DEQUEUE_TIME = 10;
+    private final static long GREEN_TIME = 50;
     
     private final Intersection intersection;
     private final LightDirection lightDirection;
@@ -47,10 +45,6 @@ public class LightChangeEvent extends Event {
                 break;
                 
             case GREEN:
-                Car[] carsDequeued = intersection.getAndEmptyCars(lightDirection);
-                if(carsDequeued.length != 0){
-                    System.out.println(this.toString() + " " + carsDequeued.length + " cars have been dequeued: " + Arrays.toString(carsDequeued));
-                }
 
                 //Queues up a new light change direction
                 LightDirection newDirection;
@@ -59,14 +53,8 @@ public class LightChangeEvent extends Event {
                 } else { 
                     newDirection = LightDirection.EW_BOUND;
                 }
+                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, lightDirection, intersection.getAndEmptyCars(lightDirection)));
                 EventBus.submitEvent(new LightChangeEvent(eventTime + GREEN_TIME, intersection, newDirection, ChangeType.INITIAL));
-
-//                //Queues up all the cars in waiting at the light
-//                double carMoveTime = eventTime;
-//                for(Car car : carsDequeued){
-//                    EventBus.submitEvent(new ApproachIntersectionEvent(carMoveTime, car, intersection));
-//                    carMoveTime += CAR_DEQUEUE_TIME;
-//                }
                 break;
             
             default:
