@@ -71,10 +71,12 @@ public class DetermineStopEvent extends Event{
             }
 
         } else {
-            GridVector stopLocation = stopAt.StopCar(car);
-            double deltaTime = car.getTimeTo(stopLocation);
-            EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car, stopLocation));
-            Simulation.WORLD.moveCar(car, stopLocation, deltaTime);
+            GridVector stopVector = stopAt.getNextCarStopVector(car);
+            double deltaTime = car.getTimeTo(stopVector);
+            Simulation.WORLD.moveCar(car, stopVector, deltaTime);
+            car.setVector(stopVector);
+            car.setState(Car.State.STOPPING);
+            EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car));
         }
     }
 }

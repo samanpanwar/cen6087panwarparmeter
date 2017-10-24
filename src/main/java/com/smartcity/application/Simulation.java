@@ -23,17 +23,18 @@ public class Simulation {
     
     //Used for rendering
     public static final boolean REAL_TIME = true;
-    public static final double SIM_SPEED = 0.1;
+    public static final double SIM_SPEED = 0.01;
     
     //configuration variables
-    public static final long CAR_ENTRY_INTERVAL = 1; //time units
-    public static final int NUM_CARS = 10;
+    public static final int NUM_CARS = 2;
+    public static final long CAR_ENTRY_INTERVAL = 10; //time units
     public static final int NUM_EW_STREETS = 12;
     public static final int NUM_NS_STREETS = 8;
     
     //Size variables
     public static final int INTERSECTION_DISATANCE = 150;
-    public static final int STREET_WIDTH = 10; //px
+    public static final int STREET_WIDTH = 10; 
+    public static final int CAR_STOP_DISTANCE = 8;//Distace between stopped cars
     
     //Objects
     public static final Grid GRID = new Grid(NUM_EW_STREETS, NUM_NS_STREETS);

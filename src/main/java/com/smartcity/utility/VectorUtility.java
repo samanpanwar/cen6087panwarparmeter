@@ -130,6 +130,6 @@ public class VectorUtility {
             default:
                 throw new IllegalArgumentException(direction + " is not handled");
         }    
-        return new GridVector(xModifier + vector.ewPoint, yModifier + vector.nsPoint, direction);
+        return new GridVector(xModifier + vector.ewPoint, yModifier + vector.nsPoint, direction.getOppisite());
     }
 }

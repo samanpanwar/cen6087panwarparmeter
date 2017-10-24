@@ -13,6 +13,8 @@ import com.smartcity.utility.VectorUtility;
  */
 public class Car {
     
+    public enum State{STOPPED, ACCELERATING, CRUISING, STOPPING};
+    
     public final double velocity = 5;//distance units / time unit
     public final double stoppingDistance = 25;
     public final double accelerationDistance = 25;
@@ -21,12 +23,21 @@ public class Car {
     private final Route route;
     private final long carNum;
     private GridVector vector;
+    private State state;
     
     public Car(double entryTime, long carNum, Route route){
         this.entryTime = entryTime;
         this.route = route;
         this.carNum = carNum;
         this.vector = VectorUtility.initializePositionDirection(route);
+    }
+    
+    public State getState(){
+        return state;
+    }
+    
+    public void setState(State state){
+        this.state = state;
     }
     
     public double getTimeTo(GridVector vector){

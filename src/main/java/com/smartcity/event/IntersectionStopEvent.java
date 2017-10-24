@@ -6,7 +6,7 @@
 package com.smartcity.event;
 
 import com.smartcity.model.Car;
-import com.smartcity.model.GridVector;
+import com.smartcity.model.Intersection;
 
 /**
  *
@@ -15,18 +15,16 @@ import com.smartcity.model.GridVector;
 public class IntersectionStopEvent extends Event{
 
     private final Car car;
-    private final GridVector stopLocation;
     
-    public IntersectionStopEvent(double eventTime, Car car, GridVector stopLocation) {
+    public IntersectionStopEvent(double eventTime, Car car) {
         super(eventTime);
         this.car = car;
-        this.stopLocation = stopLocation;
     }
 
     @Override
     public void resolveEvent() {
-        this.car.setVector(stopLocation);
-    
+        if(car.getState() == Car.State.STOPPING){
+            car.setState(Car.State.STOPPED);
+        }
     }
-    
 }

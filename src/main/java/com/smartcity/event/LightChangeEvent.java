@@ -61,12 +61,12 @@ public class LightChangeEvent extends Event {
                 }
                 EventBus.submitEvent(new LightChangeEvent(eventTime + GREEN_TIME, intersection, newDirection, ChangeType.INITIAL));
 
-                //Queues up all the cars in waiting at the light
-                double carMoveTime = eventTime;
-                for(Car car : carsDequeued){
-                    EventBus.submitEvent(new ApproachIntersectionEvent(carMoveTime, car, intersection));
-                    carMoveTime += CAR_DEQUEUE_TIME;
-                }
+//                //Queues up all the cars in waiting at the light
+//                double carMoveTime = eventTime;
+//                for(Car car : carsDequeued){
+//                    EventBus.submitEvent(new ApproachIntersectionEvent(carMoveTime, car, intersection));
+//                    carMoveTime += CAR_DEQUEUE_TIME;
+//                }
                 break;
             
             default:
