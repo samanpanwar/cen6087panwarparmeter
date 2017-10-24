@@ -68,7 +68,7 @@ public class VectorUtility {
                 break;
                 
             case EAST:
-                xDir = 0;
+                xDir = gridSize;
                 yDir = gridSize/2;
                 break;
                 
@@ -78,7 +78,7 @@ public class VectorUtility {
                 break; 
                 
             case WEST:
-                xDir = gridSize;
+                xDir = 0;
                 yDir = gridSize/2;
                 break;
                 

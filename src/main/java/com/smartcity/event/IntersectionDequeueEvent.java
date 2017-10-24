@@ -33,13 +33,11 @@ public class IntersectionDequeueEvent extends Event{
         //Queues up all the cars in waiting at the light
         Car car = carsToDequeue.poll(); 
         if(car != null){
-            Intersection intersectionToMoveTo;
             if(intersection.isPastYellowLightVector(car)){
-                intersectionToMoveTo = car.getRoute().getNextIntersection(intersection);
+                EventBus.submitEvent(new DetermineStopEvent(eventTime, car, intersection));
             } else {
-                intersectionToMoveTo = intersection;
+                EventBus.submitEvent(new ApproachIntersectionEvent(eventTime, car, intersection));
             }    
-            EventBus.submitEvent(new ApproachIntersectionEvent(eventTime, car, intersectionToMoveTo));
             EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, direction, carsToDequeue));
         }
     }

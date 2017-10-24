@@ -38,7 +38,7 @@ public class IntersectionCrossEvent extends Event{
             
             //The next intersection is straight ahead. 
             if(newDirection == car.getVector().direction){
-                deltaTime = car.getVector().distanceTo(newCarVector);
+                deltaTime = car.getVector().distanceTo(newCarVector)/4;
                 Simulation.WORLD.moveCar(car, newCarVector, deltaTime);
                 
             } else if(newDirection == car.getVector().direction.getOppisite()){
@@ -46,8 +46,8 @@ public class IntersectionCrossEvent extends Event{
                 
             //There is a curve
             } else {
-                deltaTime = car.getVector().distanceTo(newCarVector);
-                
+                deltaTime = car.getVector().distanceTo(newCarVector)/4;
+                Simulation.WORLD.turnCarTo(car, newVector, deltaTime);
             }
             
             car.setVector(newCarVector);

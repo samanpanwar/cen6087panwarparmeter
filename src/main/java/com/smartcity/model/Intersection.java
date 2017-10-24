@@ -142,10 +142,10 @@ public class Intersection {
         GridVector carVector = car.getVector();
         switch(carVector.direction){
             case EAST:
-                return carVector.ewPoint < yellowVector.ewPoint;
+                return carVector.ewPoint > yellowVector.ewPoint;
                 
             case WEST:
-                return carVector.ewPoint > yellowVector.ewPoint;
+                return carVector.ewPoint < yellowVector.ewPoint;
                 
             case NORTH:
                 return carVector.nsPoint < yellowVector.nsPoint;
@@ -157,6 +157,7 @@ public class Intersection {
                 throw new IllegalArgumentException(car.getVector().direction + " is not handled");
         }
     }
+    
     
     /**
      * @param direction
@@ -261,13 +262,11 @@ public class Intersection {
     }
     
     public LightState getEWLightState(){
-//        return EWLightState; 
-        return LightState.GREEN;
+        return EWLightState; 
     }
     
     public LightState getNSLightState(){
-//        return NSLightState;
-        return LightState.GREEN;
+        return NSLightState;
     }
     
     @Override

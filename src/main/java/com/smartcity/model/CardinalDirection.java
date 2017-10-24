@@ -44,13 +44,13 @@ public enum CardinalDirection {
                 return 0;
                 
             case EAST: 
-                return 90;
+                return 270;
                 
             case SOUTH:
                 return 180;
                 
             case WEST:
-                return 270;
+                return 90;
                 
             default:
                 throw new IllegalArgumentException(this + " is not handled.");

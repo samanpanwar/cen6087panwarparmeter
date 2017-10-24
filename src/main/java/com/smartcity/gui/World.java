@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.animation.RotateTransition;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -85,7 +86,6 @@ public class World {
         }
         
         Platform.runLater(()->{                
-            carObj.setRotate(to.direction.getDegrees());//TODO: the curve should be doing a rotate?
             Path path = new Path();
             path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
             path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
@@ -114,14 +114,23 @@ public class World {
             Path path = new Path();
             path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
             double radius = Simulation.STREET_WIDTH;
+            double duration = time * (1/Simulation.SIM_SPEED);
             path.getElements().add(new ArcTo(radius, radius, 90, to.ewPoint, to.nsPoint, false, true));
             
             PathTransition pt = new PathTransition();
             pt.setInterpolator(Interpolator.LINEAR);
             pt.setNode(carObj);
             pt.setPath(path);
-            pt.setDuration(Duration.millis(time * (1/Simulation.SIM_SPEED)));
+            pt.setDuration(Duration.millis(duration));
             pt.play();
+            
+            RotateTransition rt = new RotateTransition();
+            rt.setInterpolator(Interpolator.LINEAR);
+            rt.setNode(carObj);
+            rt.setFromAngle(from.direction.getDegrees());
+            rt.setToAngle(to.direction.getDegrees());
+            rt.setDuration(Duration.millis(duration));
+            rt.play();
         });
     }
     

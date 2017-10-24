@@ -19,7 +19,7 @@ public class LightChangeEvent extends Event {
     public enum ChangeType{INITIAL, ALL_RED, GREEN};
     
     private final static long YELLOW_TIME = 50;
-    private final static long GREEN_TIME = 50;
+    private final static long GREEN_TIME = 250;
     
     private final Intersection intersection;
     private final LightDirection lightDirection;
