@@ -26,6 +26,7 @@ import org.junit.Test;
  */
 public class RouteFactoryTest {
     
+    private final int NUM_TEST_ROUTES = 100_000;
     private final boolean debug = false;
     private final Grid grid = new Grid(12, 8);
     private final RouteFactory factory = new RouteFactory(grid, 0L);
@@ -56,9 +57,10 @@ public class RouteFactoryTest {
                 stage.show();
             });
         }
-        for(int i = 0; i < 100_000; i++){
+        for(int i = 0; i < NUM_TEST_ROUTES; i++){
             testGenerateRoute(factory.generateRoute(), i);
         }
+        System.out.println(NUM_TEST_ROUTES + " Routes tested");
     }
     
     private void testGenerateRoute(Route route, int testNum){

@@ -49,7 +49,6 @@ public class RouteFactory {
         List<Intersection> exitInteresections = grid.getExitIntersections().get(exitSide);
         Intersection exitIntersection = exitInteresections.get(random.nextInt(exitInteresections.size()));
         
-        entryIntersection = new Intersection(3, 0);
         int xEntry = entryIntersection.getEWBlock();
         int yEntry = entryIntersection.getNSBlock();
         int xExit = exitIntersection.getEWBlock();

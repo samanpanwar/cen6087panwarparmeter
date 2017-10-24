@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -79,12 +80,12 @@ public class World {
         if(carObj == null){
             throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
         }
+        if(from.direction != to.direction){
+            throw new IllegalArgumentException("This function can only move cars in a straight line");
+        }
         
-        Platform.runLater(()->{
-            if(to.direction != null){
-                carObj.setRotate(to.direction.getDegrees());
-            }
-            
+        Platform.runLater(()->{                
+            carObj.setRotate(to.direction.getDegrees());//TODO: the curve should be doing a rotate?
             Path path = new Path();
             path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
             path.getElements().add(new LineTo(to.ewPoint, to.nsPoint));
@@ -95,7 +96,32 @@ public class World {
             pt.setPath(path);
             pt.setDuration(Duration.millis(time * (1/Simulation.SIM_SPEED)));
             pt.play();
-//            System.out.println(car + " moved from: " + car.getVector() + " to: " + to + " in " + time * (1/Simulation.SIM_SPEED) + " ms(realtime)");
+        });
+    }
+    
+    public void turnCarTo(Car car, GridVector to, double time){
+        
+        GridVector from = car.getVector();
+        Rectangle carObj = CAR_MAP.get(car);
+        if(carObj == null){
+            throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
+        }
+        if(from.direction == to.direction){
+            throw new IllegalArgumentException("This function can only move cars that are turning.");
+        }
+        
+        Platform.runLater(()->{
+            Path path = new Path();
+            path.getElements().add(new MoveTo(from.ewPoint, from.nsPoint));
+            double radius = Simulation.STREET_WIDTH;
+            path.getElements().add(new ArcTo(radius, radius, 90, to.ewPoint, to.nsPoint, false, true));
+            
+            PathTransition pt = new PathTransition();
+            pt.setInterpolator(Interpolator.LINEAR);
+            pt.setNode(carObj);
+            pt.setPath(path);
+            pt.setDuration(Duration.millis(time * (1/Simulation.SIM_SPEED)));
+            pt.play();
         });
     }
     

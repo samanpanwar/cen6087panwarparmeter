@@ -40,7 +40,7 @@ public class EventBus {
                     Thread.sleep(sleepTime);
                 } else {
                     if(sleepTime < 0){
-                        System.out.println("Sleep time is: " + sleepTime);
+                       System.out.println("Sleep time is: " + sleepTime);
                     }
                 }
             }

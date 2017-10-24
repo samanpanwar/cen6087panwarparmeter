@@ -6,7 +6,6 @@
 package com.smartcity.event;
 
 import com.smartcity.model.Car;
-import com.smartcity.model.Intersection;
 
 /**
  *

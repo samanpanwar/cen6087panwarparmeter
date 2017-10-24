@@ -104,9 +104,9 @@ public class Intersection {
         return center;
     }
     
-//    public GridVector getExit(CardinalDirection direction){
-//        return null;
-//    }
+    public GridVector getEdge(CardinalDirection direction){
+        return VectorUtility.addMagnitude(center, direction, Simulation.STREET_WIDTH);
+    }
     
     /**
      * @param car
@@ -261,13 +261,13 @@ public class Intersection {
     }
     
     public LightState getEWLightState(){
-        return EWLightState; 
-//        return LightState.RED;
+//        return EWLightState; 
+        return LightState.GREEN;
     }
     
     public LightState getNSLightState(){
-        return NSLightState;
-//        return LightState.RED;
+//        return NSLightState;
+        return LightState.GREEN;
     }
     
     @Override

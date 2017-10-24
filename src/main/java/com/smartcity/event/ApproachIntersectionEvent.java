@@ -42,8 +42,6 @@ public class ApproachIntersectionEvent extends Event{
             EventBus.submitEvent(new DetermineStopEvent(deltaTime + eventTime, car, to));
         } else {
             
-            //TODO if the car is past the yellow light then move the car or stop the car based on the light state. 
-            
             //Move the car to the next available spot in the intersection
             GridVector stopVector = to.getNextCarStopVector(car);
             double deltaTime = car.getTimeTo(stopVector);

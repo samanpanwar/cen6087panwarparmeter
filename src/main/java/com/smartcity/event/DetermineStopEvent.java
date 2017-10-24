@@ -51,15 +51,12 @@ public class DetermineStopEvent extends Event{
             if(nextIntersection != null){
                 
                 //Determine the center and set the rotation
-                double x = stopAt.getCenter().ewPoint;
-                double y = stopAt.getCenter().nsPoint;
-                CardinalDirection direction = VectorUtility.getDirectionTo(stopAt, nextIntersection);
-                GridVector moveToVector = new GridVector(x, y, direction);
+                GridVector moveToVector = stopAt.getEdge(car.getVector().direction.getOppisite());
                 
                 double deltaTime = car.getTimeTo(moveToVector);
                 Simulation.WORLD.moveCar(car, moveToVector, deltaTime);
                 car.setVector(moveToVector);
-                EventBus.submitEvent(new ApproachIntersectionEvent(eventTime + deltaTime, car, nextIntersection));
+                EventBus.submitEvent(new IntersectionCrossEvent(eventTime + deltaTime, car, stopAt));
             
             //There are no more intersections, the car is exiting thoug this interseciton in it's current direction
             } else {
