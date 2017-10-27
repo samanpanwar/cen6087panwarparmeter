@@ -41,10 +41,12 @@ public class Simulation {
     //Objects
     public static final Grid GRID = new Grid(NUM_EW_STREETS, NUM_NS_STREETS);
     public static final World WORLD = new World(GRID);
+    public static final long START_TIME = System.currentTimeMillis();
     
     public static void start(){
         
         //Starts up the "dumb" light switch algorithm for the traffic lights
+        System.out.println("Simulation Started.");
         for(int i = 0; i < GRID.getEWBlockSize(); i++){
             for(int j = 0; j < GRID.getNSBlockSize(); j++){
                 Intersection intersection = GRID.getIntersection(i, j);

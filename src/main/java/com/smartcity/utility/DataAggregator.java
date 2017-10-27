@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -34,8 +35,8 @@ public class DataAggregator {
     private static final AtomicLong numCarsRemoved = new AtomicLong(0);
     private static final AtomicLong numEvents = new AtomicLong(0);
     private static final Map<Class, List<Long>> eventTimesMap = new HashMap(); 
-    private static final TreeMultiset<Long> carAverages = TreeMultiset.create();
-    private static final long updateInterval = 250;//ms
+    private static final TreeMultiset<Double> carAverages = TreeMultiset.create();
+    private static final long updateInterval = 50;//ms
     
     private static long lastUpdateTime = System.currentTimeMillis();
     
@@ -65,27 +66,33 @@ public class DataAggregator {
         return numCars.longValue();
     }
     
-    public static void putCarAverage(long average){
+    public static void putCarAverage(double average){
         carAverages.add(average);
     }
     
     public static void generateCarAverageChart(){
         
         //caculates the stats
-        long min = carAverages.firstEntry().getElement();
-        long max = carAverages.lastEntry().getElement();
-        BigInteger total = BigInteger.ZERO;
-        for(Long avg : carAverages){
-            total.add(BigInteger.valueOf(avg));
+        double min = carAverages.firstEntry().getElement();
+        double max = carAverages.lastEntry().getElement();
+        double total = 0;
+        for(double avg : carAverages){
+            total += avg;
+            if(total == Double.MAX_VALUE){
+                throw new IllegalStateException("The average cannot be calculated, double overflow");
+            }
         }
-        long avg = total.divide(BigInteger.valueOf(carAverages.size())).longValue();
+        double avg = total / carAverages.size();
         
         //Builds the stats pane
         HBox statsPane = new HBox();
+        statsPane.setSpacing(10);
         statsPane.getChildren().addAll(
+                new Label("Total:" + carAverages.size()), 
                 new Label("Mean:" + avg), 
-                new Label("min:" + min), 
-                new Label("max:" + max));
+                new Label("Min:" + min), 
+                new Label("Max:" + max),
+                new Label("Range:" + (max-min)));
         
         //builds the chart
         final CategoryAxis xAxis = new CategoryAxis();
@@ -101,10 +108,12 @@ public class DataAggregator {
         
         //opens the chart in a new window
         Scene scene = new Scene(mainBox, 600, 400);
-        Stage stage = new Stage();
-        stage.setTitle("New Window");
-        stage.setScene(scene);
-        stage.show();
+        Platform.runLater(()->{
+            Stage stage = new Stage();
+            stage.setTitle("New Window");
+            stage.setScene(scene);
+            stage.show();
+        });
     }
     
     public static void generateEventTimesAveragesChart(){

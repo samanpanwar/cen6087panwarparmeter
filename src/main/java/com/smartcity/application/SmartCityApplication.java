@@ -30,5 +30,6 @@ public class SmartCityApplication extends Application{
             primaryStage.setHeight(scene.getHeight());
             primaryStage.show();
         }
+        Simulation.start();
     }
 }

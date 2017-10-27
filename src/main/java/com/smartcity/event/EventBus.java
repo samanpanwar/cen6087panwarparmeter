@@ -18,6 +18,7 @@ public class EventBus {
     
     private static double simulationTime = 0.0;
     private static final Queue<Event> EVENT_QUEUE = new PriorityQueue(new EventComparator());
+    private static boolean isStopped = false;
     
     public static void submitEvent(Event event){
         if(simulationTime > event.eventTime){
@@ -32,7 +33,7 @@ public class EventBus {
     
     @SuppressWarnings("SleepWhileInLoop")
     public static void runQueue() throws InterruptedException{
-        while(EVENT_QUEUE.isEmpty() == false){
+        while(EVENT_QUEUE.isEmpty() == false && isStopped == false){
             Event evt = EVENT_QUEUE.poll();
             
             if(Simulation.REAL_TIME){
@@ -48,7 +49,10 @@ public class EventBus {
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }
-        System.out.println("The queue is empty.");
-        Platform.exit();
+        System.out.println("The queue is empty or has been stopped.");
+    }
+    
+    public static void stopEventBus(){
+        isStopped = true;
     }
 }
