@@ -29,7 +29,7 @@ public class DetermineStopEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         
         LightState lightState;
         switch(car.getVector().direction){
@@ -60,7 +60,8 @@ public class DetermineStopEvent extends Event{
             
             //There are no more intersections, the car is exiting thoug this interseciton in it's current direction
             } else {
-                GridVector exitVector = VectorUtility.getIntersectionEdge(stopAt, car.getVector().direction);
+                GridVector exitVector = VectorUtility.getIntersectionEdge(stopAt, car.getVector().direction.getOppisite());
+                exitVector = new GridVector(exitVector.ewPoint, exitVector.nsPoint, car.getVector().direction);
                 double deltaTime = car.getTimeTo(exitVector);
                 Simulation.WORLD.moveCar(car, exitVector, deltaTime);
                 car.setVector(exitVector);

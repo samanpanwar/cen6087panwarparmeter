@@ -21,7 +21,7 @@ public class IntersectionStopEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         if(car.getState() == Car.State.STOPPING){
             car.setState(Car.State.STOPPED);
         }

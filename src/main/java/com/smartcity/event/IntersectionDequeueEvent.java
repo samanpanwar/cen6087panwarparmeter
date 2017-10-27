@@ -28,7 +28,7 @@ public class IntersectionDequeueEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         
         //Queues up all the cars in waiting at the light
         Car car = carsToDequeue.poll(); 

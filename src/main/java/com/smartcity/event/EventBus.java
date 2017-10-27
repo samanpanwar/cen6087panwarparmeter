@@ -35,19 +35,14 @@ public class EventBus {
         while(EVENT_QUEUE.isEmpty() == false){
             Event evt = EVENT_QUEUE.poll();
             
-            if(Simulation.REAL_TIME && (evt.eventTime - simulationTime) > 1){
+            if(Simulation.REAL_TIME){
                 long sleepTime = (long) ((evt.eventTime - simulationTime) * (1/Simulation.SIM_SPEED));
                 if(sleepTime > 0){
                     Thread.sleep(sleepTime);
                 } else {
                     if(sleepTime < 0){
-                       System.out.println("Sleep time is: " + sleepTime);
+                       System.out.println("There was a negative sleep time: " + sleepTime);
                     }
-                }
-            } else { 
-                
-                if(evt.eventTime - simulationTime < -1){
-                    System.out.println(evt.eventTime - simulationTime);
                 }
             }
             simulationTime = evt.eventTime;

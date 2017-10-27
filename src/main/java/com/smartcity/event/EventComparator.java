@@ -13,8 +13,10 @@ import java.util.Comparator;
  */
 public class EventComparator implements Comparator<Event>{
 
+    private static double MULTILLER = 100_000;
+    
     @Override
     public int compare(Event o1, Event o2) {
-        return (int) (o1.eventTime - o2.eventTime);
+        return (int) ((o1.eventTime - o2.eventTime) * MULTILLER);
     }
 }

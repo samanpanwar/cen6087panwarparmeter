@@ -26,7 +26,7 @@ public class ApproachIntersectionEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         
         //If this is the entry event add the car to the GUI
         if(car.getEntryTime() == eventTime){

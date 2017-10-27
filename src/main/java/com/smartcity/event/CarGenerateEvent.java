@@ -10,7 +10,6 @@ import com.smartcity.factory.RouteFactory;
 import java.util.List;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
-import com.smartcity.model.Route;
 
 /**
  *
@@ -27,7 +26,7 @@ public class CarGenerateEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         
         double insertTime = eventTime + QUEUE_TIME;
         Car car = new Car(insertTime, carsGenerated, ROUTE_FACTORY.generateRoute());

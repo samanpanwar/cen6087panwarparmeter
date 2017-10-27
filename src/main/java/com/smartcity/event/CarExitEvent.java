@@ -23,7 +23,7 @@ public class CarExitEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         double duration = eventTime - car.getEntryTime();
         double distance = car.getRoute().getIntersections().size() * Simulation.INTERSECTION_DISATANCE;
         Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);

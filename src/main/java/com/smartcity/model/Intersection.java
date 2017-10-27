@@ -158,7 +158,6 @@ public class Intersection {
         }
     }
     
-    
     /**
      * @param direction
      * @return the cars waiting, only given when the state is not initial

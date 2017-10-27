@@ -28,7 +28,7 @@ public class IntersectionCrossEvent extends Event{
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         Intersection to = car.getRoute().getNextIntersection(from);
         if(to != null){
             CardinalDirection newDirection = VectorUtility.getDirectionTo(from, to);

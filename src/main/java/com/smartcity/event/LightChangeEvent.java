@@ -33,7 +33,7 @@ public class LightChangeEvent extends Event {
     }
 
     @Override
-    public void resolveEvent() {
+    protected void eventAction() {
         switch(changeType){
             
             case INITIAL:
