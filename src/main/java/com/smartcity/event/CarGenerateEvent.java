@@ -10,6 +10,7 @@ import com.smartcity.factory.RouteFactory;
 import java.util.List;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
+import com.smartcity.utility.DataAggregator;
 
 /**
  *
@@ -31,12 +32,12 @@ public class CarGenerateEvent extends Event{
         double insertTime = eventTime + QUEUE_TIME;
         Car car = new Car(insertTime, carsGenerated, ROUTE_FACTORY.generateRoute());
         List<Intersection> intersections = car.getRoute().getIntersections();
-        System.out.println(this.toString() + car + " location: " + intersections.get(0));
         EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
 //        Simulation.WORLD.drawRoute(car.getRoute());
         
         //generates the next car if there is a time to
         carsGenerated ++;
+        DataAggregator.addCar();
         if(carsGenerated < Simulation.NUM_CARS){
             EventBus.submitEvent(new CarGenerateEvent(eventTime + Simulation.CAR_ENTRY_INTERVAL));
         } else {

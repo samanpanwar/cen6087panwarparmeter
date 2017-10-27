@@ -21,8 +21,10 @@ import com.smartcity.model.Intersection.LightDirection;
  */
 public class Simulation {
     
-    //Used for rendering
-    public static final boolean REAL_TIME = true;
+    //Used for rendering / data gathering
+    public static final boolean GATHER_DATA = true;
+    public static final boolean REAL_TIME = false;
+    public static final boolean SHOW_GUI = false;
     public static final double SIM_SPEED = 0.02;
     
     //configuration variables

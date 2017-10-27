@@ -8,6 +8,7 @@ package com.smartcity.event;
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
+import com.smartcity.utility.DataAggregator;
 
 /**
  *
@@ -29,5 +30,12 @@ public class CarExitEvent extends Event{
         Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);
         System.out.println(this.toString() + car + " has exited at " +intersection + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
         Simulation.WORLD.removeCar(car);
+        DataAggregator.removeCar();
+        
+        //end of the simulation
+        if(DataAggregator.getNumCars() == 0){
+            DataAggregator.generateCarAverageChart();
+            DataAggregator.generateEventTimesAveragesChart();
+        }
     }
 }

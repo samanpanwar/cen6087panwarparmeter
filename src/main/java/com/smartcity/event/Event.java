@@ -5,6 +5,7 @@
  */
 package com.smartcity.event;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.utility.DataAggregator;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,9 @@ public abstract class Event {
     public void resolveEvent(){
         long startNanos = System.nanoTime();
         eventAction();
-        DataAggregator.putEventEntry(this, System.nanoTime() - startNanos);
+        if(Simulation.GATHER_DATA){
+            DataAggregator.putEventEntry(this, System.nanoTime() - startNanos);
+        }
     }
     
     protected abstract void eventAction();
