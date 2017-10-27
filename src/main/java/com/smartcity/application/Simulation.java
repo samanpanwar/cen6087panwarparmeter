@@ -23,12 +23,12 @@ public class Simulation {
     
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true;
-    public static final boolean REAL_TIME = false;
-    public static final boolean SHOW_GUI = false;
-    public static final double SIM_SPEED = 0.02;
+    public static final boolean REAL_TIME = true;
+    public static final boolean SHOW_GUI = true;
+    public static final double SIM_SPEED = 0.01;
     
     //configuration variables
-    public static final int NUM_CARS = 2000;
+    public static final int NUM_CARS = 5000;
     public static final long CAR_ENTRY_INTERVAL = 2; //time units
     public static final int NUM_EW_STREETS = 10;
     public static final int NUM_NS_STREETS = 8;

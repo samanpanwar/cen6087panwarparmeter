@@ -62,6 +62,9 @@ public class World {
     }
     
     public void addCar(Car car){    
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         GridVector v = car.getVector();
         final Rectangle carObj = new Rectangle(v.ewPoint, v.nsPoint, 3, 5);
@@ -75,6 +78,9 @@ public class World {
     }
     
     public void moveCar(Car car, GridVector to, double time){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         GridVector from = car.getVector();
         Rectangle carObj = CAR_MAP.get(car);
@@ -100,6 +106,9 @@ public class World {
     }
     
     public void turnCarTo(Car car, GridVector to, double time){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         GridVector from = car.getVector();
         Rectangle carObj = CAR_MAP.get(car);
@@ -135,6 +144,9 @@ public class World {
     }
     
     public void removeCar(Car car){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         Rectangle carObj = CAR_MAP.remove(car);
         if(carObj == null){
             throw new IllegalArgumentException("The car " + car + " cannot be found in the world.");
@@ -146,6 +158,9 @@ public class World {
     }
     
     public void renderIntersectionLights(Intersection intersection){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         int lightDistance = 15;
         int gridSize = Simulation.INTERSECTION_DISATANCE;
@@ -210,6 +225,9 @@ public class World {
     }
     
     public void drawRoute(Route route){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         GraphicsContext gc = roads.getGraphicsContext2D();
         int gridSize = Simulation.INTERSECTION_DISATANCE;
         Intersection last = null;
@@ -230,6 +248,9 @@ public class World {
     }
     
     public void drawEntriesAndExits(){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         GraphicsContext gc = roads.getGraphicsContext2D();
         int gridSize = Simulation.INTERSECTION_DISATANCE;
         for(List<Intersection> entrances : grid.getEntryIntersections()){
@@ -252,6 +273,9 @@ public class World {
     }
     
     private void drawGrid(Grid grid){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         //Draws the black background
         GraphicsContext gc = roads.getGraphicsContext2D();
@@ -269,6 +293,9 @@ public class World {
     }
     
     private void drawIntersection(Intersection intersection){
+        if(Simulation.SHOW_GUI == false){
+            return;
+        }
         
         //sets up variables
         GraphicsContext gc = roads.getGraphicsContext2D();
