@@ -5,21 +5,21 @@
  */
 package com.smartcity.utility;
 
-import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.TreeMultiset;
 import com.smartcity.event.Event;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -88,11 +88,15 @@ public class DataAggregator {
         HBox statsPane = new HBox();
         statsPane.setSpacing(10);
         statsPane.getChildren().addAll(
-                new Label("Total:" + carAverages.size()), 
+                new Label("NumCars:" + carAverages.size()), 
                 new Label("Mean:" + avg), 
                 new Label("Min:" + min), 
                 new Label("Max:" + max),
                 new Label("Range:" + (max-min)));
+        
+        //Builds the copy data area
+        TextField copyDataArea = new TextField(carAverages.size() + "," + avg + "," + min + "," + max + "," + (max-min));
+        copyDataArea.setEditable(false);
         
         //builds the chart
         final CategoryAxis xAxis = new CategoryAxis();
@@ -104,7 +108,7 @@ public class DataAggregator {
         
         //Lays out the components
         VBox mainBox = new VBox();
-        mainBox.getChildren().addAll(bc, statsPane);
+        mainBox.getChildren().addAll(bc, statsPane, copyDataArea);
         
         //opens the chart in a new window
         Scene scene = new Scene(mainBox, 600, 400);
