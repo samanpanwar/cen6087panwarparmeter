@@ -7,7 +7,7 @@ package com.smartcity.event;
 
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
-import com.smartcity.model.Intersection.LightDirection;
+import com.smartcity.application.enumeration.LightDirection;
 import java.util.Queue;
 
 /**

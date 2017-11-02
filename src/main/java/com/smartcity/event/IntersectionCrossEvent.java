@@ -7,7 +7,7 @@ package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
-import com.smartcity.model.CardinalDirection;
+import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
 import com.smartcity.utility.VectorUtility;

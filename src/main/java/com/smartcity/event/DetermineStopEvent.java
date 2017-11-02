@@ -7,7 +7,6 @@ package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
-import com.smartcity.model.CardinalDirection;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Intersection.LightState;
@@ -58,7 +57,7 @@ public class DetermineStopEvent extends Event{
                 car.setVector(moveToVector);
                 EventBus.submitEvent(new IntersectionCrossEvent(eventTime + deltaTime, car, stopAt));
             
-            //There are no more intersections, the car is exiting thoug this interseciton in it's current direction
+            //There are no more intersections, the car is exiting through this interseciton in it's current direction
             } else {
                 GridVector exitVector = VectorUtility.getIntersectionEdge(stopAt, car.getVector().direction.getOppisite());
                 exitVector = new GridVector(exitVector.ewPoint, exitVector.nsPoint, car.getVector().direction);

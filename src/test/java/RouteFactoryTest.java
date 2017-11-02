@@ -13,7 +13,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-import com.smartcity.model.CardinalDirection;
+import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Route;

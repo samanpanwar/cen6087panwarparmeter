@@ -6,6 +6,7 @@
 package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
+import com.smartcity.application.enumeration.LightDirection;
 import com.smartcity.model.Car;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
@@ -34,7 +35,8 @@ public class ApproachIntersectionEvent extends Event{
         }
         
         //Approach the yellow light vector and submit a car to the queue 
-        if(to.getNumCarsWaiting(car.getVector().direction) == 0){
+        int carsInIntersection = to.getNumCarsWaiting(car.getVector().direction);
+        if(carsInIntersection == 0){
             GridVector newVector = to.getYellowLightVector(car);
             double deltaTime = car.getTimeTo(newVector);
             Simulation.WORLD.moveCar(car, newVector, deltaTime);
@@ -48,6 +50,14 @@ public class ApproachIntersectionEvent extends Event{
             Simulation.WORLD.moveCar(car, stopVector, deltaTime);
             car.setVector(stopVector);
             EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car));
+            if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED &&
+                    carsInIntersection > Simulation.CAR_CHANGE_LIGHT_NUM && to.getIsSwitching() == false){
+                
+                to.setSwitching(true);
+                double lightEventTime = eventTime + Simulation.LIGHT_CHANGE_TIME;
+                LightDirection direction = to.getLightDirection().getOppisite();
+                EventBus.submitEvent(new LightChangeEvent(lightEventTime, to, direction, LightChangeEvent.ChangeType.INITIAL));
+            }
         }
     }
 }

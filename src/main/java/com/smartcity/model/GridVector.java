@@ -5,6 +5,8 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.application.enumeration.CardinalDirection;
+
 /**
  *
  * @author Blake

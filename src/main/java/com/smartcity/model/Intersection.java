@@ -5,7 +5,11 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.application.Simulation;
+import com.smartcity.application.enumeration.LightDirection;
+import com.smartcity.event.Event;
+import com.smartcity.event.EventBus;
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.LinkedList;
@@ -17,7 +21,6 @@ import java.util.Queue;
  */
 public class Intersection {
     
-    public enum LightDirection{NS_BOUND, EW_BOUND};
     public enum LightState{RED, YELLOW, GREEN};
     
     private final GridVector center;
@@ -27,6 +30,8 @@ public class Intersection {
     
     private LightState NSLightState, EWLightState;
     private LightDirection lightDirection;
+    private boolean isSwitching = false;
+    private Event defaultChangeEvent;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -55,6 +60,25 @@ public class Intersection {
         lightDirection = LightDirection.NS_BOUND;
         NSLightState = LightState.GREEN;
         EWLightState = LightState.RED;
+    }
+    
+    public void setDefaultChangeEvent(Event evt){
+        defaultChangeEvent = evt;
+    }
+    
+    public void setSwitching(boolean switching){
+        isSwitching = switching;
+        if(switching == true && defaultChangeEvent != null){
+            EventBus.cancelEvent(defaultChangeEvent);
+        }
+    }
+    
+    public boolean getIsSwitching(){
+        return isSwitching;
+    }
+    
+    public LightDirection getLightDirection(){
+        return lightDirection;
     }
     
     public GridVector getYellowLightVector(Car car){

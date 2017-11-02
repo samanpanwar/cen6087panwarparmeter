@@ -5,6 +5,7 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.application.enumeration.CardinalDirection;
 import java.util.ArrayList;
 import java.util.List;
 

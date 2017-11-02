@@ -20,6 +20,10 @@ public class EventBus {
     private static final Queue<Event> EVENT_QUEUE = new PriorityQueue(new EventComparator());
     private static boolean isStopped = false;
     
+    public static boolean cancelEvent(Event event){
+        return EVENT_QUEUE.remove(event);
+    }
+    
     public static void submitEvent(Event event){
         if(simulationTime > event.eventTime){
             throw new IllegalArgumentException("The event cannot be submitted, it occurs in the past." + event);

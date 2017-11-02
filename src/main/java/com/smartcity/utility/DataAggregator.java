@@ -8,7 +8,6 @@ package com.smartcity.utility;
 import com.google.common.collect.TreeMultiset;
 import com.smartcity.application.Simulation;
 import com.smartcity.event.Event;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

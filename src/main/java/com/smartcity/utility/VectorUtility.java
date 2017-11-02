@@ -6,7 +6,7 @@
 package com.smartcity.utility;
 
 import com.smartcity.application.Simulation;
-import com.smartcity.model.CardinalDirection;
+import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;

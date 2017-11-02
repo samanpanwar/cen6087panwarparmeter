@@ -1,7 +1,6 @@
 package com.smartcity.gui;
 
 import com.smartcity.application.Simulation;
-import com.smartcity.utility.VectorUtility;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -11,7 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.smartcity.model.Car;
-import com.smartcity.model.CardinalDirection;
+import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.model.Grid;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;

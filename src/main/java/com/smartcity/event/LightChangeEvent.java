@@ -8,7 +8,7 @@ package com.smartcity.event;
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
-import com.smartcity.model.Intersection.LightDirection;
+import com.smartcity.application.enumeration.LightDirection;
 
 /**
  *
@@ -18,7 +18,6 @@ public class LightChangeEvent extends Event {
     
     public enum ChangeType{INITIAL, ALL_RED, GREEN};
     
-    private final static long YELLOW_TIME = 50;
     private final static long GREEN_TIME = 250;
     
     private final Intersection intersection;
@@ -37,24 +36,22 @@ public class LightChangeEvent extends Event {
         switch(changeType){
             
             case INITIAL:
-                EventBus.submitEvent(new LightChangeEvent(eventTime + YELLOW_TIME, intersection, lightDirection, ChangeType.ALL_RED));
+                intersection.setSwitching(true);
+                EventBus.submitEvent(new LightChangeEvent(eventTime + Simulation.LIGHT_CHANGE_TIME, intersection, lightDirection, ChangeType.ALL_RED));
                 break;
                 
             case ALL_RED:
-                EventBus.submitEvent(new LightChangeEvent(eventTime + YELLOW_TIME, intersection, lightDirection, ChangeType.GREEN));
+                EventBus.submitEvent(new LightChangeEvent(eventTime + Simulation.LIGHT_CHANGE_TIME, intersection, lightDirection, ChangeType.GREEN));
                 break;
                 
             case GREEN:
 
                 //Queues up a new light change direction
-                LightDirection newDirection;
-                if(lightDirection.equals(LightDirection.EW_BOUND)){
-                    newDirection = LightDirection.NS_BOUND;
-                } else { 
-                    newDirection = LightDirection.EW_BOUND;
-                }
+                intersection.setSwitching(false);
                 EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, lightDirection, intersection.getAndEmptyCars(lightDirection)));
-                EventBus.submitEvent(new LightChangeEvent(eventTime + GREEN_TIME, intersection, newDirection, ChangeType.INITIAL));
+                Event event = new LightChangeEvent(eventTime + GREEN_TIME, intersection, lightDirection.getOppisite(), ChangeType.INITIAL);
+                intersection.setDefaultChangeEvent(event);
+                EventBus.submitEvent(event);
                 break;
             
             default:
