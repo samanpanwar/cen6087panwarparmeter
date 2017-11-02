@@ -35,7 +35,7 @@ public class ApproachIntersectionEvent extends Event{
         }
         
         //Approach the yellow light vector and submit a car to the queue 
-        int carsInIntersection = to.getNumCarsWaiting(car.getVector().direction);
+        int carsInIntersection = to.getNumCarsWaiting(LightDirection.getDirection(car.getVector().direction));
         if(carsInIntersection == 0){
             GridVector newVector = to.getYellowLightVector(car);
             double deltaTime = car.getTimeTo(newVector);
@@ -50,6 +50,8 @@ public class ApproachIntersectionEvent extends Event{
             Simulation.WORLD.moveCar(car, stopVector, deltaTime);
             car.setVector(stopVector);
             EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car));
+            
+            //switches the intersection if there are too many cars waiting
             if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED &&
                     carsInIntersection > Simulation.CAR_CHANGE_LIGHT_NUM && to.getIsSwitching() == false){
                 

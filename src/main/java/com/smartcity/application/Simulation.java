@@ -50,8 +50,9 @@ public class Simulation {
     
     public static void start(){
         
-        //Starts up the "dumb" light switch algorithm for the traffic lights
         System.out.println("Simulation Started.");
+        
+        //Starts up the "dumb" light switch algorithm for the traffic lights
         if(LIGHT_CHANGE_TYPE == LightChangeType.DUMB){
             for(int i = 0; i < GRID.getEWBlockSize(); i++){
                 for(int j = 0; j < GRID.getNSBlockSize(); j++){

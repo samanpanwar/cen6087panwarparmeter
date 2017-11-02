@@ -48,7 +48,7 @@ public class LightChangeEvent extends Event {
 
                 //Queues up a new light change direction
                 intersection.setSwitching(false);
-                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, lightDirection, intersection.getAndEmptyCars(lightDirection)));
+                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, lightDirection, 0));
                 Event event = new LightChangeEvent(eventTime + GREEN_TIME, intersection, lightDirection.getOppisite(), ChangeType.INITIAL);
                 intersection.setDefaultChangeEvent(event);
                 EventBus.submitEvent(event);

@@ -8,7 +8,6 @@ package com.smartcity.event;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.application.enumeration.LightDirection;
-import java.util.Queue;
 
 /**
  *
@@ -18,27 +17,28 @@ public class IntersectionDequeueEvent extends Event{
 
     private final Intersection intersection;
     private final LightDirection direction;
-    private final Queue<Car> carsToDequeue;
+    private final int index;
     
-    public IntersectionDequeueEvent(double eventTime, Intersection intersection, LightDirection direction, Queue<Car> carsToDequeue) {
+    public IntersectionDequeueEvent(double eventTime, Intersection intersection, LightDirection direction, int index) {
         super(eventTime);
         this.intersection = intersection;
         this.direction = direction;
-        this.carsToDequeue = carsToDequeue;
+        this.index = index;
     }
 
     @Override
     protected void eventAction() {
         
-        //Queues up all the cars in waiting at the light
-        Car car = carsToDequeue.poll(); 
-        if(car != null){
-            if(intersection.isPastYellowLightVector(car)){
-                EventBus.submitEvent(new DetermineStopEvent(eventTime, car, intersection));
-            } else {
-                EventBus.submitEvent(new ApproachIntersectionEvent(eventTime, car, intersection));
-            }    
-            EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, direction, carsToDequeue));
+        if(intersection.getNumCarsWaiting(direction) > index){
+            Car car = intersection.dequeueCar(direction, index);
+            if(car != null){
+                if(intersection.isPastYellowLightVector(car)){
+                    EventBus.submitEvent(new DetermineStopEvent(eventTime + Car.DEQUQE_LIGHT_TIME, car, intersection));
+                } else {
+                    EventBus.submitEvent(new ApproachIntersectionEvent(eventTime + Car.DEQUQE_LIGHT_TIME, car, intersection));
+                }    
+                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, direction, index+1));
+            }
         }
     }
 }

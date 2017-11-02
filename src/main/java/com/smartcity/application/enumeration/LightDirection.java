@@ -25,4 +25,17 @@ public enum LightDirection {
                 throw new IllegalArgumentException(this + " is not handled");
         }
     }
+    
+    public static LightDirection getDirection(CardinalDirection direction){
+        switch(direction){
+            case EAST: case WEST:
+                return EW_BOUND;
+                
+            case NORTH: case SOUTH:
+                return NS_BOUND;
+            
+            default:
+                throw new IllegalArgumentException(direction + " is not handled");
+        }
+    }
 }

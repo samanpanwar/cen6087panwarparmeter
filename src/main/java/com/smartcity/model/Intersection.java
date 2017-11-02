@@ -86,12 +86,12 @@ public class Intersection {
         return VectorUtility.addMagnitude(center, car.getVector().direction.getOppisite(), magnitude);
     }
     
-    public int getNumCarsWaiting(CardinalDirection direction){
+    public int getNumCarsWaiting(LightDirection direction){
         switch(direction){
-            case NORTH: case SOUTH:
+            case NS_BOUND:
                 return this.lightQueueNSBound.size();
                 
-            case EAST: case WEST:
+            case EW_BOUND:
                 return this.lightQueueEWBound.size();
                 
             default :
@@ -179,6 +179,18 @@ public class Intersection {
             
             default:
                 throw new IllegalArgumentException(car.getVector().direction + " is not handled");
+        }
+    }
+    
+    public Car dequeueCar(LightDirection direction, int index){
+        switch(direction){
+            case EW_BOUND:
+                return lightQueueEWBound.get(index);
+
+            case NS_BOUND:
+                return lightQueueNSBound.get(index);
+            default:
+                throw new IllegalArgumentException(direction + " is not handled");
         }
     }
     
