@@ -5,6 +5,7 @@
  */
 package com.smartcity.model;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.utility.VectorUtility;
 
 /**
@@ -15,9 +16,6 @@ public class Car {
     
     public enum State{STOPPED, ACCELERATING, CRUISING, STOPPING};
     
-    public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
-    
-    public final double velocity = 5;//distance units / time unit
     public final double stoppingDistance = 25;
     public final double accelerationDistance = 25;
     
@@ -43,7 +41,7 @@ public class Car {
     }
     
     public double getTimeTo(GridVector vector){
-        return this.vector.distanceTo(vector) / velocity;
+        return this.vector.distanceTo(vector) / Simulation.CAR_VELOCITY;
     }
     
     public double getEntryTime(){

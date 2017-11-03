@@ -8,8 +8,6 @@ package com.smartcity.model;
 import com.smartcity.application.enumeration.CardinalDirection;
 import com.smartcity.application.Simulation;
 import com.smartcity.application.enumeration.LightDirection;
-import com.smartcity.event.Event;
-import com.smartcity.event.EventBus;
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
 import java.util.LinkedList;
@@ -31,7 +29,7 @@ public class Intersection {
     private LightState NSLightState, EWLightState;
     private LightDirection lightDirection;
     private boolean isSwitching = false;
-    private Event defaultChangeEvent;
+    private double lastGreenChange, currentDequeueFinishTime;
     
     public Intersection(int EWBlock, int NSBlock){
         this.EWBlock = EWBlock;
@@ -61,16 +59,25 @@ public class Intersection {
         NSLightState = LightState.GREEN;
         EWLightState = LightState.RED;
     }
-    
-    public void setDefaultChangeEvent(Event evt){
-        defaultChangeEvent = evt;
+
+    public double getLastGreenChange() {
+        return lastGreenChange;
+    }
+
+    public void setLastGreenChange(double lastGreenChange) {
+        this.lastGreenChange = lastGreenChange;
+    }
+
+    public double getCurrentDequeueFinishTime() {
+        return currentDequeueFinishTime;
+    }
+
+    public void setCurrentDequeueFinishTime(double currentDequeueFinishTime) {
+        this.currentDequeueFinishTime = currentDequeueFinishTime;
     }
     
     public void setSwitching(boolean switching){
         isSwitching = switching;
-        if(switching == true && defaultChangeEvent != null){
-            EventBus.cancelEvent(defaultChangeEvent);
-        }
     }
     
     public boolean getIsSwitching(){

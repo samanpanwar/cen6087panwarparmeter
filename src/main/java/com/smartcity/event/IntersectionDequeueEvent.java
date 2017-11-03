@@ -5,6 +5,7 @@
  */
 package com.smartcity.event;
 
+import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.application.enumeration.LightDirection;
@@ -38,7 +39,7 @@ public class IntersectionDequeueEvent extends Event{
             } else {
                 EventBus.submitEvent(new ApproachIntersectionEvent(eventTime, car, intersection));
             }    
-            EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, direction, carsToDequeue));
+            EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Simulation.DEQUQE_LIGHT_TIME, intersection, direction, carsToDequeue));
         }
     }
 }

@@ -50,13 +50,29 @@ public class ApproachIntersectionEvent extends Event{
             Simulation.WORLD.moveCar(car, stopVector, deltaTime);
             car.setVector(stopVector);
             EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car));
-            if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED &&
-                    carsInIntersection > Simulation.CAR_CHANGE_LIGHT_NUM && to.getIsSwitching() == false){
+            
+            //determines when to switch the intersection based on the car's
+            if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED && 
+                    eventTime > to.getCurrentDequeueFinishTime() && to.getIsSwitching() == false){
                 
-                to.setSwitching(true);
-                double lightEventTime = eventTime + Simulation.LIGHT_CHANGE_TIME;
-                LightDirection direction = to.getLightDirection().getOppisite();
-                EventBus.submitEvent(new LightChangeEvent(lightEventTime, to, direction, LightChangeEvent.ChangeType.INITIAL));
+                boolean switchCriteria = false;
+                double lightChangeTime = Simulation.LIGHT_CHANGE_TIME + Simulation.LIGHT_CHANGE_TIME;
+                if(carsInIntersection > Simulation.CAR_CHANGE_LIGHT_NUM){
+                    double lastCarMoveTime = (carsInIntersection * Simulation.CAR_STOP_DISTANCE) / Simulation.CAR_VELOCITY;
+                    double dequeueTime = Simulation.DEQUQE_LIGHT_TIME * carsInIntersection;
+                    to.setCurrentDequeueFinishTime(eventTime + lastCarMoveTime + dequeueTime + lightChangeTime);
+                    switchCriteria = true;
+                } else if(eventTime > to.getLastGreenChange() + lightChangeTime + Simulation.LIGHT_CHANGE_GREEN_TIME){
+                    to.setLastGreenChange(eventTime + lightChangeTime + Simulation.LIGHT_CHANGE_GREEN_TIME);
+                    switchCriteria = true;
+                }
+                
+                if(switchCriteria){
+                    to.setSwitching(true);
+                    double lightEventTime = eventTime + Simulation.LIGHT_CHANGE_TIME;
+                    LightDirection direction = to.getLightDirection().getOppisite();
+                    EventBus.submitEvent(new LightChangeEvent(lightEventTime, to, direction, LightChangeEvent.ChangeType.INITIAL));
+                }
             }
         }
     }

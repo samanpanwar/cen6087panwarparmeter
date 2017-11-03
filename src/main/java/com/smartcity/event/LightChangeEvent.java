@@ -6,7 +6,6 @@
 package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
-import com.smartcity.model.Car;
 import com.smartcity.model.Intersection;
 import com.smartcity.application.enumeration.LightDirection;
 
@@ -17,8 +16,6 @@ import com.smartcity.application.enumeration.LightDirection;
 public class LightChangeEvent extends Event {
     
     public enum ChangeType{INITIAL, ALL_RED, GREEN};
-    
-    private final static long GREEN_TIME = 250;
     
     private final Intersection intersection;
     private final LightDirection lightDirection;
@@ -48,10 +45,10 @@ public class LightChangeEvent extends Event {
 
                 //Queues up a new light change direction
                 intersection.setSwitching(false);
-                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Car.DEQUQE_LIGHT_TIME, intersection, lightDirection, intersection.getAndEmptyCars(lightDirection)));
-                Event event = new LightChangeEvent(eventTime + GREEN_TIME, intersection, lightDirection.getOppisite(), ChangeType.INITIAL);
-                intersection.setDefaultChangeEvent(event);
-                EventBus.submitEvent(event);
+                EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Simulation.DEQUQE_LIGHT_TIME, intersection, lightDirection, intersection.getAndEmptyCars(lightDirection)));
+                if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.DUMB){
+                    EventBus.submitEvent(new LightChangeEvent(eventTime + Simulation.LIGHT_CHANGE_GREEN_TIME, intersection, lightDirection.getOppisite(), ChangeType.INITIAL));
+                }
                 break;
             
             default:

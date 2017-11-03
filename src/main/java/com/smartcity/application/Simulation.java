@@ -37,6 +37,9 @@ public class Simulation {
     public static final int NUM_NS_STREETS = 8;
     public static final int CAR_CHANGE_LIGHT_NUM = 5;
     public static final long LIGHT_CHANGE_TIME = 50;
+    public static final long LIGHT_CHANGE_GREEN_TIME = 250;
+    public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
+    public static final double CAR_VELOCITY = 5;//distance units / time unit
     
     //Size variables
     public static final int INTERSECTION_DISATANCE = 150;
