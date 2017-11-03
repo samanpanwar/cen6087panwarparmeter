@@ -93,7 +93,7 @@ public class DataAggregator {
             }
         }
         double avg = total / carAverages.size();
-        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms.");
+        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms. Average: " + avg);
         
         //Builds the stats pane
         HBox statsPane = new HBox();
