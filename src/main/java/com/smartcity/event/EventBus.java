@@ -6,6 +6,7 @@
 package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
+import com.smartcity.utility.DataAggregator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javafx.application.Platform;
@@ -50,6 +51,10 @@ public class EventBus {
             evt.resolveEvent();
         }
         System.out.println("The queue is empty or has been stopped.");
+        if(Simulation.GATHER_DATA){
+            DataAggregator.generateEventTimesAveragesChart();
+            DataAggregator.generateCarAverageChart();
+        }
     }
     
     public static void stopEventBus(){
