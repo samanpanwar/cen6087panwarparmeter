@@ -19,7 +19,7 @@ import com.smartcity.utility.DataAggregator;
 public class CarGenerateEvent extends Event{
     
     private static final double QUEUE_TIME = 15;
-    private static final RouteFactory ROUTE_FACTORY = new RouteFactory(Simulation.GRID, 111L);
+    private static final RouteFactory ROUTE_FACTORY = new RouteFactory(Simulation.GRID);
     private static long carsGenerated = 0;
 
     public CarGenerateEvent(double eventTime) {

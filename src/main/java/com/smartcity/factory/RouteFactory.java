@@ -5,6 +5,7 @@
  */
 package com.smartcity.factory;
 
+import com.smartcity.application.Simulation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,17 +20,14 @@ import com.smartcity.model.Route;
  */
 public class RouteFactory {
     
-    private final Random random;
+    private final Random random = Simulation.RNG;
     private final Grid grid;
     
     /**
      * @param grid the grid to build the route on
-     * @param seed a seed that can be used to generate the RNG. If the grid dimensions are the same and
-     * the seed is the same between runs then the resultant generated routes will be identical aswell. 
      */
-    public RouteFactory(Grid grid, long seed){
+    public RouteFactory(Grid grid){
         this.grid = grid;
-        this.random = new Random(seed);
     }
     
     public Route generateRoute(){
