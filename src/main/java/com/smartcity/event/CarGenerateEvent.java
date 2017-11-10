@@ -37,7 +37,7 @@ public class CarGenerateEvent extends Event{
 //        Simulation.WORLD.drawRoute(route);
         for(int i=0; i<numCarsToGenerate; i++){
             insertTime += Simulation.CAR_ENTRY_INTERVAL;
-            Car car = new Car(insertTime, DataAggregator.getNumCars(), route);
+            Car car = new Car(insertTime, DataAggregator.getNumCarsAdded(), route);
             List<Intersection> intersections = car.getRoute().getIntersections();
             EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
             DataAggregator.addCar();

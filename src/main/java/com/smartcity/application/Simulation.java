@@ -27,6 +27,7 @@ public class Simulation {
     public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.COORDINATED;
     public static final double NUM_CARS_LAMBDA = 0.015;
     public static final double CAR_ENTRY_MULTIPLIER = 3000;
+    public static final double CHART_BUCKETS = 100;
     public static final int NUM_CARS = 5000;
     public static final long CAR_ENTRY_INTERVAL = 2; //time units
     public static final int NUM_EW_STREETS = 10;
@@ -35,7 +36,7 @@ public class Simulation {
     public static final long LIGHT_CHANGE_TIME = 50;
     public static final long LIGHT_CHANGE_GREEN_TIME = 250;
     public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
-    public static final double CAR_VELOCITY = 5;//distance units / time unit    
+    public static final double CAR_VELOCITY = 5;//distance units / time unit   
     public static final Random RNG = new Random(0);
     
     //Size variables

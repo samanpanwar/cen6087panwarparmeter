@@ -5,18 +5,21 @@
  */
 package com.smartcity.utility;
 
+import com.google.common.collect.BoundType;
 import com.google.common.collect.TreeMultiset;
 import com.smartcity.application.Simulation;
 import com.smartcity.event.Event;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -33,7 +36,7 @@ public class DataAggregator {
     private static final AtomicLong numCarsAdded = new AtomicLong(0);
     private static final AtomicLong numCarsRemoved = new AtomicLong(0);
     private static final AtomicLong numEvents = new AtomicLong(0);
-    private static final Map<Class, List<Long>> eventTimesMap = new HashMap(); 
+    private static final Map<Class, TreeMultiset<Long>> eventTimesMap = new HashMap(); 
     private static final TreeMultiset<Double> carAverages = TreeMultiset.create();
     private static final long updateInterval = 250;//ms
     
@@ -63,7 +66,7 @@ public class DataAggregator {
         checkForPrintStatus();
     }
     
-    public static long getNumCars(){
+    public static long getNumCarsActive(){
         return numCars.longValue();
     }
     
@@ -118,17 +121,31 @@ public class DataAggregator {
         System.out.println("Simulation Data:\n"+copyDataArea.getText());
         copyDataArea.setEditable(false);
         
+        //Get data for the chart
+        double bucketRange = Simulation.CAR_VELOCITY / Simulation.CHART_BUCKETS;
+        double bucketMin = 0;
+        ObservableList<XYChart.Data> data = FXCollections.observableList(new ArrayList());
+        for(int i=0; i < Simulation.CHART_BUCKETS; i++){
+            double bucketMax = bucketMin + bucketRange;
+            int numRecords = carAverages.subMultiset(bucketMin, BoundType.OPEN, bucketMax, BoundType.CLOSED).size();
+            double middle = bucketMin + ((bucketMax - bucketMin) / 2);
+            data.add(new XYChart.Data(middle, numRecords));
+            bucketMin = bucketMax;
+        }
+        
         //builds the chart
-        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
-        final BarChart<String,Number> bc = new BarChart(xAxis,yAxis);
-        bc.setTitle("Car Average Speed");
-        xAxis.setLabel("Time (In Time Units)");       
+        final LineChart<String,Number> lc = new LineChart(xAxis,yAxis);
+        lc.getData().add(new XYChart.Series("Average Velocity", data));
+        lc.setTitle("Average Car Speed for Lambda: (TODO)");
+        lc.setCreateSymbols(false);
+        xAxis.setLabel("Average Velocity");       
         yAxis.setLabel("Number of Cars");
         
         //Lays out the components
         VBox mainBox = new VBox();
-        mainBox.getChildren().addAll(bc, statsPane, copyDataArea);
+        mainBox.getChildren().addAll(lc, statsPane, copyDataArea);
         
         //opens the chart in a new window
         Scene scene = new Scene(mainBox, 600, 400);
