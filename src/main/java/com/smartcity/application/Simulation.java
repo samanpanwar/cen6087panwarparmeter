@@ -25,10 +25,10 @@ public class Simulation {
     
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true; //Displays data at the end of the simulation
-    public static final boolean REAL_TIME = false;  //Sleeps the time between events
-    public static final boolean SHOW_GUI = false;   //Renders a GUI 
+    public static final boolean REAL_TIME = true;  //Sleeps the time between events
+    public static final boolean SHOW_GUI = true;   //Renders a GUI 
     public static final double SIM_SPEED = 0.03;    //The simulation speed
-    public static final double CHART_BUCKETS = 20;
+    public static final double CHART_BUCKETS = 100;
     
     //configuration variables
     public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.DUMB;
