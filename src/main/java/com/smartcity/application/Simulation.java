@@ -1,13 +1,13 @@
 package com.smartcity.application;
 
 
+import com.smartcity.application.enumeration.LightDirection;
 import com.smartcity.gui.World;
 import com.smartcity.event.CarGenerateEvent;
 import com.smartcity.event.EventBus;
 import com.smartcity.event.LightChangeEvent;
 import com.smartcity.model.Grid;
 import com.smartcity.model.Intersection;
-import com.smartcity.model.Intersection.LightDirection;
 import java.util.Random;
 
 /*
@@ -22,19 +22,28 @@ import java.util.Random;
  */
 public class Simulation {
     
+    public enum LightChangeType{DUMB, CAR_BASED}
+    
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true;
-    public static final boolean REAL_TIME = false;
-    public static final boolean SHOW_GUI = false;
-    public static final double SIM_SPEED = 0.03;
+    public static final boolean REAL_TIME = true;
+    public static final boolean SHOW_GUI = true;
+    public static final double SIM_SPEED = 0.03;    
+
     
     //configuration variables
+    public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.CAR_BASED;
     public static final double NUM_CARS_LAMBDA = 0.0005;
     public static final double CAR_ENTRY_MULTIPLIER = 50_000;
-    public static final long CAR_ENTRY_INTERVAL = 2; //time units
     public static final int NUM_CARS = 5000;
+    public static final long CAR_ENTRY_INTERVAL = 2; //time units
     public static final int NUM_EW_STREETS = 10;
     public static final int NUM_NS_STREETS = 8;
+    public static final int CAR_CHANGE_LIGHT_NUM = 5;
+    public static final long LIGHT_CHANGE_TIME = 50;
+    public static final long LIGHT_CHANGE_GREEN_TIME = 250;
+    public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
+    public static final double CAR_VELOCITY = 5;//distance units / time unit    
     public static final Random RNG = new Random(0);
     
     //Size variables
@@ -51,10 +60,12 @@ public class Simulation {
         
         //Starts up the "dumb" light switch algorithm for the traffic lights
         System.out.println("Simulation Started.");
-        for(int i = 0; i < GRID.getEWBlockSize(); i++){
-            for(int j = 0; j < GRID.getNSBlockSize(); j++){
-                Intersection intersection = GRID.getIntersection(i, j);
-                EventBus.submitEvent(new LightChangeEvent(0.0, intersection, LightDirection.NS_BOUND, LightChangeEvent.ChangeType.GREEN));
+        if(LIGHT_CHANGE_TYPE == LightChangeType.DUMB){
+            for(int i = 0; i < GRID.getEWBlockSize(); i++){
+                for(int j = 0; j < GRID.getNSBlockSize(); j++){
+                    Intersection intersection = GRID.getIntersection(i, j);
+                    EventBus.submitEvent(new LightChangeEvent(0.0, intersection, LightDirection.NS_BOUND, LightChangeEvent.ChangeType.GREEN));
+                }
             }
         }
         
