@@ -29,7 +29,7 @@ public class RouteFactoryTest {
     private final int NUM_TEST_ROUTES = 100_000;
     private final boolean debug = false;
     private final Grid grid = new Grid(12, 8);
-    private final RouteFactory factory = new RouteFactory(grid, 0L);
+    private final RouteFactory factory = new RouteFactory(grid);
     private Stage stage;
     
     @Test 
