@@ -35,12 +35,10 @@ public class CarExitEvent extends Event{
         DataAggregator.putCarAverage(velocity);
         
         //end of the simulation
-        if(DataAggregator.getNumCars() == 0){
+        if(DataAggregator.getNumCarsActive() == 0 && DataAggregator.getNumCarsAdded() == Simulation.NUM_CARS){
             long simulationTime = System.currentTimeMillis() - Simulation.START_TIME;
             double rate = ((double)Simulation.NUM_CARS / (double)simulationTime) * 1000;
             System.out.println("All cars have exited. The simulation took: " + simulationTime + "ms. " + rate + " cars processed / sec");
-            DataAggregator.generateCarAverageChart();
-            DataAggregator.generateEventTimesAveragesChart();
             EventBus.stopEventBus();
         }
     }

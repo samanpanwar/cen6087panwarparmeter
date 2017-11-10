@@ -5,12 +5,11 @@
  */
 package com.smartcity.utility;
 
+import com.google.common.collect.BoundType;
 import com.google.common.collect.TreeMultiset;
 import com.smartcity.application.Simulation;
 import com.smartcity.event.Event;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
@@ -34,7 +33,7 @@ public class DataAggregator {
     private static final AtomicLong numCarsAdded = new AtomicLong(0);
     private static final AtomicLong numCarsRemoved = new AtomicLong(0);
     private static final AtomicLong numEvents = new AtomicLong(0);
-    private static final Map<Class, List<Long>> eventTimesMap = new HashMap(); 
+    private static final Map<Class, TreeMultiset<Long>> eventTimesMap = new HashMap(); 
     private static final TreeMultiset<Double> carAverages = TreeMultiset.create();
     private static final long updateInterval = 250;//ms
     
@@ -64,8 +63,16 @@ public class DataAggregator {
         checkForPrintStatus();
     }
     
-    public static long getNumCars(){
+    public static long getNumCarsActive(){
         return numCars.longValue();
+    }
+    
+    public static long getNumCarsAdded(){
+        return numCarsAdded.longValue();
+    }
+    
+    public static long getNumCarsRemoved(){
+        return numCarsRemoved.longValue();
     }
     
     public static void putCarAverage(double average){
@@ -94,7 +101,7 @@ public class DataAggregator {
             }
         }
         double avg = total / carAverages.size();
-        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms.");
+        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms. Average: " + avg);
         
         //Builds the stats pane
         HBox statsPane = new HBox();
@@ -109,6 +116,16 @@ public class DataAggregator {
         //Builds the copy data area
         TextField copyDataArea = new TextField(carAverages.size() + "," + avg + "," + min + "," + max + "," + (max-min));
         copyDataArea.setEditable(false);
+        
+        //Get data for the chart
+        double bucketRange = (max-min) / Simulation.CHART_BUCKETS;
+        double bucketMin = min;
+        for(int i=0; i < Simulation.CHART_BUCKETS; i++){
+            double bucketMax = bucketMin + bucketRange;
+            int numRecords = carAverages.subMultiset(bucketMin, BoundType.OPEN, bucketMax, BoundType.CLOSED).size();
+            System.out.println("bucket Range: " + bucketMin + "-" + bucketMax + " num records: " + numRecords);
+            bucketMin = bucketMax;
+        }
         
         //builds the chart
         final CategoryAxis xAxis = new CategoryAxis();
