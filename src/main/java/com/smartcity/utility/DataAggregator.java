@@ -108,6 +108,7 @@ public class DataAggregator {
         
         //Builds the copy data area
         TextField copyDataArea = new TextField(carAverages.size() + "," + avg + "," + min + "," + max + "," + (max-min));
+        System.out.println("Simulation Data:\n"+copyDataArea.getText());
         copyDataArea.setEditable(false);
         
         //builds the chart

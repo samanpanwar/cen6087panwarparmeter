@@ -24,9 +24,9 @@ public class Simulation {
     
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true;
-    public static final boolean REAL_TIME = true;
-    public static final boolean SHOW_GUI = true;
-    public static final double SIM_SPEED = 0.01;
+    public static final boolean REAL_TIME = false;
+    public static final boolean SHOW_GUI = false;
+    public static final double SIM_SPEED = 0.03;
     
     //configuration variables
     public static final double NUM_CARS_LAMBDA = 0.0005;
