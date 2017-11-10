@@ -10,6 +10,7 @@ import com.smartcity.application.enumeration.LightDirection;
 import com.smartcity.model.Car;
 import com.smartcity.model.GridVector;
 import com.smartcity.model.Intersection;
+import com.smartcity.utility.VectorUtility;
 
 /**
  *
@@ -52,15 +53,16 @@ public class ApproachIntersectionEvent extends Event{
             EventBus.submitEvent(new IntersectionStopEvent(deltaTime + eventTime, car));
             
             //determines when to switch the intersection based on the car's
-            if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED && 
+            if((Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CAR_BASED ||
+                    Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.COORDINATED)&& 
                     eventTime > to.getCurrentDequeueFinishTime() && to.getIsSwitching() == false){
                 
                 boolean switchCriteria = false;
                 double lightChangeTime = Simulation.LIGHT_CHANGE_TIME + Simulation.LIGHT_CHANGE_TIME;
+                double lastCarMoveTime = (carsInIntersection * Simulation.CAR_STOP_DISTANCE) / Simulation.CAR_VELOCITY;
+                double dequeueTime = Simulation.DEQUQE_LIGHT_TIME * carsInIntersection;
+                double nextDequeueFinish = eventTime + lastCarMoveTime + dequeueTime + lightChangeTime;
                 if(carsInIntersection > Simulation.CAR_CHANGE_LIGHT_NUM){
-                    double lastCarMoveTime = (carsInIntersection * Simulation.CAR_STOP_DISTANCE) / Simulation.CAR_VELOCITY;
-                    double dequeueTime = Simulation.DEQUQE_LIGHT_TIME * carsInIntersection;
-                    to.setCurrentDequeueFinishTime(eventTime + lastCarMoveTime + dequeueTime + lightChangeTime);
                     switchCriteria = true;
                 } else if(eventTime > to.getLastGreenChange() + lightChangeTime + Simulation.LIGHT_CHANGE_GREEN_TIME){
                     to.setLastGreenChange(eventTime + lightChangeTime + Simulation.LIGHT_CHANGE_GREEN_TIME);
@@ -69,9 +71,26 @@ public class ApproachIntersectionEvent extends Event{
                 
                 if(switchCriteria){
                     to.setSwitching(true);
+                    to.setCurrentDequeueFinishTime(nextDequeueFinish);
                     double lightEventTime = eventTime + Simulation.LIGHT_CHANGE_TIME;
                     LightDirection direction = to.getLightDirection().getOppisite();
                     EventBus.submitEvent(new LightChangeEvent(lightEventTime, to, direction, LightChangeEvent.ChangeType.INITIAL));
+                    
+                    if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.COORDINATED){
+                        Intersection last = to;
+                        Intersection next = car.getRoute().getNextIntersection(to);
+                        while(next != null && lightEventTime > next.getCurrentDequeueFinishTime() && next.getIsSwitching() == false){
+                            lightEventTime += (double) Simulation.INTERSECTION_DISATANCE / Simulation.CAR_VELOCITY;
+                            LightDirection carDirection = LightDirection.get(VectorUtility.getDirectionTo(last, next));
+                            direction = next.getLightDirection().getOppisite();
+                            next.setCurrentDequeueFinishTime(lightEventTime + nextDequeueFinish);
+                            if(carDirection != direction){
+                                EventBus.submitEvent(new LightChangeEvent(lightEventTime, next, direction, LightChangeEvent.ChangeType.INITIAL));
+                            }
+                            last = next;
+                            next = car.getRoute().getNextIntersection(next);
+                        }
+                    }
                 }
             }
         }
