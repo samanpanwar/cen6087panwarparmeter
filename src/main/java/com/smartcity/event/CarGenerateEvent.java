@@ -20,7 +20,6 @@ import com.smartcity.utility.DataAggregator;
 public class CarGenerateEvent extends Event{
     
     private static final RouteFactory ROUTE_FACTORY = new RouteFactory(Simulation.GRID);
-    private static long carsGenerated = 0;
     private static long eventNum = 0;
     private static long numZeroEvents = 0;
     private static final long NUM_ZERO_EVENT_FOR_QUIT = 100;
@@ -38,12 +37,11 @@ public class CarGenerateEvent extends Event{
 //        Simulation.WORLD.drawRoute(route);
         for(int i=0; i<numCarsToGenerate; i++){
             insertTime += Simulation.CAR_ENTRY_INTERVAL;
-            Car car = new Car(insertTime, carsGenerated, route);
+            Car car = new Car(insertTime, DataAggregator.getNumCars(), route);
             List<Intersection> intersections = car.getRoute().getIntersections();
             EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
-            carsGenerated ++;
             DataAggregator.addCar();
-            if(carsGenerated >= Simulation.NUM_CARS){
+            if(DataAggregator.getNumCarsAdded() >= Simulation.NUM_CARS){
                 System.out.println("Car generation completed.");
                 return;
             }

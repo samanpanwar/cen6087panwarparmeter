@@ -67,6 +67,14 @@ public class DataAggregator {
         return numCars.longValue();
     }
     
+    public static long getNumCarsAdded(){
+        return numCarsAdded.longValue();
+    }
+    
+    public static long getNumCarsRemoved(){
+        return numCarsRemoved.longValue();
+    }
+    
     public static void putCarAverage(double average){
         if(Simulation.GATHER_DATA){
             carAverages.add(average);
