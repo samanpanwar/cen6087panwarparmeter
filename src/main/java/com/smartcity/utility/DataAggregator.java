@@ -9,6 +9,7 @@ import com.google.common.collect.BoundType;
 import com.google.common.collect.TreeMultiset;
 import com.smartcity.application.Simulation;
 import com.smartcity.event.Event;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -39,6 +41,8 @@ public class DataAggregator {
     private static final Map<Class, TreeMultiset<Long>> eventTimesMap = new HashMap(); 
     private static final TreeMultiset<Double> carAverages = TreeMultiset.create();
     private static final long updateInterval = 250;//ms
+    private static final DecimalFormat lambdaFormatter = new DecimalFormat("0.###########");
+    private static final DecimalFormat nf = new DecimalFormat("0.###");
     
     private static long lastUpdateTime = System.currentTimeMillis();
     
@@ -109,12 +113,13 @@ public class DataAggregator {
         //Builds the stats pane
         HBox statsPane = new HBox();
         statsPane.setSpacing(10);
+        statsPane.setAlignment(Pos.TOP_CENTER);
         statsPane.getChildren().addAll(
-                new Label("NumCars:" + carAverages.size()), 
-                new Label("Mean:" + avg), 
-                new Label("Min:" + min), 
-                new Label("Max:" + max),
-                new Label("Range:" + (max-min)));
+                new Label("NumCars: " + nf.format(carAverages.size())), 
+                new Label("Mean: " + nf.format(avg)), 
+                new Label("Min: " + nf.format(min)), 
+                new Label("Max: " + nf.format(max)),
+                new Label("Range: " + nf.format(max-min)));
         
         //Builds the copy data area
         TextField copyDataArea = new TextField(carAverages.size() + "," + avg + "," + min + "," + max + "," + (max-min));
@@ -138,7 +143,7 @@ public class DataAggregator {
         final NumberAxis yAxis = new NumberAxis();
         final LineChart<String,Number> lc = new LineChart(xAxis,yAxis);
         lc.getData().add(new XYChart.Series("Average Velocity", data));
-        lc.setTitle("Average Car Speed for Lambda: (TODO)");
+        lc.setTitle("Average Car Speed for Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA));
         lc.setCreateSymbols(false);
         xAxis.setLabel("Average Velocity");       
         yAxis.setLabel("Number of Cars");

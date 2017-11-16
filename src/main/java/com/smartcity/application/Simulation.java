@@ -33,7 +33,7 @@ public class Simulation {
     
     //configuration variables
     public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.DUMB;
-    public static final double NUM_CARS_LAMBDA = 0.0005;
+    public static final double NUM_CARS_LAMBDA = 0.00005;
     public static final double CAR_ENTRY_MULTIPLIER = 50_000;
     public static final long CAR_ENTRY_INTERVAL = 2; //time units
     public static final int NUM_CARS = 5000;
