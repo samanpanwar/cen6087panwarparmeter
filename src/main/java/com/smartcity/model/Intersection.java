@@ -10,7 +10,9 @@ import com.smartcity.application.Simulation;
 import com.smartcity.application.enumeration.LightDirection;
 import com.smartcity.utility.VectorUtility;
 import com.smartcity.event.LightChangeEvent.ChangeType;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -25,10 +27,12 @@ public class Intersection {
     private final int EWBlock, NSBlock;
     private final CardinalDirection NSDirection, EWDirection;
     private final LinkedList<Car> lightQueueNSBound, NSBoundCars, lightQueueEWBound, EWBoundCars;
+    private final List<Convoy> convoysCrossing = new ArrayList();
     
     private LightState NSLightState, EWLightState;
     private LightDirection lightDirection;
     private boolean isSwitching = false;
+//    private boolean convoyLocked = false;
     private double lastGreenChange, currentDequeueFinishTime;
     
     public Intersection(int EWBlock, int NSBlock){
@@ -60,6 +64,18 @@ public class Intersection {
         EWLightState = LightState.RED;
     }
 
+    public boolean isConvoyLocked() {
+        return !convoysCrossing.isEmpty();
+    }
+    
+    public void addConvoy(Convoy convoy){
+        convoysCrossing.add(convoy);
+    }
+    
+    public void removeConvoy(Convoy convoy){
+        convoysCrossing.remove(convoy);
+    }
+    
     public double getLastGreenChange() {
         return lastGreenChange;
     }
@@ -221,7 +237,7 @@ public class Intersection {
         
         if(changeType.equals(ChangeType.INITIAL)){
             if(direction.equals(lightDirection)){
-                throw new IllegalArgumentException("The state was already set to " + direction);
+//                throw new IllegalArgumentException("The state was already set to " + direction);
             }
             lightDirection = direction;
         }

@@ -9,9 +9,11 @@ import com.smartcity.application.Simulation;
 import com.smartcity.factory.RouteFactory;
 import java.util.List;
 import com.smartcity.model.Car;
+import com.smartcity.model.Convoy;
 import com.smartcity.model.Intersection;
 import com.smartcity.model.Route;
 import com.smartcity.utility.DataAggregator;
+import java.util.ArrayList;
 
 /**
  *
@@ -35,16 +37,29 @@ public class CarGenerateEvent extends Event{
         double insertTime = eventTime;
         Route route = ROUTE_FACTORY.generateRoute();
 //        Simulation.WORLD.drawRoute(route);
+        Convoy convoy = new Convoy(route);
+        List<Car> cars = new ArrayList();
         for(int i=0; i<numCarsToGenerate; i++){
             insertTime += Simulation.CAR_ENTRY_INTERVAL;
-            Car car = new Car(insertTime, DataAggregator.getNumCarsAdded(), route);
+            Car car = new Car(insertTime, DataAggregator.getNumCarsAdded(), route, convoy);
+            cars.add(car);
             List<Intersection> intersections = car.getRoute().getIntersections();
-            EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
+            if(Simulation.LIGHT_CHANGE_TYPE != Simulation.LightChangeType.CONVOY_AWARE){
+                EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, intersections.get(0)));
+            }
             DataAggregator.addCar();
             if(DataAggregator.getNumCarsAdded() >= Simulation.NUM_CARS){
                 System.out.println("Car generation completed.");
-                return;
+                break;
             }
+        }
+        convoy.setCars(cars);
+        if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CONVOY_AWARE){
+            EventBus.submitEvent(new ConvoyEnterEvent(eventTime, convoy));
+        }
+        
+        if(DataAggregator.getNumCarsAdded() >= Simulation.NUM_CARS){
+            return;
         }
         
         if(numCarsToGenerate == 0){

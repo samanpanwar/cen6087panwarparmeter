@@ -22,18 +22,24 @@ public class Car {
     private final double entryTime;
     private final Route route;
     private final long carNum;
+    private final Convoy convoy;
     private GridVector vector;
     private State state;
     
-    public Car(double entryTime, long carNum, Route route){
+    public Car(double entryTime, long carNum, Route route, Convoy convoy){
         this.entryTime = entryTime;
         this.route = route;
         this.carNum = carNum;
         this.vector = VectorUtility.initializePositionDirection(route);
+        this.convoy = convoy;
     }
     
     public State getState(){
         return state;
+    }
+    
+    public Convoy getConvoy(){
+        return convoy;
     }
     
     public void setState(State state){

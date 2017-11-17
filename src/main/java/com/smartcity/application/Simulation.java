@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class Simulation {
     
-    public enum LightChangeType{DUMB, CAR_BASED, COORDINATED}
+    public enum LightChangeType{DUMB, CAR_BASED, COORDINATED, CONVOY_AWARE}
     
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true;
@@ -24,7 +24,7 @@ public class Simulation {
     public static final double SIM_SPEED = 0.03;    
     
     //configuration variables
-    public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.COORDINATED;
+    public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.CONVOY_AWARE;
     public static final double NUM_CARS_LAMBDA = 0.015;
     public static final double CAR_ENTRY_MULTIPLIER = 3000;
     public static final double CHART_BUCKETS = 100;

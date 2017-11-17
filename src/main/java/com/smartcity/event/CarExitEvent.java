@@ -7,6 +7,8 @@ package com.smartcity.event;
 
 import com.smartcity.application.Simulation;
 import com.smartcity.model.Car;
+import com.smartcity.model.Convoy;
+import com.smartcity.model.ConvoyQueue;
 import com.smartcity.model.Intersection;
 import com.smartcity.utility.DataAggregator;
 
@@ -40,6 +42,16 @@ public class CarExitEvent extends Event{
             double rate = ((double)Simulation.NUM_CARS / (double)simulationTime) * 1000;
             System.out.println("All cars have exited. The simulation took: " + simulationTime + "ms. " + rate + " cars processed / sec");
             EventBus.stopEventBus();
+        }
+        
+        if(Simulation.LIGHT_CHANGE_TYPE == Simulation.LightChangeType.CONVOY_AWARE){
+            if(car.getConvoy().isLast(car)){
+                Convoy convoy = ConvoyQueue.pollQueue();
+                while(convoy != null){
+                    EventBus.submitEvent(new ConvoyEnterEvent(eventTime + Simulation.CAR_ENTRY_INTERVAL, convoy));
+                    convoy = ConvoyQueue.pollQueue();
+                }
+            }
         }
     }
 }
