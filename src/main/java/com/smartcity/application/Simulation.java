@@ -28,8 +28,8 @@ public class Simulation {
     public static final double NUM_CARS_LAMBDA = 0.015;
     public static final double CAR_ENTRY_MULTIPLIER = 3000;
     public static final double CHART_BUCKETS = 100;
-    public static final int NUM_CARS = 5000;
     public static final long CAR_ENTRY_INTERVAL = 2; //time units
+    public static final int NUM_CARS = 5000;
     public static final int NUM_EW_STREETS = 10;
     public static final int NUM_NS_STREETS = 8;
     public static final int CAR_CHANGE_LIGHT_NUM = 5;
