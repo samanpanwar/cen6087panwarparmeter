@@ -47,14 +47,14 @@ public class VectorUtility {
     }
     
     public static GridVector getCenter(Intersection intersection){
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         int x = (intersection.getEWBlock() * gridSize) + (gridSize/2);
         int y = (intersection.getNSBlock()* gridSize) + (gridSize/2);
         return new GridVector(x, y, null);
     }
     
     public static GridVector getIntersectionEdge(Intersection intersection, CardinalDirection direction){
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         int xCell = intersection.getEWBlock() * gridSize;
         int yCell = intersection.getNSBlock() * gridSize;
         

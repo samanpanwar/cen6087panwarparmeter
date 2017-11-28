@@ -80,7 +80,7 @@ public class ApproachIntersectionEvent extends Event{
                         Intersection last = to;
                         Intersection next = car.getRoute().getNextIntersection(to);
                         while(next != null && lightEventTime > next.getCurrentDequeueFinishTime() && next.getIsSwitching() == false){
-                            lightEventTime += (double) Simulation.INTERSECTION_DISATANCE / Simulation.CAR_VELOCITY;
+                            lightEventTime += (double) Simulation.INTERSECTION_DISTANCE / Simulation.CAR_VELOCITY;
                             LightDirection carDirection = LightDirection.get(VectorUtility.getDirectionTo(last, next));
                             direction = next.getLightDirection().getOppisite();
                             next.setCurrentDequeueFinishTime(lightEventTime + nextDequeueFinish);

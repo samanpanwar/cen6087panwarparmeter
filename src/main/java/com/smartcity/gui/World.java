@@ -49,7 +49,7 @@ public class World {
     
     public World(Grid grid){
         this.grid = grid;
-        roads = new Canvas(grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE, grid.getNSBlockSize() * Simulation.INTERSECTION_DISATANCE);
+        roads = new Canvas(grid.getEWBlockSize() * Simulation.INTERSECTION_DISTANCE, grid.getNSBlockSize() * Simulation.INTERSECTION_DISTANCE);
         drawGrid(grid);
         
         //adds all the layers to the root
@@ -162,7 +162,7 @@ public class World {
         }
         
         int lightDistance = 15;
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         int xCenter = (intersection.getEWBlock() * gridSize) + (gridSize/2);
         int yCenter = (intersection.getNSBlock() * gridSize) + (gridSize/2);
         
@@ -228,7 +228,7 @@ public class World {
             return;
         }
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         Intersection last = null;
         for(Intersection inter : route.getIntersections()){
             int x1 = (inter.getEWBlock() * gridSize) + (gridSize /2);
@@ -251,7 +251,7 @@ public class World {
             return;
         }
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         for(List<Intersection> entrances : grid.getEntryIntersections()){
             for(Intersection entry : entrances){
                 int x1 = (entry.getEWBlock() * gridSize) + (gridSize /2);
@@ -278,8 +278,8 @@ public class World {
         
         //Draws the black background
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int width = grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE;
-        int height = grid.getEWBlockSize() * Simulation.INTERSECTION_DISATANCE;
+        int width = grid.getEWBlockSize() * Simulation.INTERSECTION_DISTANCE;
+        int height = grid.getEWBlockSize() * Simulation.INTERSECTION_DISTANCE;
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, width, height);
         
@@ -298,7 +298,7 @@ public class World {
         
         //sets up variables
         GraphicsContext gc = roads.getGraphicsContext2D();
-        int gridSize = Simulation.INTERSECTION_DISATANCE;
+        int gridSize = Simulation.INTERSECTION_DISTANCE;
         int streetWidth = Simulation.STREET_WIDTH;
         int cellX = intersection.getEWBlock() * gridSize;
         int cellY = intersection.getNSBlock()* gridSize;
