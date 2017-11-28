@@ -25,5 +25,6 @@ public class IntersectionStopEvent extends Event{
         if(car.getState() == Car.State.STOPPING){
             car.setState(Car.State.STOPPED);
         }
+        car.setStopTime(eventTime);
     }
 }

@@ -25,6 +25,8 @@ public class Car {
     private final Convoy convoy;
     private GridVector vector;
     private State state;
+    private double waitTime = 0;
+    private Double stopTime;
     
     public Car(double entryTime, long carNum, Route route, Convoy convoy){
         this.entryTime = entryTime;
@@ -32,6 +34,10 @@ public class Car {
         this.carNum = carNum;
         this.vector = VectorUtility.initializePositionDirection(route);
         this.convoy = convoy;
+    }
+    
+    public double getTotalWaitTime(){
+        return waitTime;
     }
     
     public State getState(){
@@ -64,6 +70,17 @@ public class Car {
     
     public void setVector(GridVector vector){
         this.vector = vector;
+    }
+    
+    public void setStopTime(double stopTime){
+        this.stopTime = stopTime;
+    }
+    
+    public void incrementWaitTime(double currentTime){
+        if(stopTime != null){
+            waitTime += currentTime - stopTime;
+            stopTime = null;
+        }
     }
 
     @Override

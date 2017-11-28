@@ -15,13 +15,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -39,10 +45,11 @@ public class DataAggregator {
     private static final AtomicLong numCarsRemoved = new AtomicLong(0);
     private static final AtomicLong numEvents = new AtomicLong(0);
     private static final Map<Class, TreeMultiset<Long>> eventTimesMap = new HashMap(); 
-    private static final TreeMultiset<Double> carAverages = TreeMultiset.create();
+    private static final TreeMultiset<Double> carVelocityAverages = TreeMultiset.create();
+    private static final TreeMultiset<Double> carSimulationTimes = TreeMultiset.create();
+    private static final TreeMultiset<Double> carWaitTimes = TreeMultiset.create();
     private static final long updateInterval = 250;//ms
     private static final DecimalFormat lambdaFormatter = new DecimalFormat("0.###########");
-    private static final DecimalFormat nf = new DecimalFormat("0.###");
     
     private static long lastUpdateTime = System.currentTimeMillis();
     
@@ -82,75 +89,65 @@ public class DataAggregator {
         return numCarsRemoved.longValue();
     }
     
-    public static void putCarAverage(double average){
+    public static void putCarVelocityAverage(double average){
         if(Simulation.GATHER_DATA){
-            carAverages.add(average);
+            carVelocityAverages.add(average);
+        }
+    }
+    
+    public static void putCarSimulationTime(double time){
+        if(Simulation.GATHER_DATA){
+            carSimulationTimes.add(time);
+        }
+    }
+    
+    public static void putCarTotalWaitTime(double time){
+        if(Simulation.GATHER_DATA){
+            carWaitTimes.add(time);
         }
     }
     
     public static void generateCarAverageChart(){
         
-        if(carAverages.isEmpty()){
-            System.out.println("There is no data to plot");
-            return;
-        }
-        
-        //caculates the stats
-        long start = System.currentTimeMillis();
-        System.out.println("calculating stats...");
-        double min = carAverages.firstEntry().getElement();
-        double max = carAverages.lastEntry().getElement();
-        double total = 0;
-        for(double avg : carAverages){
-            total += avg;
-            if(total == Double.MAX_VALUE){
-                throw new IllegalStateException("The average cannot be calculated, double overflow");
-            }
-        }
-        double avg = total / carAverages.size();
-        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms. Average: " + avg);
-        
-        //Builds the stats pane
-        HBox statsPane = new HBox();
-        statsPane.setSpacing(10);
-        statsPane.setAlignment(Pos.TOP_CENTER);
-        statsPane.getChildren().addAll(
-                new Label("NumCars: " + nf.format(carAverages.size())), 
-                new Label("Mean: " + nf.format(avg)), 
-                new Label("Min: " + nf.format(min)), 
-                new Label("Max: " + nf.format(max)),
-                new Label("Range: " + nf.format(max-min)));
-        
-        //Builds the copy data area
-        TextField copyDataArea = new TextField(carAverages.size() + "," + avg + "," + min + "," + max + "," + (max-min));
-        System.out.println("Simulation Data:\n"+copyDataArea.getText());
-        copyDataArea.setEditable(false);
-        
-        //Get data for the chart
-        double bucketRange = Simulation.CAR_VELOCITY / Simulation.CHART_BUCKETS;
-        double bucketMin = 0;
-        ObservableList<XYChart.Data> data = FXCollections.observableList(new ArrayList());
-        for(int i=0; i < Simulation.CHART_BUCKETS; i++){
-            double bucketMax = bucketMin + bucketRange;
-            int numRecords = carAverages.subMultiset(bucketMin, BoundType.OPEN, bucketMax, BoundType.CLOSED).size();
-            double middle = bucketMin + ((bucketMax - bucketMin) / 2);
-            data.add(new XYChart.Data(middle, numRecords));
-            bucketMin = bucketMax;
-        }
+        Stats velocityAverages = new Stats(carVelocityAverages);
+        Stats simulationTimes = new Stats(carSimulationTimes);
+        Stats waitTimes = new Stats(carWaitTimes);
         
         //builds the chart
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         final LineChart<String,Number> lc = new LineChart(xAxis,yAxis);
-        lc.getData().add(new XYChart.Series("Average Velocity", data));
-        lc.setTitle("Average Car Speed for Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA));
+        XYChart.Series velocitySeries = new XYChart.Series("Average Velocity (carLengths/s)", velocityAverages.getChartData(Simulation.CAR_VELOCITY));
+        XYChart.Series simulationTimeSeries = new XYChart.Series("Time in Simulation (s)", simulationTimes.getChartData(simulationTimes.max));
+        XYChart.Series waitTimeSeries = new XYChart.Series("Wait Times (s)", waitTimes.getChartData(waitTimes.max));
+        lc.getData().addAll(simulationTimeSeries, waitTimeSeries);
+        lc.setTitle("Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA) + "\nLight Change Type: " + Simulation.LIGHT_CHANGE_TYPE);
         lc.setCreateSymbols(false);
-        xAxis.setLabel("Average Velocity");       
+        xAxis.setLabel("");       
         yAxis.setLabel("Number of Cars");
+        
+        //adds the buttons
+        CheckBox velBox = new CheckBox("Average Velocity");
+        velBox.setSelected(false);
+        velBox.selectedProperty().addListener(new ToggleEvent(velocitySeries, lc.getData()));
+        CheckBox timeInSimBox = new CheckBox("Time in Simulation");
+        timeInSimBox.setSelected(true);
+        timeInSimBox.selectedProperty().addListener(new ToggleEvent(simulationTimeSeries, lc.getData()));
+        CheckBox waitTimeBox = new CheckBox("Wait Times");
+        waitTimeBox.setSelected(true);
+        waitTimeBox.selectedProperty().addListener(new ToggleEvent(waitTimeSeries, lc.getData()));
+        HBox checkBoxes = new HBox();
+        checkBoxes.setAlignment(Pos.CENTER);
+        checkBoxes.setSpacing(10);
+        checkBoxes.getChildren().setAll(velBox, timeInSimBox, waitTimeBox);
         
         //Lays out the components
         VBox mainBox = new VBox();
-        mainBox.getChildren().addAll(lc, statsPane, copyDataArea);
+        mainBox.setSpacing(5);
+        mainBox.getChildren().addAll(lc, checkBoxes,
+                velocityAverages.getStatsPane(),
+                simulationTimes.getStatsPane(),
+                waitTimes.getStatsPane());
         
         //opens the chart in a new window
         Scene scene = new Scene(mainBox, 600, 400);
@@ -170,6 +167,26 @@ public class DataAggregator {
         if(System.currentTimeMillis() - lastUpdateTime > updateInterval){
             System.out.println(numCarsAdded.get() + " cars added\t" + numCarsRemoved.get() + " cars removed\t" + numCars + " cars in the system.");
             lastUpdateTime = System.currentTimeMillis();
+        }
+    }
+    
+    private static class ToggleEvent implements ChangeListener<Boolean>{
+
+        private final Object obj;
+        private final ObservableList list;
+        
+        public ToggleEvent(Object obj, ObservableList list){
+            this.obj = obj;
+            this.list = list;
+        }
+        
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            if(newValue && !list.contains(obj)){
+                list.add(obj);
+            } else {
+                list.remove(obj);
+            }
         }
     }
 }

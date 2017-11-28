@@ -29,12 +29,15 @@ public class CarExitEvent extends Event{
     protected void eventAction() {
         double duration = eventTime - car.getEntryTime();
         double distance = car.getRoute().getIntersections().size() * Simulation.INTERSECTION_DISATANCE;
-        double velocity = (distance / duration);
+        double velocity = distance / duration;
+        
         Intersection intersection = car.getRoute().getIntersections().get(car.getRoute().getIntersections().size()-1);
 //        System.out.println(this.toString() + car + " has exited at " +intersection + " the car was in the simulation for " + duration + " time units and covered " + distance + " distance units the velocity was: " + (distance / duration));
         Simulation.WORLD.removeCar(car);
         DataAggregator.removeCar();
-        DataAggregator.putCarAverage(velocity);
+        DataAggregator.putCarVelocityAverage(velocity);
+        DataAggregator.putCarSimulationTime(duration);
+        DataAggregator.putCarTotalWaitTime(car.getTotalWaitTime());
         
         //end of the simulation
         if(DataAggregator.getNumCarsActive() == 0 && DataAggregator.getNumCarsAdded() == Simulation.NUM_CARS){

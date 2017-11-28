@@ -39,6 +39,7 @@ public class IntersectionDequeueEvent extends Event{
             } else {
                 EventBus.submitEvent(new ApproachIntersectionEvent(eventTime, car, intersection));
             }    
+            car.incrementWaitTime(eventTime);
             EventBus.submitEvent(new IntersectionDequeueEvent(eventTime + Simulation.DEQUQE_LIGHT_TIME, intersection, direction, carsToDequeue));
         }
     }
