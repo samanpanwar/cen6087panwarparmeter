@@ -30,7 +30,7 @@ public class RouteFactoryTest {
     private final boolean debug = false;
     private final Grid grid = new Grid(12, 8);
     private final RouteFactory factory = new RouteFactory(grid);
-    private Stage stage;
+//    private Stage stage;
     
     @Test 
     public void gridTest(){
@@ -50,13 +50,13 @@ public class RouteFactoryTest {
     
     @Test
     public void basicRouteFactoryTest() {
-        if(debug){
-            new JFXPanel(); // initializes JavaFX environment
-            Platform.runLater(()->{
-                stage = new Stage();
-                stage.show();
-            });
-        }
+//        if(debug){
+//            new JFXPanel(); // initializes JavaFX environment
+//            Platform.runLater(()->{
+//                stage = new Stage();
+//                stage.show();
+//            });
+//        }
         for(int i = 0; i < NUM_TEST_ROUTES; i++){
             testGenerateRoute(factory.generateRoute(), i);
         }
@@ -67,23 +67,23 @@ public class RouteFactoryTest {
         
         //prints out the route information
         if(debug){
-            System.out.println("\nTest no: " + (testNum+1) + " Route Size: " + route.getIntersections().size());
-            for(int i=0; i < route.getIntersections().size(); i ++){
-                System.out.println("Intersection:" + i + "\t" + route.getIntersections().get(i));
-            }
-            Platform.runLater(()->{
-                World world = new World(grid);
-                world.drawRoute(route);
-                world.drawEntriesAndExits();
-                stage.setScene(new Scene(new ScrollPane(world.getRoot())));
-            });
-            
-            //Need to sleep, if it's too fast it will crash the system with too many render calls. 
-            try{
-                Thread.sleep(50);
-            }catch(Exception ex){
-                
-            }
+//            System.out.println("\nTest no: " + (testNum+1) + " Route Size: " + route.getIntersections().size());
+//            for(int i=0; i < route.getIntersections().size(); i ++){
+//                System.out.println("Intersection:" + i + "\t" + route.getIntersections().get(i));
+//            }
+//            Platform.runLater(()->{
+//                World world = new World(grid);
+//                world.drawRoute(route);
+//                world.drawEntriesAndExits();
+//                stage.setScene(new Scene(new ScrollPane(world.getRoot())));
+//            });
+//            
+//            //Need to sleep, if it's too fast it will crash the system with too many render calls. 
+//            try{
+//                Thread.sleep(50);
+//            }catch(Exception ex){
+//                
+//            }
         }
         
         //Ensures the first intersection is an entrance

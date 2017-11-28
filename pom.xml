@@ -29,25 +29,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-    <name>SmartCity</name>
+    <!--<name>SmartCity</name>-->
     <build>
         <plugins>
-<!--          <plugin>
-             Build an executable JAR 
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.0.2</version>
-            <configuration>
-              <archive>
-                <manifest>
-                  <addClasspath>true</addClasspath>
-                  <classpathPrefix>lib/</classpathPrefix>
-                  <mainClass>com.smartcity.application.SmartCityApplication</mainClass>
-                </manifest>
-              </archive>
-            </configuration>
-          </plugin>-->
-            
             <plugin>
               <artifactId>maven-assembly-plugin</artifactId>
               <executions>
@@ -73,5 +57,4 @@
             </plugin>
         </plugins>
       </build>
-    
 </project>

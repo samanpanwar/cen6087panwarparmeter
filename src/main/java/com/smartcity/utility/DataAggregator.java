@@ -14,25 +14,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+//import javafx.application.Platform;
+//import javafx.beans.value.ChangeListener;
+//import javafx.beans.value.ObservableValue;
+//import javafx.collections.FXCollections;
+//import javafx.collections.ObservableList;
+//import javafx.event.EventHandler;
+//import javafx.event.EventType;
+//import javafx.geometry.Pos;
+//import javafx.scene.Node;
+//import javafx.scene.Scene;
+//import javafx.scene.chart.LineChart;
+//import javafx.scene.chart.NumberAxis;
+//import javafx.scene.chart.XYChart;
+//import javafx.scene.control.CheckBox;
+//import javafx.scene.control.Label;
+//import javafx.scene.control.TextField;
+//import javafx.scene.layout.HBox;
+//import javafx.scene.layout.VBox;
+//import javafx.stage.Stage;
 
 /**
  *
@@ -113,50 +113,50 @@ public class DataAggregator {
         Stats simulationTimes = new Stats(carSimulationTimes, "Simulation Times");
         Stats waitTimes = new Stats(carWaitTimes, "Wait Times");
         
-        //builds the chart
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        final LineChart<String,Number> lc = new LineChart(xAxis,yAxis);
-        XYChart.Series velocitySeries = new XYChart.Series("Average Velocity (carLengths/s)", velocityAverages.getChartData(Simulation.CAR_VELOCITY));
-        XYChart.Series simulationTimeSeries = new XYChart.Series("Time in Simulation (s)", simulationTimes.getChartData(simulationTimes.max));
-        XYChart.Series waitTimeSeries = new XYChart.Series("Wait Times (s)", waitTimes.getChartData(waitTimes.max));
-        lc.getData().addAll(simulationTimeSeries, waitTimeSeries);
-        lc.setTitle("Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA) + "\nLight Change Type: " + Simulation.LIGHT_CHANGE_TYPE);
-        lc.setCreateSymbols(false);
-        xAxis.setLabel("");       
-        yAxis.setLabel("Number of Cars");
-        
-        //adds the buttons
-        CheckBox velBox = new CheckBox("Average Velocity");
-        velBox.setSelected(false);
-        velBox.selectedProperty().addListener(new ToggleEvent(velocitySeries, lc.getData()));
-        CheckBox timeInSimBox = new CheckBox("Time in Simulation");
-        timeInSimBox.setSelected(true);
-        timeInSimBox.selectedProperty().addListener(new ToggleEvent(simulationTimeSeries, lc.getData()));
-        CheckBox waitTimeBox = new CheckBox("Wait Times");
-        waitTimeBox.setSelected(true);
-        waitTimeBox.selectedProperty().addListener(new ToggleEvent(waitTimeSeries, lc.getData()));
-        HBox checkBoxes = new HBox();
-        checkBoxes.setAlignment(Pos.CENTER);
-        checkBoxes.setSpacing(10);
-        checkBoxes.getChildren().setAll(velBox, timeInSimBox, waitTimeBox);
-        
-        //Lays out the components
-        VBox mainBox = new VBox();
-        mainBox.setSpacing(5);
-        mainBox.getChildren().addAll(lc, checkBoxes,
-                velocityAverages.getStatsPane(),
-                simulationTimes.getStatsPane(),
-                waitTimes.getStatsPane());
-        
-        //opens the chart in a new window
-        Scene scene = new Scene(mainBox, 600, 400);
-        Platform.runLater(()->{
-            Stage stage = new Stage();
-            stage.setTitle("New Window");
-            stage.setScene(scene);
-            stage.show();
-        });
+//        //builds the chart
+//        final NumberAxis xAxis = new NumberAxis();
+//        final NumberAxis yAxis = new NumberAxis();
+//        final LineChart<String,Number> lc = new LineChart(xAxis,yAxis);
+//        XYChart.Series velocitySeries = new XYChart.Series("Average Velocity (carLengths/s)", velocityAverages.getChartData(Simulation.CAR_VELOCITY));
+//        XYChart.Series simulationTimeSeries = new XYChart.Series("Time in Simulation (s)", simulationTimes.getChartData(simulationTimes.max));
+//        XYChart.Series waitTimeSeries = new XYChart.Series("Wait Times (s)", waitTimes.getChartData(waitTimes.max));
+//        lc.getData().addAll(simulationTimeSeries, waitTimeSeries);
+//        lc.setTitle("Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA) + "\nLight Change Type: " + Simulation.LIGHT_CHANGE_TYPE);
+//        lc.setCreateSymbols(false);
+//        xAxis.setLabel("");       
+//        yAxis.setLabel("Number of Cars");
+//        
+//        //adds the buttons
+//        CheckBox velBox = new CheckBox("Average Velocity");
+//        velBox.setSelected(false);
+//        velBox.selectedProperty().addListener(new ToggleEvent(velocitySeries, lc.getData()));
+//        CheckBox timeInSimBox = new CheckBox("Time in Simulation");
+//        timeInSimBox.setSelected(true);
+//        timeInSimBox.selectedProperty().addListener(new ToggleEvent(simulationTimeSeries, lc.getData()));
+//        CheckBox waitTimeBox = new CheckBox("Wait Times");
+//        waitTimeBox.setSelected(true);
+//        waitTimeBox.selectedProperty().addListener(new ToggleEvent(waitTimeSeries, lc.getData()));
+//        HBox checkBoxes = new HBox();
+//        checkBoxes.setAlignment(Pos.CENTER);
+//        checkBoxes.setSpacing(10);
+//        checkBoxes.getChildren().setAll(velBox, timeInSimBox, waitTimeBox);
+//        
+//        //Lays out the components
+//        VBox mainBox = new VBox();
+//        mainBox.setSpacing(5);
+//        mainBox.getChildren().addAll(lc, checkBoxes,
+//                velocityAverages.getStatsPane(),
+//                simulationTimes.getStatsPane(),
+//                waitTimes.getStatsPane());
+//        
+//        //opens the chart in a new window
+//        Scene scene = new Scene(mainBox, 600, 400);
+//        Platform.runLater(()->{
+//            Stage stage = new Stage();
+//            stage.setTitle("New Window");
+//            stage.setScene(scene);
+//            stage.show();
+//        });
     }
     
     public static void generateEventTimesAveragesChart(){
@@ -169,24 +169,24 @@ public class DataAggregator {
             lastUpdateTime = System.currentTimeMillis();
         }
     }
-    
-    private static class ToggleEvent implements ChangeListener<Boolean>{
-
-        private final Object obj;
-        private final ObservableList list;
-        
-        public ToggleEvent(Object obj, ObservableList list){
-            this.obj = obj;
-            this.list = list;
-        }
-        
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-            if(newValue && !list.contains(obj)){
-                list.add(obj);
-            } else {
-                list.remove(obj);
-            }
-        }
-    }
+//    
+//    private static class ToggleEvent implements ChangeListener<Boolean>{
+//
+//        private final Object obj;
+//        private final ObservableList list;
+//        
+//        public ToggleEvent(Object obj, ObservableList list){
+//            this.obj = obj;
+//            this.list = list;
+//        }
+//        
+//        @Override
+//        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//            if(newValue && !list.contains(obj)){
+//                list.add(obj);
+//            } else {
+//                list.remove(obj);
+//            }
+//        }
+//    }
 }
