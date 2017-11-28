@@ -29,7 +29,7 @@ public class Stats {
     public final TreeMultiset<Double> data;
     public final double min, max, total, avg;
 
-    public Stats(TreeMultiset<Double> data){
+    public Stats(TreeMultiset<Double> data, String name){
 
         if(data.isEmpty()){
             throw new IllegalArgumentException("There is no data to plot");

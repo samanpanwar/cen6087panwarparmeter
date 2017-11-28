@@ -7,7 +7,14 @@ import com.smartcity.event.EventBus;
 import com.smartcity.event.LightChangeEvent;
 import com.smartcity.model.Grid;
 import com.smartcity.model.Intersection;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +23,8 @@ import java.util.Random;
 public class Simulation {
     
     public enum LightChangeType{DUMB, CAR_BASED, COORDINATED, CONVOY_AWARE}
+    
+    public static final Properties prop = new Properties();
     
     //Used for rendering / data gathering
     public static final boolean GATHER_DATA = true;
@@ -48,6 +57,17 @@ public class Simulation {
     public static final Grid GRID = new Grid(NUM_EW_STREETS, NUM_NS_STREETS);
     public static final World WORLD = new World(GRID);
     public static final long START_TIME = System.currentTimeMillis();
+    
+    static{
+        try {
+            prop.load(new FileInputStream("simulation.properties"));
+            System.out.println(prop.getProperty("test"));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public static void start(){
         
