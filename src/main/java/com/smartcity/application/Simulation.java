@@ -24,10 +24,10 @@ public class Simulation {
     
     public enum LightChangeType{DUMB, CAR_BASED, COORDINATED, CONVOY_AWARE}
     
-    public static final Properties prop = new Properties();
+    private static final Properties prop = getProperties();
     
     //Used for rendering / data gathering
-    public static final boolean GATHER_DATA = true;
+    public static final boolean GATHER_DATA = Boolean.valueOf(prop.getProperty("gather_data"));
     public static final boolean REAL_TIME = false;
     public static final boolean SHOW_GUI = false;
     public static final double SIM_SPEED = 0.03;    
@@ -46,7 +46,7 @@ public class Simulation {
     public static final long LIGHT_CHANGE_GREEN_TIME = 250;
     public static final long DEQUQE_LIGHT_TIME = 10; //Time after the light changes or a car in front moves that this car moves 
     public static final double CAR_VELOCITY = 5;//distance units / time unit   
-    public static final Random RNG = new Random(0);
+    public static final Random RNG = new Random(Long.valueOf(prop.getProperty("seed")));
     
     //Size variables
     public static final int INTERSECTION_DISATANCE = 150;
@@ -58,15 +58,16 @@ public class Simulation {
     public static final World WORLD = new World(GRID);
     public static final long START_TIME = System.currentTimeMillis();
     
-    static{
+    private static Properties getProperties(){
+        Properties properties = new Properties();
         try {
-            prop.load(new FileInputStream("simulation.properties"));
-            System.out.println(prop.getProperty("test"));
+            properties.load(new FileInputStream("simulation.properties"));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return properties;
     }
     
     public static void start(){
