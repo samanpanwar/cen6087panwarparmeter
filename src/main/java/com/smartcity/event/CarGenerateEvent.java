@@ -33,14 +33,14 @@ public class CarGenerateEvent extends Event{
     @Override
     protected void eventAction() {
         
-        long numCarsToGenerate = getNumCars(eventNum);
+        int numCarsToGenerate = getNumCars();
         double insertTime = eventTime;
         Route route = ROUTE_FACTORY.generateRoute();
 //        Simulation.WORLD.drawRoute(route);
         Convoy convoy = new Convoy(route);
         List<Car> cars = new ArrayList();
         for(int i=0; i<numCarsToGenerate; i++){
-            insertTime += Simulation.CAR_ENTRY_INTERVAL;
+            insertTime += Simulation.CONVOY_ENTRY_INTERVAL;
             Car car = new Car(insertTime, DataAggregator.getNumCarsAdded(), route, convoy);
             cars.add(car);
             List<Intersection> intersections = car.getRoute().getIntersections();
@@ -73,15 +73,17 @@ public class CarGenerateEvent extends Event{
         }
         
         //generates the next car if we have not broken out
-        EventBus.submitEvent(new CarGenerateEvent(insertTime + Simulation.CAR_ENTRY_INTERVAL));
+        double carGenerateTime = numCarsToGenerate * Simulation.CONVOY_ENTRY_INTERVAL;
+        EventBus.submitEvent(new CarGenerateEvent(insertTime + carGenerateTime + getNextGenerateTime(Simulation.LAMBDA)));
         eventNum++;
     }
     
-    private long getNumCars(long EventNum){
-        double t = (double) EventNum;
+    private int getNumCars(){
+        return Simulation.RNG.nextInt(Simulation.CONVOY_AVERAGE_SIZE);
+    }
+
+    double getNextGenerateTime(double lambda) {
         double X = Simulation.RNG.nextDouble();
-        double l = Simulation.NUM_CARS_LAMBDA;
-        double mult = Simulation.CAR_ENTRY_MULTIPLIER;
-        return Math.round(X * mult * l * Math.exp(-l * t));
+        return lambda * Math.exp(-lambda * X);
     }
 }

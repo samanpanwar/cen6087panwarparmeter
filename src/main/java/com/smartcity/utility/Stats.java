@@ -36,8 +36,6 @@ public class Stats {
         }
 
         //caculates the stats
-        long start = System.currentTimeMillis();
-        System.out.println("calculating stats...");
         min = data.firstEntry().getElement();
         max = data.lastEntry().getElement();
         double totalCalc = 0;
@@ -49,7 +47,7 @@ public class Stats {
         }
         total = totalCalc;
         avg = total / data.size();
-        System.out.println("Stats calculation took " + (System.currentTimeMillis() - start) + "ms. Average: " + avg);
+        System.out.println(name + " Average:" + avg);
         this.data = data;
     }
 

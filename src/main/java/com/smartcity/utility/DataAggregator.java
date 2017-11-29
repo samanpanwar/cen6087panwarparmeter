@@ -109,7 +109,7 @@ public class DataAggregator {
     
     public static void generateCarAverageChart(){
         
-        Stats velocityAverages = new Stats(carVelocityAverages, "Velocity Averages");
+        Stats velocityAverages = new Stats(carVelocityAverages, "Velocities");
         Stats simulationTimes = new Stats(carSimulationTimes, "Simulation Times");
         Stats waitTimes = new Stats(carWaitTimes, "Wait Times");
         
@@ -121,7 +121,7 @@ public class DataAggregator {
         XYChart.Series simulationTimeSeries = new XYChart.Series("Time in Simulation (s)", simulationTimes.getChartData(simulationTimes.max));
         XYChart.Series waitTimeSeries = new XYChart.Series("Wait Times (s)", waitTimes.getChartData(waitTimes.max));
         lc.getData().addAll(simulationTimeSeries, waitTimeSeries);
-        lc.setTitle("Lambda: " + lambdaFormatter.format(Simulation.NUM_CARS_LAMBDA) + "\nLight Change Type: " + Simulation.LIGHT_CHANGE_TYPE);
+        lc.setTitle("Lambda: " + lambdaFormatter.format(Simulation.LAMBDA) + "\nLight Change Type: " + Simulation.LIGHT_CHANGE_TYPE);
         lc.setCreateSymbols(false);
         xAxis.setLabel("");       
         yAxis.setLabel("Number of Cars");

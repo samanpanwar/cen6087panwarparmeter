@@ -28,6 +28,7 @@ public class SmartCityApplication extends Application{
             primaryStage.setScene(scene);
             primaryStage.setWidth(scene.getWidth());
             primaryStage.setHeight(scene.getHeight());
+            primaryStage.setTitle("Sim Type: " + Simulation.LIGHT_CHANGE_TYPE + " Lambda:" + Simulation.LAMBDA);
             primaryStage.show();
         }
         Simulation.start();
