@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class CarGenerateEvent extends Event{
     
     private static final RouteFactory ROUTE_FACTORY = new RouteFactory(Simulation.GRID);
-    private static long eventNum = 0;
     private static long numZeroEvents = 0;
     private static final long NUM_ZERO_EVENT_FOR_QUIT = 100;
 
@@ -75,7 +74,6 @@ public class CarGenerateEvent extends Event{
         //generates the next car if we have not broken out
         double carGenerateTime = numCarsToGenerate * Simulation.CONVOY_ENTRY_INTERVAL;
         EventBus.submitEvent(new CarGenerateEvent(insertTime + carGenerateTime + getNextGenerateTime(Simulation.LAMBDA)));
-        eventNum++;
     }
     
     private int getNumCars(){
@@ -84,6 +82,6 @@ public class CarGenerateEvent extends Event{
 
     double getNextGenerateTime(double lambda) {
         double X = Simulation.RNG.nextDouble();
-        return lambda * Math.exp(-lambda * X);
+        return lambda * Math.exp(-lambda*X);
     }
 }
