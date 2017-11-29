@@ -53,7 +53,7 @@ public class ConvoyEnterEvent extends Event{
         
         double insertTime = eventTime;
         for(Car car : convoy.getCars()){
-            insertTime += Simulation.CAR_ENTRY_INTERVAL;
+            insertTime += Simulation.CONVOY_ENTRY_INTERVAL;
             EventBus.submitEvent(new ApproachIntersectionEvent(insertTime, car, convoy.route.getIntersections().get(0)));
         }
     }

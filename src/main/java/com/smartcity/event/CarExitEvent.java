@@ -51,7 +51,7 @@ public class CarExitEvent extends Event{
             if(car.getConvoy().isLast(car)){
                 Convoy convoy = ConvoyQueue.pollQueue();
                 while(convoy != null){
-                    EventBus.submitEvent(new ConvoyEnterEvent(eventTime + Simulation.CAR_ENTRY_INTERVAL, convoy));
+                    EventBus.submitEvent(new ConvoyEnterEvent(eventTime + Simulation.CONVOY_ENTRY_INTERVAL, convoy));
                     convoy = ConvoyQueue.pollQueue();
                 }
             }

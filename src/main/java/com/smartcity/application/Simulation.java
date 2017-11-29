@@ -27,17 +27,17 @@ public class Simulation {
     private static final Properties prop = getProperties();
     
     //Used for rendering / data gathering
-    public static final boolean GATHER_DATA = Boolean.valueOf(prop.getProperty("gather_data"));
     public static final boolean REAL_TIME = Boolean.valueOf(prop.getProperty("real_time"));
     public static final boolean SHOW_GUI = Boolean.valueOf(prop.getProperty("show_gui"));
     public static final double SIM_SPEED = Double.valueOf(prop.getProperty("sim_speed"));   
+    public static final boolean GATHER_DATA = Boolean.valueOf(prop.getProperty("gather_data"));
+    public static final double CHART_BUCKETS = Double.valueOf(prop.getProperty("chart_buckets"));
     
     //configuration variables
+    public static final double LAMBDA =  Double.valueOf(prop.getProperty("lambda"));
+    public static final double CONVOY_ENTRY_INTERVAL =  Double.valueOf(prop.getProperty("convoy_entry_interval"));
+    public static final int CONVOY_AVERAGE_SIZE =  Integer.valueOf(prop.getProperty("convoy_average_size"));
     public static final LightChangeType LIGHT_CHANGE_TYPE = LightChangeType.valueOf(prop.getProperty("light_change_type"));
-    public static final double NUM_CARS_LAMBDA = Double.valueOf(prop.getProperty("num_cars_lambda"));
-    public static final double CAR_ENTRY_MULTIPLIER = Double.valueOf(prop.getProperty("car_entry_multiplier"));
-    public static final double CHART_BUCKETS = Double.valueOf(prop.getProperty("chart_buckets"));
-    public static final long CAR_ENTRY_INTERVAL = Long.valueOf(prop.getProperty("car_entry_interval")); //time units
     public static final int NUM_CARS = Integer.valueOf(prop.getProperty("num_cars"));
     public static final int NUM_EW_STREETS = Integer.valueOf(prop.getProperty("num_ew_streets"));
     public static final int NUM_NS_STREETS = Integer.valueOf(prop.getProperty("num_ns_streets"));
@@ -73,7 +73,7 @@ public class Simulation {
     public static void start(){
         
         //Starts up the "dumb" light switch algorithm for the traffic lights
-        System.out.println("Simulation Started.");
+        System.out.println("Simulation Started. Sim Type: " + Simulation.LIGHT_CHANGE_TYPE + " Lambda:" + Simulation.LAMBDA);
         if(LIGHT_CHANGE_TYPE == LightChangeType.DUMB){
             for(int i = 0; i < GRID.getEWBlockSize(); i++){
                 for(int j = 0; j < GRID.getNSBlockSize(); j++){

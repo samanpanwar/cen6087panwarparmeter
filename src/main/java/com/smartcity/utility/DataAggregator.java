@@ -109,7 +109,7 @@ public class DataAggregator {
     
     public static void generateCarAverageChart(){
         
-        Stats velocityAverages = new Stats(carVelocityAverages, "Velocity Averages");
+        Stats velocityAverages = new Stats(carVelocityAverages, "Velocities");
         Stats simulationTimes = new Stats(carSimulationTimes, "Simulation Times");
         Stats waitTimes = new Stats(carWaitTimes, "Wait Times");
         

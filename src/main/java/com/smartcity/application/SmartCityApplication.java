@@ -17,9 +17,8 @@ package com.smartcity.application;
 public class SmartCityApplication{
 
     public static void main(String[] args) {
-//        launch(args);
-//        
         Simulation.start();
+//        launch(args);
     }
     
 //    @Override
