@@ -13,10 +13,10 @@ import org.junit.Test;
  */
 public class LambdaFunctionTest {
     
-    private static final double NUM_LAMBDAS = 1;
-    private static final double NUM_TESTS = 100_000;
-    private static final double SLOPE = 1;
-    private static final double OFFSET = 10;
+    private static final double NUM_LAMBDAS = 10;
+    private static final double NUM_TESTS = 10_000;
+    private static final double SLOPE = 2;
+    private static final double OFFSET = -20;
     
     boolean debug = true;
     
