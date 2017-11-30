@@ -82,6 +82,6 @@ public class CarGenerateEvent extends Event{
 
     double getNextGenerateTime(double lambda) {
         double X = Simulation.RNG.nextDouble();
-        return lambda * Math.exp(-lambda*X);
+        return Math.log(1-X)/-(1/lambda);
     }
 }
