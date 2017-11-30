@@ -48,7 +48,7 @@ public class CarGenerateEvent extends Event{
             }
             DataAggregator.addCar();
             if(DataAggregator.getNumCarsAdded() >= Simulation.NUM_CARS){
-                System.out.println("Car generation completed.");
+                System.out.println("Car generation completed. " + DataAggregator.getNumCarsAdded() + " cars have been generated.");
                 break;
             }
         }
@@ -82,6 +82,6 @@ public class CarGenerateEvent extends Event{
 
     double getNextGenerateTime(double lambda) {
         double X = Simulation.RNG.nextDouble();
-        return Math.log(1-X)/-(1/lambda);
+        return (Math.log(1-X)/-(lambda/(1000*(Simulation.CONVOY_AVERAGE_SIZE/2)))); //converts to seconds
     }
 }
