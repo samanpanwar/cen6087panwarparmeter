@@ -82,6 +82,6 @@ public class CarGenerateEvent extends Event{
 
     double getNextGenerateTime(double lambda) {
         double X = Simulation.RNG.nextDouble();
-        return Math.log(1-X)/-(lambda);
+        return (Math.log(1-X)/-(lambda/(1000*(Simulation.CONVOY_AVERAGE_SIZE/2)))); //converts to seconds
     }
 }
