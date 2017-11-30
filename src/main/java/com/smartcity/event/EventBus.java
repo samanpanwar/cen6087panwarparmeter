@@ -53,7 +53,7 @@ public class EventBus {
             simulationTime = evt.eventTime;
             evt.resolveEvent();
         }
-        System.out.println("The queue is empty or has been stopped.");
+        System.out.println("The queue is empty or has been stopped. " + DataAggregator.getNumCarsRemoved() + " cars have exited the system.");
         DataAggregator.generateCarAverageChart();
         DataAggregator.generateEventTimesAveragesChart();
     }
